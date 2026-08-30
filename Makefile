@@ -4,7 +4,10 @@ CHART := chart
 RELEASE := grafana-crossplane
 HELM ?= $(shell command -v helm 2>/dev/null || which /opt/homebrew/bin/helm /usr/local/bin/helm 2>/dev/null | head -n 1 || echo helm)
 
-.PHONY: lint render validate
+.PHONY: lint render validate bootstrap
+
+bootstrap:
+	./bootstrap.sh
 
 lint:
 	command -v $(HELM) >/dev/null || (echo "helm is required" >&2; exit 1)
