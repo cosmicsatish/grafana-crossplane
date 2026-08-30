@@ -1,25 +1,6 @@
 apiVersion: 1
 muteTimes:
   - orgId: 1
-    name: MarkitServ STPaaS FAB OOH
-    time_intervals:
-      - times:
-        - start_time: "16:00"
-          end_time: "23:00"
-        weekdays: [monday, tuesday, wednesday, thursday, friday]
-      - times:
-        - start_time: "23:00"
-          end_time: "23:59"
-        weekdays: [friday]
-      - times:
-        - start_time: "00:00"
-          end_time: "23:59"
-        weekdays: [saturday]
-      - times:
-        - start_time: "00:00"
-          end_time: "16:00"
-        weekdays: [sunday]
-  - orgId: 1
     name: Prod Maintenance Window
     time_intervals:
       - times:
