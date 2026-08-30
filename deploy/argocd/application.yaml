@@ -35,23 +35,15 @@ spec:
         factor: 2
         maxDuration: 3m
   ignoreDifferences:
-    - group: oss.grafana.crossplane.io
-      kind: FolderPermission
-      jsonPointers:
-        - /spec/forProvider/permissions
     - group: oss.grafana.m.crossplane.io
       kind: FolderPermission
       jsonPointers:
         - /spec/forProvider/permissions
-    - group: enterprise.grafana.crossplane.io
-      kind: DataSourcePermission
-      jsonPointers:
-        - /spec/forProvider/permissions
     - group: enterprise.grafana.m.crossplane.io
       kind: DataSourcePermission
       jsonPointers:
         - /spec/forProvider/permissions
-    - group: enterprise.grafana.crossplane.io
+    - group: enterprise.grafana.m.crossplane.io
       kind: RoleAssignment
       jsonPointers:
         - /spec/forProvider/teams
@@ -60,25 +52,9 @@ spec:
         - /spec/forProvider/teamRefs
         - /spec/forProvider/serviceAccountRefs
     - group: enterprise.grafana.m.crossplane.io
-      kind: RoleAssignment
-      jsonPointers:
-        - /spec/forProvider/teams
-        - /spec/forProvider/serviceAccounts
-        - /spec/forProvider/users
-        - /spec/forProvider/teamRefs
-        - /spec/forProvider/serviceAccountRefs
-    - group: enterprise.grafana.crossplane.io
       kind: TeamExternalGroup
       jsonPointers:
         - /spec/forProvider/teamId
-    - group: enterprise.grafana.m.crossplane.io
-      kind: TeamExternalGroup
-      jsonPointers:
-        - /spec/forProvider/teamId
-    - group: oss.grafana.crossplane.io
-      kind: ServiceAccountToken
-      jsonPointers:
-        - /spec/forProvider/serviceAccountId
     - group: oss.grafana.m.crossplane.io
       kind: ServiceAccountToken
       jsonPointers:
