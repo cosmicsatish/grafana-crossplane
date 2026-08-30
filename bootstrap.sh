@@ -120,60 +120,11 @@ echo "=> Deploying ArgoCD Application to continuously sync resources..."
 $KUBECTL_BIN apply -f deploy/argocd/project.yaml
 $KUBECTL_BIN apply -f deploy/argocd/application.yaml
 
-# 8. Wait for Wave 0 (Teams) to be Ready, then auto-refresh team UIDs
-echo ""
-echo "=> Waiting for Wave 0 (Teams) to become Ready in Grafana Cloud..."
-echo "   This typically takes 3-5 minutes on first bootstrap."
-TIMEOUT=600
-START=$(date +%s)
-while true; do
-  TOTAL=$($KUBECTL_BIN get teams.oss.grafana.m.crossplane.io -n crossplane-system --no-headers 2>/dev/null | wc -l | tr -d ' ')
-  READY=$($KUBECTL_BIN get teams.oss.grafana.m.crossplane.io -n crossplane-system -o json 2>/dev/null | \
-    python3 -c "
-import sys,json
-d=json.load(sys.stdin)
-print(sum(1 for i in d['items'] for c in i.get('status',{}).get('conditions',[]) if c['type']=='Ready' and c['status']=='True'))
-" 2>/dev/null || echo 0)
-  if [ "$TOTAL" -gt 0 ] && [ "$READY" -eq "$TOTAL" ]; then
-    echo "   => All ${TOTAL} Teams are Ready!"
-    break
-  fi
-  NOW=$(date +%s)
-  ELAPSED=$((NOW - START))
-  if [ $ELAPSED -ge $TIMEOUT ]; then
-    echo "   WARNING: Timeout waiting for Teams (${READY}/${TOTAL} ready). Proceeding with available UIDs."
-    break
-  fi
-  echo "   Teams: ${READY:-0}/${TOTAL:-0} ready (${ELAPSED}s elapsed)..."
-  sleep 15
-done
-
-# Auto-refresh team UIDs in catalog (team UIDs are assigned by Grafana Cloud on creation)
-echo "=> Auto-refreshing chart/catalog/team-uids.yaml with live Grafana-assigned UIDs..."
-bash scripts/refresh-team-uids.sh
-
-# Commit and push if there are changes
-if ! git diff --quiet chart/catalog/team-uids.yaml; then
-  echo "=> Committing updated team UIDs..."
-  git add chart/catalog/team-uids.yaml
-  git commit -m "chore(catalog): auto-refresh team UIDs from bootstrap on $(date '+%Y-%m-%d')"
-  git push origin main
-  echo "=> Team UIDs committed and pushed. ArgoCD will auto-sync LBAC rules."
-else
-  echo "=> Team UIDs unchanged, no commit needed."
-fi
-
 echo "=========================================="
 echo " Bootstrap Process Completed Successfully!"
 echo "=========================================="
-echo ""
-echo "ArgoCD is syncing all resources in wave order:"
-echo "  Wave 0: Teams, Folders, ServiceAccounts, DataSources"
-echo "  Wave 1: Tokens, Permissions, RoleAssignments, LBAC"
-echo "  Wave 2: Alerting, Dashboards"
 echo ""
 echo "To access ArgoCD UI locally, you can port-forward:"
 echo "  kubectl port-forward svc/argocd-server -n argocd 8080:443"
 echo "  (Username: admin, Password: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath=\"{.data.password}\" | base64 -d)"
 echo ""
-
