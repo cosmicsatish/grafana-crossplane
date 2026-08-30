@@ -316,6 +316,13 @@ data:
           hs.message = condition.message or "Ready"
           return hs
         end
+        if condition.type == "Synced" and condition.status == "True" then
+          if obj.spec ~= nil and obj.spec.forProvider ~= nil and obj.spec.forProvider.disableProvenance == true then
+            hs.status = "Healthy"
+            hs.message = "Synced (non-provenance template)"
+            return hs
+          end
+        end
         if condition.type == "Synced" and condition.status == "False" then
           hs.status = "Degraded"
           hs.message = condition.message or "Sync failed"
