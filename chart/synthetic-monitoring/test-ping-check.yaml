@@ -1,0 +1,9 @@
+checks:
+  - job: "test-website-ping"
+    target: "grafana.com"
+    frequency: 60000
+    timeout: 3000
+    enabled: true
+    settings:
+      - ping:
+          - ipVersion: "V4"

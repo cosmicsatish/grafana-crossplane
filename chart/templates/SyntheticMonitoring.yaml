@@ -22,8 +22,14 @@ spec:
     frequency: {{ $item.frequency | default 60000 }}
     timeout: {{ $item.timeout | default 5000 }}
     enabled: {{ if hasKey $item "enabled" }}{{ $item.enabled }}{{ else }}true{{ end }}
+    {{- with $item.probes }}
     probes:
-      {{- toYaml ($item.probes | default list) | nindent 6 }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with $item.probeNames }}
+    probeNames:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     {{- with $item.settings }}
     settings:
       {{- toYaml . | nindent 6 }}
