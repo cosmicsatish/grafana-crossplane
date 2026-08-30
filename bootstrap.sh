@@ -91,7 +91,31 @@ elif [ -f deploy/crossplane/providerconfig.yaml.example ]; then
     $KUBECTL_BIN apply -f deploy/crossplane/providerconfig.yaml.example
 fi
 
-# 6. Deploy ArgoCD Application
+# 6. Configure ArgoCD Repository Access (required for private repos)
+echo "=> Configuring ArgoCD repository credentials..."
+if ! $KUBECTL_BIN get secret argocd-repo-github -n argocd > /dev/null 2>&1; then
+    # Prefer GITHUB_PERSONAL_ACCESS_TOKEN (used by GitHub MCP server), fallback to GITHUB_TOKEN, then prompt
+    _GH_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-${GITHUB_TOKEN}}"
+    if [ -z "${_GH_TOKEN}" ]; then
+        read -rsp "Enter your GitHub Personal Access Token (for private repo access): " _GH_TOKEN
+        echo "" # newline after prompt
+    else
+        echo "=> Using GitHub token from environment (GITHUB_PERSONAL_ACCESS_TOKEN or GITHUB_TOKEN)."
+    fi
+    $KUBECTL_BIN create secret generic argocd-repo-github \
+        -n argocd \
+        --from-literal=type=git \
+        --from-literal=url=https://github.com/cosmicsatish/grafana-crossplane.git \
+        --from-literal=username=cosmicsatish \
+        --from-literal=password="${_GH_TOKEN}"
+    $KUBECTL_BIN label secret argocd-repo-github -n argocd \
+        argocd.argoproj.io/secret-type=repository
+    echo "=> ArgoCD repository secret created."
+else
+    echo "=> ArgoCD repository secret already exists."
+fi
+
+# 7. Deploy ArgoCD Application
 echo "=> Deploying ArgoCD Application to continuously sync resources..."
 $KUBECTL_BIN apply -f deploy/argocd/project.yaml
 $KUBECTL_BIN apply -f deploy/argocd/application.yaml
