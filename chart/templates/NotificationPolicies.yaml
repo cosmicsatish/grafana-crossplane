@@ -6,7 +6,7 @@
 ---
 apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
 kind: NotificationPolicy
-{{ include "grafana-crossplane.alertMeta" (dict "name" (include "grafana-crossplane.slugify" ($item.name | default "default")) "wave" "2" "owner" $item.owner "root" $) }}
+{{ include "grafana-crossplane.alertMeta" (dict "name" (include "grafana-crossplane.slugify" ($item.name | default "default")) "wave" "3" "owner" $item.owner "root" $) }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:

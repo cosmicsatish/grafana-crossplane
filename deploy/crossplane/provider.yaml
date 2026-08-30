@@ -5,3 +5,7 @@ metadata:
 spec:
   package: xpkg.upbound.io/grafana/provider-grafana:v2.14.0
   packagePullPolicy: IfNotPresent
+  runtimeConfigRef:
+    apiVersion: pkg.crossplane.io/v1beta1
+    kind: DeploymentRuntimeConfig
+    name: provider-grafana-config
