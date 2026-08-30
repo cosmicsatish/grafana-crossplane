@@ -1,0 +1,13 @@
+apiVersion: 1
+messageTemplates:
+  - name: custom-alert-template
+    owner: platform
+    template: |
+      {{ define "custom.alert.title" }}
+        [{{ .Status | toUpper }}] {{ .CommonLabels.alertname }} ({{ .CommonLabels.severity }})
+      {{ end }}
+      {{ define "custom.alert.message" }}
+        Summary: {{ .CommonAnnotations.summary }}
+        Description: {{ .CommonAnnotations.description }}
+        Runbook: {{ .CommonAnnotations.runbook_url }}
+      {{ end }}

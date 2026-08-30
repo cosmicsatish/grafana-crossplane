@@ -8,36 +8,40 @@
 {{- $presets := .Values.rolePresets | default dict }}
 {{- $uids := .Values.rbac.roleUids | default dict }}
 {{- $assignments := dict }}
-{{- $teams := (include "grafana-admin-platform.teamsList" . | fromYaml).teams | default list }}
+{{- $teams := (include "grafana-crossplane.teamsList" . | fromYaml).teams | default list }}
 {{- range $team := $teams }}
   {{- $names := list }}{{- if $team.preset }}{{ $names = append $names $team.preset }}{{ end }}{{- range ($team.presets | default list) }}{{ $names = append $names . }}{{ end }}{{- range ($team.roles | default list) }}{{ $names = append $names . }}{{ end }}{{- range ($team.fixedRoles | default list) }}{{ $names = append $names . }}{{ end }}
   {{- $names = uniq $names }}
-  {{- range $item := $names }}{{- $resolved := get $presets $item | default (list $item) }}{{- range $role := $resolved }}{{- $e := get $assignments $role | default (dict "teams" list "serviceAccounts" list) }}{{- $items := get $e "teams" }}{{- $items = append $items (dict "name" ($team.slug | default (include "grafana-admin-platform.slugify" $team.name))) }}{{- $_ := set $e "teams" $items }}{{- $_ := set $assignments $role $e }}{{ end }}{{ end }}
+  {{- range $item := $names }}{{- $resolved := get $presets $item | default (list $item) }}{{- range $role := $resolved }}{{- $e := get $assignments $role | default (dict "teams" list "serviceAccounts" list) }}{{- $items := get $e "teams" }}{{- $items = append $items (dict "name" ($team.slug | default (include "grafana-crossplane.slugify" $team.name))) }}{{- $_ := set $e "teams" $items }}{{- $_ := set $assignments $role $e }}{{ end }}{{ end }}
 {{- end }}
-{{- $sas := (include "grafana-admin-platform.saList" . | fromYaml).serviceAccounts | default list }}
+{{- $sas := (include "grafana-crossplane.saList" . | fromYaml).serviceAccounts | default list }}
 {{- range $sa := $sas }}
   {{- $names := list }}{{- if $sa.preset }}{{ $names = append $names $sa.preset }}{{ end }}{{- range ($sa.presets | default list) }}{{ $names = append $names . }}{{ end }}{{- range ($sa.roles | default list) }}{{ $names = append $names . }}{{ end }}{{- range ($sa.fixedRoles | default list) }}{{ $names = append $names . }}{{ end }}
   {{- $names = uniq $names }}
-  {{- range $item := $names }}{{- $resolved := get $presets $item | default (list $item) }}{{- range $role := $resolved }}{{- $e := get $assignments $role | default (dict "teams" list "serviceAccounts" list) }}{{- $items := get $e "serviceAccounts" }}{{- $items = append $items (dict "name" ($sa.resourceName | default (include "grafana-admin-platform.slugify" $sa.name))) }}{{- $_ := set $e "serviceAccounts" $items }}{{- $_ := set $assignments $role $e }}{{ end }}{{ end }}
+  {{- range $item := $names }}{{- $resolved := get $presets $item | default (list $item) }}{{- range $role := $resolved }}{{- $e := get $assignments $role | default (dict "teams" list "serviceAccounts" list) }}{{- $items := get $e "serviceAccounts" }}{{- $items = append $items (dict "name" ($sa.resourceName | default (include "grafana-crossplane.slugify" $sa.name))) }}{{- $_ := set $e "serviceAccounts" $items }}{{- $_ := set $assignments $role $e }}{{ end }}{{ end }}
 {{- end }}
 {{- range $roleName, $assignment := $assignments }}
-  {{- $roleUid := include "grafana-admin-platform.roleRef" (dict "name" $roleName "map" $roleMap "uids" $uids "path" $path) }}
+  {{- $roleUid := include "grafana-crossplane.roleRef" (dict "name" $roleName "map" $roleMap "uids" $uids "path" $path) }}
 ---
 apiVersion: enterprise.grafana.m.crossplane.io/v1alpha1
 kind: RoleAssignment
 metadata:
-  name: {{ printf "role-assign-%s" (include "grafana-admin-platform.slugify" $roleName) | trunc 63 | trimSuffix "-" | quote }}
+  name: {{ printf "role-assign-%s" (include "grafana-crossplane.slugify" $roleName) | trunc 63 | trimSuffix "-" | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     roleUid: {{ $roleUid | quote }}
-    {{- with (get $assignment "teams") }}teamRefs:
-      {{- toYaml . | nindent 6 }}{{ end }}
-    {{- with (get $assignment "serviceAccounts") }}serviceAccountRefs:
-      {{- toYaml . | nindent 6 }}{{ end }}
+    {{- with (get $assignment "teams") }}
+    teamRefs:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with (get $assignment "serviceAccounts") }}
+    serviceAccountRefs:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{- end }}
 {{- end }}

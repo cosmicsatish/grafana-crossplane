@@ -1,8 +1,8 @@
 {{- if and .Values.teams (default true .Values.teams.enabled) }}
-{{- $teams := (include "grafana-admin-platform.teamsList" . | fromYaml).teams | default list }}
+{{- $teams := (include "grafana-crossplane.teamsList" . | fromYaml).teams | default list }}
 {{- range $team := $teams }}
 {{- $name := $team.name | required "team.name is required" }}
-{{- $slug := $team.slug | default (include "grafana-admin-platform.slugify" $name) }}
+{{- $slug := $team.slug | default (include "grafana-crossplane.slugify" $name) }}
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: Team
@@ -11,10 +11,12 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
   labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
-    {{- with $team.owner }}owner: {{ . | quote }}{{ end }}
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
+    {{- with $team.owner }}
+    owner: {{ . | quote }}
+    {{- end }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ $name | quote }}
     {{- with $team.email }}
@@ -29,9 +31,9 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     teamRef:
       name: {{ $slug | quote }}

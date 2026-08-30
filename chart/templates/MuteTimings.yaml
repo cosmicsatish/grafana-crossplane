@@ -1,19 +1,18 @@
 {{- if and .Values.alerting (default true .Values.alerting.enabled) }}
-{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "mute-timings") | fromYaml).items | default list }}
+{{- $files := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "mute-timings") | fromYaml).items | default list }}
 {{- range $f := $files }}
   {{- $items := $f.parsed.muteTimings | default $f.parsed.muteTimes | default list }}
   {{- range $item := $items }}
 ---
 apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
 kind: MuteTiming
-{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $item.name) "wave" "2" "owner" $item.owner "root" $) -}}
+{{ include "grafana-crossplane.alertMeta" (dict "name" (include "grafana-crossplane.slugify" $item.name) "wave" "2" "owner" $item.owner "root" $) }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ $item.name | quote }}
     disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else }}true{{ end }}
-    intervals:
-      {{- toYaml ($item.intervals | default $item.time_intervals | default list) | nindent 6 }}
+    {{- include "grafana-crossplane.renderMuteIntervals" $item | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}
