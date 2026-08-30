@@ -1,9 +1,13 @@
 # Crossplane provider bootstrap
-
-This repository intentionally contains no custom bootstrap scripts.
-
-The only imperative prerequisites are the installation of Crossplane and Argo CD themselves. Once Crossplane is available, apply the provider package and ProviderConfig declaratively.
-
+ 
+Run the automated bootstrap command:
+ 
+```bash
+make bootstrap
+```
+ 
+Or follow the declarative step-by-step process below.
+ 
 ## 1. Install Crossplane
 
 Install the upstream Crossplane Helm chart using your platform's normal package-management process. Pin the Crossplane version according to your platform compatibility policy.

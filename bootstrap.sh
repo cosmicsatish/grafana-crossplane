@@ -77,8 +77,16 @@ echo "=> Waiting for Grafana provider to be healthy..."
 sleep 5 # wait a moment for the provider to be created
 $KUBECTL_BIN wait --for=condition=Healthy provider/provider-grafana --timeout=300s
 
-# Create providerconfig if it doesn't exist
-$KUBECTL_BIN apply -f deploy/crossplane/providerconfig.yaml
+# Apply providerconfig (create from example if missing)
+if [ ! -f deploy/crossplane/providerconfig.yaml ] && [ -f deploy/crossplane/providerconfig.yaml.example ]; then
+    echo "=> Copying providerconfig.yaml.example to providerconfig.yaml..."
+    cp deploy/crossplane/providerconfig.yaml.example deploy/crossplane/providerconfig.yaml
+fi
+if [ -f deploy/crossplane/providerconfig.yaml ]; then
+    $KUBECTL_BIN apply -f deploy/crossplane/providerconfig.yaml
+elif [ -f deploy/crossplane/providerconfig.yaml.example ]; then
+    $KUBECTL_BIN apply -f deploy/crossplane/providerconfig.yaml.example
+fi
 
 # 6. Deploy ArgoCD Application
 echo "=> Deploying ArgoCD Application to continuously sync resources..."

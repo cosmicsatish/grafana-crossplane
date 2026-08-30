@@ -1,19 +1,16 @@
 # Operations Runbook
 
-## Prerequisites
-
-Crossplane and Argo CD are platform prerequisites. Install them using the platform's standard package-management process. This repository does not contain a custom bootstrap script.
-
-After Crossplane is installed:
-
+## Automated Bootstrap
+ 
+To stand up or initialize the complete stack from scratch:
+ 
 ```bash
-kubectl apply -f deploy/crossplane/provider.yaml
-kubectl wait --for=condition=healthy provider.pkg.crossplane.io/provider-grafana --timeout=10m
+make bootstrap
 ```
-
-Create the Grafana credentials Secret using your secret-management process, then apply the example ProviderConfig after reviewing the Secret reference.
-
-## Deploy
+ 
+The bootstrap script automatically provisions the cluster, sets up Argo CD with health checks, installs Crossplane with rate-limit runtime configs, creates credentials, and deploys the GitOps sync loop.
+ 
+## Manual Deployment Path
 
 Apply the Argo CD project and application:
 

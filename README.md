@@ -75,9 +75,21 @@ LBAC remains opt-in and is configured against the target stack's datasource UID.
 
 ## Bootstrap
 
-There is no repository bootstrap script by design.
+An end-to-end bootstrap script is provided to initialize a local cluster or automated environment:
 
-Install Crossplane and Argo CD using your platform's standard package-management process. Then apply the declarative provider resources under `deploy/crossplane/` and the Argo CD objects under `deploy/argocd/`.
+```bash
+make bootstrap
+# OR
+./bootstrap.sh
+```
+
+The bootstrap script automates the complete workflow:
+1. **Cluster Creation**: Verifies or creates the `grafana-admin-gitops` kind cluster.
+2. **Argo CD Installation**: Deploys Argo CD, sets up custom Crossplane Lua health checks in `deploy/argocd/argocd-cm.yaml`, and waits for controller readiness.
+3. **Crossplane Setup**: Installs Crossplane via Helm into `crossplane-system`.
+4. **Grafana Credentials**: Checks for `grafana-provider-creds` secret and securely prompts for your Grafana Admin Service Account token if missing.
+5. **Provider & Limits**: Deploys `deploy/crossplane/runtime-config.yaml` (configured with `--max-reconcile-rate=10` and `--poll=10m` to prevent API rate limits) and `deploy/crossplane/provider.yaml`.
+6. **Argo CD Application**: Deploys `deploy/argocd/project.yaml` and `deploy/argocd/application.yaml` to begin continuous reconciliation.
 
 See `deploy/crossplane/README.md` and `OPERATIONS.md`.
 
