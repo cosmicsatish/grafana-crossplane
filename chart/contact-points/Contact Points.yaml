@@ -8,3 +8,19 @@ contactPoints:
           addresses: youremail@example.com
           singleEmail: false
         disableResolveMessage: false
+  - orgId: 1
+    name: aas-dev-email
+    receivers:
+      - type: email
+        settings:
+          addresses: aas-dev@example.com
+          singleEmail: false
+        disableResolveMessage: false
+  - orgId: 1
+    name: NOC Monitoring
+    receivers:
+      - type: email
+        settings:
+          addresses: noc-monitoring@example.com
+          singleEmail: false
+        disableResolveMessage: false
