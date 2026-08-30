@@ -24,12 +24,16 @@ $KUBECTL_BIN config use-context kind-${CLUSTER_NAME}
 # 2. Install ArgoCD
 echo "=> Installing ArgoCD..."
 $KUBECTL_BIN create namespace argocd --dry-run=client -o yaml | $KUBECTL_BIN apply -f -
-$KUBECTL_BIN apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+$KUBECTL_BIN apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml --server-side=true --force-conflicts
 
 echo "=> Waiting for ArgoCD to be ready..."
 $KUBECTL_BIN wait --for=condition=Available deployment/argocd-server -n argocd --timeout=300s
 $KUBECTL_BIN wait --for=condition=Available deployment/argocd-repo-server -n argocd --timeout=300s
-$KUBECTL_BIN wait --for=condition=Available deployment/argocd-application-controller -n argocd --timeout=300s
+$KUBECTL_BIN rollout status statefulset/argocd-application-controller -n argocd --timeout=300s
+if [ -f deploy/argocd/argocd-cm.yaml ]; then
+    echo "=> Applying ArgoCD custom resource health checks..."
+    $KUBECTL_BIN apply -f deploy/argocd/argocd-cm.yaml
+fi
 echo "=> ArgoCD installed and ready!"
 
 # 3. Install Crossplane
@@ -74,10 +78,6 @@ sleep 5 # wait a moment for the provider to be created
 $KUBECTL_BIN wait --for=condition=Healthy provider/provider-grafana --timeout=300s
 
 # Create providerconfig if it doesn't exist
-if [ ! -f deploy/crossplane/providerconfig.yaml ]; then
-    echo "=> Copying providerconfig.yaml.example to providerconfig.yaml"
-    cp deploy/crossplane/providerconfig.yaml.example deploy/crossplane/providerconfig.yaml
-fi
 $KUBECTL_BIN apply -f deploy/crossplane/providerconfig.yaml
 
 # 6. Deploy ArgoCD Application

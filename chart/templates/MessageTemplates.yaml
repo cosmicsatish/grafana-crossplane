@@ -12,7 +12,7 @@ spec:
   forProvider:
     name: {{ $item.name | quote }}
     template: {{ if hasKey $item "template" }}{{ $item.template | quote }}{{ else }}{{ $item.content | default "" | quote }}{{ end }}
-    disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else }}true{{ end }}
+    disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else }}false{{ end }}
   {{- end }}
 {{- end }}
 {{- end }}
