@@ -30,7 +30,7 @@ dashboards:
   enabled: true
 alerting:
   enabled: true
-  disableProvenance: false
+  disableProvenance: true
 slos:
   enabled: true
 syntheticMonitoring:
