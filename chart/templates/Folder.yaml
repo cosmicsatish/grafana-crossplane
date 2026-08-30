@@ -76,8 +76,9 @@ spec:
   forProvider:
     title: {{ $f.title | quote }}
     uid: {{ $uid | quote }}
-    {{- with ($f.parentUid | default (include "grafana-admin-platform.slugify" $f.parentTitle)) }}
-    parentFolderUid: {{ . | quote }}
+    {{- $parent := $f.parentUid | default ($f.parentTitle | default "" | toString | trim) }}
+    {{- if and $parent (ne $parent "nil") }}
+    parentFolderUid: {{ include "grafana-admin-platform.slugify" $parent | quote }}
     {{- end }}
   {{- $fp := get $permissions $uid | default list }}
   {{- if $fp }}
