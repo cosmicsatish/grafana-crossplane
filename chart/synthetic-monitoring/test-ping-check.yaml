@@ -4,6 +4,8 @@ checks:
     frequency: 60000
     timeout: 3000
     enabled: true
+    probes:
+      - 1
     settings:
       - ping:
           - ipVersion: "V4"

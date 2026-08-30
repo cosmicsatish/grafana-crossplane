@@ -4,10 +4,8 @@ slos:
     destinationDatasource:
       - uid: "grafanacloud-prom"
     objectives:
-      - value: 0.99
-        window: "30d"
       - value: 0.995
-        window: "7d"
+        window: "30d"
     query:
       - type: "freeform"
         freeform:
