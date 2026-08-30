@@ -6,7 +6,7 @@
 {{- define "grafana-admin-platform.labels" -}}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/part-of: grafana-gitops-control-plane
+app.kubernetes.io/part-of: grafana-crossplane
 {{- end -}}
 
 {{- define "grafana-admin-platform.providerConfigRef" -}}
@@ -173,14 +173,26 @@ folders:
 
 {{- define "grafana-admin-platform.resolveFolderUid" -}}
 {{- $requested := .folder | default "" | toString | trim -}}
-{{- if not $requested }}{{- "" -}}{{- else }}
+{{- $fallback := .fallback | default "" | toString | trim -}}
+{{- if not $requested -}}
+  {{- if $fallback }}{{ include "grafana-admin-platform.slugify" $fallback }}{{ else }}{{ "" }}{{ end -}}
+{{- else -}}
   {{- $found := "" -}}
   {{- $folders := (include "grafana-admin-platform.foldersList" .root | fromYaml).folders | default list -}}
-  {{- range $f := $folders }}
+  {{- range $f := $folders -}}
     {{- $uid := $f.uid | default (include "grafana-admin-platform.slugify" $f.title) -}}
-    {{- if or (eq $requested $uid) (eq (lower ($f.title | default "")) (lower $requested)) }}{{ $found = $uid }}{{ end }}
-  {{- end }}
-  {{- if $found }}{{ $found }}{{ else }}{{ include "grafana-admin-platform.slugify" $requested }}{{ end }}
+    {{- if or (eq $requested $uid) (eq (lower ($f.title | default "")) (lower $requested)) -}}
+      {{- $found = $uid -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $found -}}
+    {{- $found -}}
+  {{- else if $fallback -}}
+    {{- include "grafana-admin-platform.resolveFolderUid" (dict "folder" $fallback "root" .root) -}}
+  {{- else -}}
+    {{- include "grafana-admin-platform.slugify" $requested -}}
+  {{- end -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "grafana-admin-platform.alertMeta" -}}
@@ -197,7 +209,9 @@ metadata:
 
 {{- define "grafana-admin-platform.renderRelativeTimeRange" -}}
 relativeTimeRange:
-{{- if kindIs "slice" . }}{{ toYaml . | nindent 2 }}{{ else }}
+{{- if kindIs "slice" . }}
+  {{- toYaml . | nindent 2 }}
+{{- else }}
   - from: {{ .from | default 0 }}
     to: {{ .to | default 0 }}
 {{- end }}
@@ -210,10 +224,16 @@ relativeTimeRange:
 data:
 {{- range $d := $data }}
   - refId: {{ $d.refId | default $d.refID | quote }}
-    {{- with ($d.queryType | default $d.query_type) }}queryType: {{ . | quote }}{{ end }}
+    {{- with ($d.queryType | default $d.query_type) }}
+    queryType: {{ . | quote }}
+    {{- end }}
     datasourceUid: {{ include "grafana-admin-platform.resolveDatasource" (dict "ref" ($d.datasourceUid | default $d.datasource_uid | default "") "aliases" $aliases) }}
-    {{- with ($d.relativeTimeRange | default $d.relative_time_range) }}{{ include "grafana-admin-platform.renderRelativeTimeRange" . | nindent 4 }}{{ end }}
-    {{- with $d.model }}model: {{ if kindIs "string" . }}{{ . | quote }}{{ else }}{{ . | toJson | quote }}{{ end }}{{ end }}
+    {{- with ($d.relativeTimeRange | default $d.relative_time_range) }}
+    {{- include "grafana-admin-platform.renderRelativeTimeRange" . | nindent 4 }}
+    {{- end }}
+    {{- with $d.model }}
+    model: {{ if kindIs "string" . }}{{ . | quote }}{{ else }}{{ . | toJson | quote }}{{ end }}
+    {{- end }}
 {{- end -}}
 {{- end -}}
 
@@ -234,14 +254,22 @@ data:
 {{- define "grafana-admin-platform.renderRoutes" -}}
 {{- range $r := .routes }}
 - contactPoint: {{ $r.contactPoint | default $r.contact_point | default $r.receiver | quote }}
-  {{- if hasKey $r "continue" }}continue: {{ $r.continue }}{{ end }}
+  {{- if hasKey $r "continue" }}
+  continue: {{ $r.continue }}
+  {{- end }}
   {{- with ($r.groupBy | default $r.group_by) }}
   groupBy:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  {{- with ($r.groupWait | default $r.group_wait) }}groupWait: {{ . | quote }}{{ end }}
-  {{- with ($r.groupInterval | default $r.group_interval) }}groupInterval: {{ . | quote }}{{ end }}
-  {{- with ($r.repeatInterval | default $r.repeat_interval) }}repeatInterval: {{ . | quote }}{{ end }}
+  {{- with ($r.groupWait | default $r.group_wait) }}
+  groupWait: {{ . | quote }}
+  {{- end }}
+  {{- with ($r.groupInterval | default $r.group_interval) }}
+  groupInterval: {{ . | quote }}
+  {{- end }}
+  {{- with ($r.repeatInterval | default $r.repeat_interval) }}
+  repeatInterval: {{ . | quote }}
+  {{- end }}
   {{- with ($r.muteTimings | default $r.mute_time_intervals) }}
   muteTimings:
     {{- toYaml . | nindent 4 }}

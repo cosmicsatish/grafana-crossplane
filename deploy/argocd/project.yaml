@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Grafana GitOps control plane managed by Helm and Crossplane
   sourceRepos:
-    - "https://github.com/cosmicsatish/grafana-gitops-control-plane.git"
+    - "https://github.com/cosmicsatish/grafana-crossplane.git"
   destinations:
     - namespace: crossplane-system
       server: https://kubernetes.default.svc

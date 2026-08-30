@@ -43,6 +43,10 @@
             {{- $folder := $g.folderUid | default (include "grafana-admin-platform.slugify" ($g.folder | default $rel)) }}
             {{- if not (hasKey $explicit $folder) }}{{ $_ := set $auto $folder (dict "title" ($g.folder | default $rel) "parentUid" "") }}{{ end }}
           {{- end }}
+          {{- if or $doc.grafana_alert $doc.title }}
+            {{- $fUid := include "grafana-admin-platform.slugify" $rel }}
+            {{- if not (hasKey $explicit $fUid) }}{{ if not (hasKey $auto $fUid) }}{{ $_ := set $auto $fUid (dict "title" $rel "parentUid" "") }}{{ end }}{{ end }}
+          {{- end }}
         {{- else if $rel }}
           {{- $parent := "" }}
           {{- range $part := (splitList "/" $rel) }}
@@ -72,7 +76,9 @@ spec:
   forProvider:
     title: {{ $f.title | quote }}
     uid: {{ $uid | quote }}
-    {{- with ($f.parentUid | default (include "grafana-admin-platform.slugify" $f.parentTitle)) }}parentFolderUid: {{ . | quote }}{{ end }}
+    {{- with ($f.parentUid | default (include "grafana-admin-platform.slugify" $f.parentTitle)) }}
+    parentFolderUid: {{ . | quote }}
+    {{- end }}
   {{- $fp := get $permissions $uid | default list }}
   {{- if $fp }}
 ---
@@ -109,6 +115,8 @@ spec:
   forProvider:
     title: {{ $meta.title | quote }}
     uid: {{ $uid | quote }}
-    {{- with $meta.parentUid }}parentFolderUid: {{ . | quote }}{{ end }}
+    {{- with $meta.parentUid }}
+    parentFolderUid: {{ . | quote }}
+    {{- end }}
 {{- end }}
 {{- end }}

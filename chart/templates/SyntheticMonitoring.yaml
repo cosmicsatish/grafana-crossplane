@@ -11,7 +11,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
   labels:
     {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
-    {{- with $item.owner }}owner: {{ . | quote }}{{ end }}
+    {{- with $item.owner }}
+    owner: {{ . | quote }}
+    {{- end }}
 spec:
   {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
   forProvider:
@@ -22,7 +24,10 @@ spec:
     enabled: {{ if hasKey $item "enabled" }}{{ $item.enabled }}{{ else }}true{{ end }}
     probes:
       {{- toYaml ($item.probes | default list) | nindent 6 }}
-    {{- with $item.settings }}settings: {{- toYaml . | nindent 6 }}{{ end }}
+    {{- with $item.settings }}
+    settings:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

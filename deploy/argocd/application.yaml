@@ -8,7 +8,7 @@ metadata:
 spec:
   project: grafana-admin
   source:
-    repoURL: https://github.com/cosmicsatish/grafana-gitops-control-plane.git
+    repoURL: https://github.com/cosmicsatish/grafana-crossplane.git
     targetRevision: main
     path: chart
     helm:

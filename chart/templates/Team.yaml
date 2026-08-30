@@ -12,7 +12,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
   labels:
     {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
-    {{- with $team.owner }}owner: {{ . | quote }}{{ end }}
+    {{- with $team.owner }}
+    owner: {{ . | quote }}
+    {{- end }}
 spec:
   {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
   forProvider:

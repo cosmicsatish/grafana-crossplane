@@ -5,7 +5,7 @@
 ---
 apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
 kind: ContactPoint
-{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $cp.name) "wave" "2" "owner" $cp.owner "root" $) -}}
+{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $cp.name) "wave" "2" "owner" $cp.owner "root" $) }}
 spec:
   {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
   forProvider:

@@ -6,7 +6,7 @@
 ---
 apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
 kind: MuteTiming
-{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $item.name) "wave" "2" "owner" $item.owner "root" $) -}}
+{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $item.name) "wave" "2" "owner" $item.owner "root" $) }}
 spec:
   {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
   forProvider:

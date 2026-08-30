@@ -35,9 +35,13 @@ spec:
   {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
   forProvider:
     roleUid: {{ $roleUid | quote }}
-    {{- with (get $assignment "teams") }}teamRefs:
-      {{- toYaml . | nindent 6 }}{{ end }}
-    {{- with (get $assignment "serviceAccounts") }}serviceAccountRefs:
-      {{- toYaml . | nindent 6 }}{{ end }}
+    {{- with (get $assignment "teams") }}
+    teamRefs:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with (get $assignment "serviceAccounts") }}
+    serviceAccountRefs:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{- end }}
 {{- end }}

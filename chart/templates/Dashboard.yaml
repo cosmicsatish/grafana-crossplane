@@ -8,7 +8,7 @@
   {{- $folderName := $data.folderTitle | default $data.folderName | default $raw.folderTitle | default $raw.folderName | default $meta.folderName }}
   {{- $folderPath := include "grafana-admin-platform.folderPath" (dict "path" $f.path) }}
   {{- $folderRequested := $data.folderUid | default $raw.folderUid | default ($folderName | default $folderPath) | default "" }}
-  {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "root" $) }}
+  {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderPath "root" $) }}
   {{- $slug := include "grafana-admin-platform.slugify" ($data.uid | default $raw.uid | default (get ($data.metadata | default dict) "name") | default $base) }}
   {{- if and $data.apiVersion (hasPrefix "dashboard.grafana.app/" $data.apiVersion) }}
 ---
@@ -25,7 +25,9 @@ spec:
   forProvider:
     metadata:
       name: {{ get ($data.metadata | default dict) "name" | default $slug | quote }}
-    {{- if $folder }}folderUid: {{ $folder | quote }}{{ end }}
+    {{- if $folder }}
+    folderUid: {{ $folder | quote }}
+    {{- end }}
     spec:
       {{- toYaml ($data.spec | default dict) | nindent 6 }}
   {{- else }}
@@ -43,8 +45,10 @@ spec:
   forProvider:
     configJson: {{ ($data | toJson) | quote }}
     overwrite: true
-    {{- if $folder }}folderRef:
-      name: {{ $folder | quote }}{{ end }}
+    {{- if $folder }}
+    folderRef:
+      name: {{ $folder | quote }}
+    {{- end }}
   {{- end }}
 {{- end }}
 {{- end }}

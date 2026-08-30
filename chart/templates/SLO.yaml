@@ -11,13 +11,20 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
   labels:
     {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
-    {{- with $item.owner }}owner: {{ . | quote }}{{ end }}
+    {{- with $item.owner }}
+    owner: {{ . | quote }}
+    {{- end }}
 spec:
   {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ $item.name | quote }}
-    {{- with $item.description }}description: {{ . | quote }}{{ end }}
-    {{- with $item.destinationDatasource }}destinationDatasource: {{- toYaml . | nindent 6 }}{{ end }}
+    {{- with $item.description }}
+    description: {{ . | quote }}
+    {{- end }}
+    {{- with $item.destinationDatasource }}
+    destinationDatasource:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     objectives:
       {{- toYaml ($item.objectives | default list) | nindent 6 }}
     {{- if $item.query }}
@@ -27,7 +34,10 @@ spec:
     query:
       {{- toYaml $item.queries | nindent 6 }}
     {{- end }}
-    {{- with $item.alertings }}alertings: {{- toYaml . | nindent 6 }}{{ end }}
+    {{- with $item.alertings }}
+    alertings:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

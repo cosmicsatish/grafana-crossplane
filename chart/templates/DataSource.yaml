@@ -27,24 +27,54 @@ spec:
   forProvider:
     name: {{ $name | quote }}
     uid: {{ $d.uid | default $slug | quote }}
-    {{- with $d.type }}type: {{ . | quote }}{{ end }}
-    {{- with $d.url }}url: {{ . | quote }}{{ end }}
+    {{- with $d.type }}
+    type: {{ . | quote }}
+    {{- end }}
+    {{- with $d.url }}
+    url: {{ . | quote }}
+    {{- end }}
     {{- $access := $d.accessMode | default $d.access | default "proxy" }}
-    {{- if $access }}accessMode: {{ $access | quote }}{{ end }}
-    {{- with ($d.basicAuthEnabled | default $d.basicAuth) }}basicAuthEnabled: {{ . }}{{ end }}
-    {{- with ($d.basicAuthUsername | default $d.basicAuthUser) }}basicAuthUsername: {{ . | quote }}{{ end }}
-    {{- with $d.database }}databaseName: {{ . | quote }}{{ end }}
-    {{- with $d.jsonData }}jsonDataEncoded: {{ toJson . | quote }}{{ end }}
-    {{- with $d.jsonDataEncoded }}jsonDataEncoded: {{ . | quote }}{{ end }}
-    {{- with $d.secureJsonDataEncoded }}secureJsonDataEncoded: {{ . | quote }}{{ end }}
-    {{- with $d.httpHeadersSecretRef }}httpHeadersSecretRef:
-      {{- toYaml . | nindent 6 }}{{ end }}
-    {{- with $d.passwordSecretRef }}passwordSecretRef:
-      {{- toYaml . | nindent 6 }}{{ end }}
-    {{- with $d.basicAuthPasswordSecretRef }}basicAuthPasswordSecretRef:
-      {{- toYaml . | nindent 6 }}{{ end }}
-    {{- with $d.isDefault }}isDefault: {{ . }}{{ end }}
-    {{- with $d.editable }}editable: {{ . }}{{ end }}
-    {{- with $d.readOnly }}readOnly: {{ . }}{{ end }}
+    {{- if $access }}
+    accessMode: {{ $access | quote }}
+    {{- end }}
+    {{- with ($d.basicAuthEnabled | default $d.basicAuth) }}
+    basicAuthEnabled: {{ . }}
+    {{- end }}
+    {{- with ($d.basicAuthUsername | default $d.basicAuthUser) }}
+    basicAuthUsername: {{ . | quote }}
+    {{- end }}
+    {{- with $d.database }}
+    databaseName: {{ . | quote }}
+    {{- end }}
+    {{- with $d.jsonData }}
+    jsonDataEncoded: {{ toJson . | quote }}
+    {{- end }}
+    {{- with $d.jsonDataEncoded }}
+    jsonDataEncoded: {{ . | quote }}
+    {{- end }}
+    {{- with $d.secureJsonDataEncoded }}
+    secureJsonDataEncoded: {{ . | quote }}
+    {{- end }}
+    {{- with $d.httpHeadersSecretRef }}
+    httpHeadersSecretRef:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with $d.passwordSecretRef }}
+    passwordSecretRef:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with $d.basicAuthPasswordSecretRef }}
+    basicAuthPasswordSecretRef:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with $d.isDefault }}
+    isDefault: {{ . }}
+    {{- end }}
+    {{- with $d.editable }}
+    editable: {{ . }}
+    {{- end }}
+    {{- with $d.readOnly }}
+    readOnly: {{ . }}
+    {{- end }}
   {{- end }}
 {{- end }}
