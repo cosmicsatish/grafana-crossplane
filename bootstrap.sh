@@ -51,13 +51,16 @@ echo "=> Crossplane installed and ready!"
 
 # 4. Configure Grafana Credentials
 echo "=> Checking for Grafana Provider Credentials..."
-if ! $KUBECTL_BIN get secret grafana-provider-creds -n crossplane-system >/dev/null 2>&1; then
+if ! $KUBECTL_BIN get secret grafana-provider-creds -n crossplane-system > /dev/null 2>&1; then
     echo "Secret grafana-provider-creds not found."
-    read -rsp "Enter your Grafana Cloud Admin Service Account Token: " GRAFANA_TOKEN
-    echo "" # newline after prompt
-
-    # You could also optionally prompt for the Grafana URL if it varies, but hardcoding based on context:
     GRAFANA_URL="https://cosmicsatish.grafana.net"
+    # Use GRAFANA_TOKEN env var if set (non-interactive), otherwise prompt
+    if [ -z "${GRAFANA_TOKEN}" ]; then
+        read -rsp "Enter your Grafana Cloud Admin Service Account Token: " GRAFANA_TOKEN
+        echo "" # newline after prompt
+    else
+        echo "=> Using GRAFANA_TOKEN from environment."
+    fi
 
     echo "=> Creating secret grafana-provider-creds in crossplane-system namespace..."
     $KUBECTL_BIN create secret generic grafana-provider-creds \
