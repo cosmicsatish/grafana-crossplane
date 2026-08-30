@@ -9,4 +9,4 @@ slos:
     query:
       - type: "freeform"
         freeform:
-          - query: "sum(rate(node_cpu_seconds_total{mode!='idle'}[5m])) / sum(rate(node_cpu_seconds_total[5m]))"
+          - query: "sum(rate(node_cpu_seconds_total{mode!='idle'}[$__rate_interval])) / sum(rate(node_cpu_seconds_total[$__rate_interval]))"
