@@ -5,10 +5,11 @@ apiVersion: grafana.m.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: default
+  namespace: crossplane-system
 spec:
   credentials:
     source: Secret
     secretRef:
       namespace: crossplane-system
-      name: grafana-provider-credentials
+      name: grafana-provider-creds
       key: credentials
