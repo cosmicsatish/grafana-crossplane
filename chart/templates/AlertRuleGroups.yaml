@@ -21,7 +21,7 @@ spec:
     folderUid: {{ $folder | quote }}
     {{- end }}
     intervalSeconds: {{ $interval }}
-    disableProvenance: {{ if hasKey $rg "disableProvenance" }}{{ $rg.disableProvenance }}{{ else }}{{ $.Values.alerting.disableProvenance | default false }}{{ end }}
+    disableProvenance: {{ if hasKey $rg "disableProvenance" }}{{ $rg.disableProvenance }}{{ else if hasKey $.Values.alerting "disableProvenance" }}{{ $.Values.alerting.disableProvenance }}{{ else }}true{{ end }}
     rule:
       {{- range $rule := ($rg.rules | default $rg.rule | default list) }}
       - name: {{ $rule.name | default $rule.title | required "alert rule title/name is required" | quote }}
@@ -103,7 +103,7 @@ spec:
     folderUid: {{ $folder | quote }}
     {{- end }}
     intervalSeconds: {{ $ga.intervalSeconds | default (include "grafana-crossplane.parseDurationSeconds" ($ga.interval | default "60s")) }}
-    disableProvenance: {{ $.Values.alerting.disableProvenance | default false }}
+    disableProvenance: {{ if hasKey $.Values.alerting "disableProvenance" }}{{ $.Values.alerting.disableProvenance }}{{ else }}true{{ end }}
     rule:
       - name: {{ ($ga.title | default $fileName) | quote }}
         {{- with $ga.uid }}
@@ -140,7 +140,7 @@ spec:
     folderUid: {{ $folderFromPath | quote }}
     {{- end }}
     intervalSeconds: {{ $raw.intervalSeconds | default 60 }}
-    disableProvenance: {{ $.Values.alerting.disableProvenance | default false }}
+    disableProvenance: {{ if hasKey $.Values.alerting "disableProvenance" }}{{ $.Values.alerting.disableProvenance }}{{ else }}true{{ end }}
     rule:
       - name: {{ $raw.title | quote }}
         {{- with $raw.uid }}

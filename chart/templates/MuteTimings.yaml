@@ -11,7 +11,7 @@ spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ $item.name | quote }}
-    disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else }}true{{ end }}
+    disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else if hasKey $.Values.alerting "disableProvenance" }}{{ $.Values.alerting.disableProvenance }}{{ else }}true{{ end }}
     {{- include "grafana-crossplane.renderMuteIntervals" $item | nindent 4 }}
   {{- end }}
 {{- end }}

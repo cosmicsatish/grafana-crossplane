@@ -10,7 +10,7 @@ spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ $cp.name | quote }}
-    disableProvenance: {{ if hasKey $cp "disableProvenance" }}{{ $cp.disableProvenance }}{{ else }}true{{ end }}
+    disableProvenance: {{ if hasKey $cp "disableProvenance" }}{{ $cp.disableProvenance }}{{ else if hasKey $.Values.alerting "disableProvenance" }}{{ $.Values.alerting.disableProvenance }}{{ else }}true{{ end }}
     {{- include "grafana-crossplane.renderContactIntegrations" $cp | nindent 4 }}
   {{- end }}
 {{- end }}

@@ -11,7 +11,7 @@ spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     contactPoint: {{ default $item.contactPoint $item.receiver | quote }}
-    disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else }}true{{ end }}
+    disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else if hasKey $.Values.alerting "disableProvenance" }}{{ $.Values.alerting.disableProvenance }}{{ else }}true{{ end }}
     {{- with ($item.groupBy | default $item.group_by) }}
     groupBy:
       {{- toYaml . | nindent 6 }}
