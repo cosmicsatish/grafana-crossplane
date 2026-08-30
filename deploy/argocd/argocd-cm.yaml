@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/part-of: argocd
 data:
-  resource.customizations.health.oss.grafana.m.crossplane.io_ServiceAccount: |
+  resource.customizations.health.oss.grafana.m.crossplane.io_Team: &crossplaneHealth |
     hs = {}
     if obj.status ~= nil and obj.status.conditions ~= nil then
       for i, condition in ipairs(obj.status.conditions) do
@@ -17,8 +17,11 @@ data:
           return hs
         end
         if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
+          if condition.message ~= nil and string.find(condition.message, "referenced field was empty") then
+            hs.status = "Progressing"
+            hs.message = condition.message
+            return hs
+          end
         end
       end
     end
@@ -26,59 +29,24 @@ data:
     hs.message = "Waiting for resource to become Ready"
     return hs
 
-  resource.customizations.health.oss.grafana.crossplane.io_ServiceAccount: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
+  resource.customizations.health.oss.grafana.m.crossplane.io_Folder: *crossplaneHealth
+  resource.customizations.health.oss.grafana.m.crossplane.io_FolderPermission: *crossplaneHealth
+  resource.customizations.health.oss.grafana.m.crossplane.io_ServiceAccount: *crossplaneHealth
+  resource.customizations.health.oss.grafana.m.crossplane.io_ServiceAccountToken: *crossplaneHealth
+  resource.customizations.health.oss.grafana.m.crossplane.io_DataSource: *crossplaneHealth
+  resource.customizations.health.oss.grafana.m.crossplane.io_Dashboard: *crossplaneHealth
 
-  resource.customizations.health.oss.grafana.m.crossplane.io_ServiceAccountToken: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
+  resource.customizations.health.enterprise.grafana.m.crossplane.io_DataSourcePermission: *crossplaneHealth
+  resource.customizations.health.enterprise.grafana.m.crossplane.io_DataSourceConfigLbacRules: *crossplaneHealth
+  resource.customizations.health.enterprise.grafana.m.crossplane.io_RoleAssignment: *crossplaneHealth
+  resource.customizations.health.enterprise.grafana.m.crossplane.io_TeamExternalGroup: *crossplaneHealth
 
-  resource.customizations.health.enterprise.grafana.m.crossplane.io_RoleAssignment: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
+  resource.customizations.health.alerting.grafana.m.crossplane.io_AlertRuleGroup: *crossplaneHealth
+  resource.customizations.health.alerting.grafana.m.crossplane.io_ContactPoint: *crossplaneHealth
+  resource.customizations.health.alerting.grafana.m.crossplane.io_NotificationPolicy: *crossplaneHealth
+  resource.customizations.health.alerting.grafana.m.crossplane.io_MuteTiming: *crossplaneHealth
+  resource.customizations.health.alerting.grafana.m.crossplane.io_MessageTemplate: *crossplaneHealth
+
+  resource.customizations.health.slo.grafana.m.crossplane.io_SLO: *crossplaneHealth
+  resource.customizations.health.sm.grafana.m.crossplane.io_Check: *crossplaneHealth
+  resource.customizations.health.sm.grafana.m.crossplane.io_Probe: *crossplaneHealth
