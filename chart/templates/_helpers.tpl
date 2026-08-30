@@ -254,10 +254,12 @@ data:
 
 {{- define "grafana-crossplane.renderRoutes" -}}
 {{- range $r := .routes }}
-- contactPoint: {{ $r.contactPoint | default $r.contact_point | default $r.receiver | quote }}
-  {{- if hasKey $r "continue" }}
-  continue: {{ $r.continue }}
+{{- $cp := $r.contactPoint | default $r.contact_point | default $r.receiver }}
+- continue: {{ if hasKey $r "continue" }}{{ $r.continue }}{{ else }}false{{ end }}
+  {{- with $cp }}
+  contactPoint: {{ . | quote }}
   {{- end }}
+
   {{- with ($r.groupBy | default $r.group_by) }}
   groupBy:
     {{- toYaml . | nindent 4 }}
@@ -300,11 +302,11 @@ data:
 {{- $emails := $cp.email | default list -}}{{- $slacks := $cp.slack | default list -}}{{- $pds := $cp.pagerduty | default list -}}{{- $hooks := $cp.webhook | default list -}}{{- $ops := $cp.opsgenie | default list -}}{{- $victors := $cp.victorops | default list -}}{{- $teams := $cp.teams | default list -}}{{- $discord := $cp.discord | default list -}}{{- $googlechat := $cp.googlechat | default list -}}{{- $telegram := $cp.telegram | default list -}}{{- $sns := $cp.sns | default list -}}{{- $jira := $cp.jira | default list -}}{{- $alertmanager := $cp.alertmanager | default list -}}{{- $oncall := $cp.oncall | default list -}}{{- $webex := $cp.webex | default list -}}{{- $dingding := $cp.dingding | default list -}}
 {{- if $native }}
   {{- range $r := ($cp.receivers | default list) }}
-    {{- $t := $r.type | toString | lower -}}{{- $s := $r.settings | default dict -}}{{- $common := dict "disableResolveMessage" (default false $r.disableResolveMessage) "uid" $r.uid -}}
+    {{- $t := $r.type | toString | lower -}}{{- $s := $r.settings | default dict -}}{{- $common := dict "disableResolveMessage" (default false $r.disableResolveMessage) -}}
     {{- if eq $t "email" }}
       {{- $addr := $s.addresses | default list -}}
       {{- if not (kindIs "slice" $addr) }}{{ $addr = list $addr }}{{ end -}}
-      {{- $_ := set $common "addresses" $addr }}{{ $_ := set $common "singleEmail" (default false $s.singleEmail) }}{{ $_ := set $common "message" $s.message }}{{ $_ := set $common "subject" $s.subject }}{{ $emails = append $emails $common }}
+      {{- $_ := set $common "addresses" $addr }}{{ $_ := set $common "singleEmail" (default false $s.singleEmail) }}{{- with $s.message }}{{ $_ := set $common "message" . }}{{ end }}{{- with $s.subject }}{{ $_ := set $common "subject" . }}{{ end }}{{ $emails = append $emails $common }}
     {{- else if eq $t "slack" }}{{ $_ := set $common "url" ($s.url | default $s.endpointUrl) }}{{ $_ := set $common "title" $s.title }}{{ $_ := set $common "text" $s.text }}{{ $_ := set $common "username" $s.username }}{{ $_ := set $common "recipient" $s.recipient }}{{- with $r.urlSecretRef }}{{ $_ := set $common "urlSecretRef" . }}{{ end }}{{- with $r.tokenSecretRef }}{{ $_ := set $common "tokenSecretRef" . }}{{ end }}{{ $slacks = append $slacks $common }}
     {{- else if eq $t "pagerduty" }}{{ $_ := set $common "severity" (default "critical" $s.severity) }}{{ $_ := set $common "class" $s.class }}{{ $_ := set $common "component" $s.component }}{{ $_ := set $common "group" $s.group }}{{ $_ := set $common "summary" $s.summary }}{{- with $r.integrationKeySecretRef }}{{ $_ := set $common "integrationKeySecretRef" . }}{{ end }}{{ $pds = append $pds $common }}
     {{- else if eq $t "webhook" }}{{ $_ := set $common "url" $s.url }}{{ $_ := set $common "httpMethod" (default "POST" $s.httpMethod) }}{{ $_ := set $common "maxAlerts" $s.maxAlerts }}{{ $_ := set $common "title" $s.title }}{{ $_ := set $common "username" $s.username }}{{ $_ := set $common "message" $s.message }}{{- with $r.urlSecretRef }}{{ $_ := set $common "urlSecretRef" . }}{{ end }}{{- with $r.basicAuthPasswordSecretRef }}{{ $_ := set $common "basicAuthPasswordSecretRef" . }}{{ end }}{{- with $r.authorizationCredentialsSecretRef }}{{ $_ := set $common "authorizationCredentialsSecretRef" . }}{{ end }}{{ $hooks = append $hooks $common }}
