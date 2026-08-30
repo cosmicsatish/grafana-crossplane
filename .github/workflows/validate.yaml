@@ -25,5 +25,5 @@ jobs:
         run: |
           helm lint chart
           helm lint chart -f chart/values-osttra.yaml
-          helm template grafana-admin chart >/dev/null
-          helm template grafana-admin chart -f chart/values-osttra.yaml >/dev/null
+          helm template grafana-crossplane chart >/dev/null
+          helm template grafana-crossplane chart -f chart/values-osttra.yaml >/dev/null
