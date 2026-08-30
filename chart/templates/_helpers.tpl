@@ -12,6 +12,7 @@ app.kubernetes.io/part-of: grafana-crossplane
 {{- define "grafana-admin-platform.providerConfigRef" -}}
 providerConfigRef:
   name: {{ .Values.providerConfig.name | default "default" | quote }}
+  kind: "ProviderConfig"
 {{- end -}}
 
 {{- define "grafana-admin-platform.verbMap" -}}

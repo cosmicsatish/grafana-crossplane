@@ -9,28 +9,7 @@
   {{- $folderPath := include "grafana-admin-platform.folderPath" (dict "path" $f.path) }}
   {{- $folderRequested := $data.folderUid | default $raw.folderUid | default ($folderName | default $folderPath) | default "" }}
   {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderPath "root" $) }}
-  {{- $slug := include "grafana-admin-platform.slugify" ($data.uid | default $raw.uid | default (get ($data.metadata | default dict) "name") | default $base) }}
-  {{- if and $data.apiVersion (hasPrefix "dashboard.grafana.app/" $data.apiVersion) }}
----
-apiVersion: oss.grafana.m.crossplane.io/v1alpha1
-kind: DashboardV2
-metadata:
-  name: {{ $slug | quote }}
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-  labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
-spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
-  forProvider:
-    metadata:
-      name: {{ get ($data.metadata | default dict) "name" | default $slug | quote }}
-    {{- if $folder }}
-    folderUid: {{ $folder | quote }}
-    {{- end }}
-    spec:
-      {{- toYaml ($data.spec | default dict) | nindent 6 }}
-  {{- else }}
+  {{- $slug := include "grafana-admin-platform.slugify" ($data.uid | default $raw.uid | default $base) }}
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: Dashboard
@@ -49,6 +28,5 @@ spec:
     folderRef:
       name: {{ $folder | quote }}
     {{- end }}
-  {{- end }}
 {{- end }}
 {{- end }}

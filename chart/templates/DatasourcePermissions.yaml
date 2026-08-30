@@ -20,25 +20,10 @@
         {{- else if $p.team }}{{ $_ := set $entry "teamRef" (dict "name" (include "grafana-admin-platform.slugify" $p.team)) }}
         {{- else if $p.userRef }}{{ $_ := set $entry "userRef" $p.userRef }}
         {{- else if $p.user }}{{ $_ := set $entry "userRef" (dict "name" (include "grafana-admin-platform.slugify" $p.user)) }}
-        {{- else if $p.serviceAccountRef }}{{ $_ := set $entry "serviceAccountRef" $p.serviceAccountRef }}
-        {{- else if $p.serviceAccount }}{{ $_ := set $entry "serviceAccountRef" (dict "name" (include "grafana-admin-platform.slugify" $p.serviceAccount)) }}
         {{- else if $p.builtInRole }}{{ $_ := set $entry "builtInRole" $p.builtInRole }}
         {{- else if $p.role }}{{ $_ := set $entry "builtInRole" $p.role }}{{ end }}
         {{- if $uid }}{{ $cur := get $map $uid | default list }}{{ $cur = append $cur $entry }}{{ $_ := set $map $uid $cur }}{{ end }}
       {{- end }}
-    {{- end }}
-  {{- end }}
-{{- end }}
-
-{{- range $sa := $sas }}
-  {{- $saSlug := $sa.resourceName | default (include "grafana-admin-platform.slugify" $sa.name) }}
-  {{- range ($sa.datasourcePermissions | default list) }}
-    {{- $uid := .datasource | default .datasourceUid | default "" }}
-    {{- if hasKey $aliases $uid }}{{ $uid = (get (get $aliases $uid) "uid") | default $uid }}{{ end }}
-    {{- if and $lbacUid (or (contains "lbac" ($uid | lower)) (eq $uid "loki") (eq $uid "logs")) }}{{ $uid = $lbacUid }}{{ end }}
-    {{- if $uid }}
-      {{- $entry := dict "permission" (.permission | default "Query" | title) "serviceAccountRef" (dict "name" $saSlug) }}
-      {{- $cur := get $map $uid | default list }}{{ $cur = append $cur $entry }}{{ $_ := set $map $uid $cur }}
     {{- end }}
   {{- end }}
 {{- end }}
