@@ -1,0 +1,21 @@
+apiVersion: 1
+policies:
+  - orgId: 1
+    receiver: aas-dev-email
+    group_by:
+      - grafana_folder
+      - alertname
+    routes:
+      - object_matchers:
+          - - notify_toc
+            - "="
+            - "true"
+        continue: true
+        routes:
+          - receiver: NOC Monitoring
+            object_matchers:
+              - - Application
+                - "="
+                - Test
+            mute_time_intervals:
+              - Prod Maintenance Window

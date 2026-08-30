@@ -301,8 +301,10 @@ data:
 {{- if $native }}
   {{- range $r := ($cp.receivers | default list) }}
     {{- $t := $r.type | toString | lower -}}{{- $s := $r.settings | default dict -}}{{- $common := dict "disableResolveMessage" (default false $r.disableResolveMessage) "uid" $r.uid -}}
-    {{- with $r.settingsSecretRef }}{{ $_ := set $common "settingsSecretRef" . }}{{ end }}
-    {{- if eq $t "email" }}{{ $_ := set $common "addresses" ($s.addresses | default list) }}{{ $_ := set $common "singleEmail" (default false $s.singleEmail) }}{{ $_ := set $common "message" $s.message }}{{ $_ := set $common "subject" $s.subject }}{{ $emails = append $emails $common }}
+    {{- if eq $t "email" }}
+      {{- $addr := $s.addresses | default list -}}
+      {{- if not (kindIs "slice" $addr) }}{{ $addr = list $addr }}{{ end -}}
+      {{- $_ := set $common "addresses" $addr }}{{ $_ := set $common "singleEmail" (default false $s.singleEmail) }}{{ $_ := set $common "message" $s.message }}{{ $_ := set $common "subject" $s.subject }}{{ $emails = append $emails $common }}
     {{- else if eq $t "slack" }}{{ $_ := set $common "url" ($s.url | default $s.endpointUrl) }}{{ $_ := set $common "title" $s.title }}{{ $_ := set $common "text" $s.text }}{{ $_ := set $common "username" $s.username }}{{ $_ := set $common "recipient" $s.recipient }}{{- with $r.urlSecretRef }}{{ $_ := set $common "urlSecretRef" . }}{{ end }}{{- with $r.tokenSecretRef }}{{ $_ := set $common "tokenSecretRef" . }}{{ end }}{{ $slacks = append $slacks $common }}
     {{- else if eq $t "pagerduty" }}{{ $_ := set $common "severity" (default "critical" $s.severity) }}{{ $_ := set $common "class" $s.class }}{{ $_ := set $common "component" $s.component }}{{ $_ := set $common "group" $s.group }}{{ $_ := set $common "summary" $s.summary }}{{- with $r.integrationKeySecretRef }}{{ $_ := set $common "integrationKeySecretRef" . }}{{ end }}{{ $pds = append $pds $common }}
     {{- else if eq $t "webhook" }}{{ $_ := set $common "url" $s.url }}{{ $_ := set $common "httpMethod" (default "POST" $s.httpMethod) }}{{ $_ := set $common "maxAlerts" $s.maxAlerts }}{{ $_ := set $common "title" $s.title }}{{ $_ := set $common "username" $s.username }}{{ $_ := set $common "message" $s.message }}{{- with $r.urlSecretRef }}{{ $_ := set $common "urlSecretRef" . }}{{ end }}{{- with $r.basicAuthPasswordSecretRef }}{{ $_ := set $common "basicAuthPasswordSecretRef" . }}{{ end }}{{- with $r.authorizationCredentialsSecretRef }}{{ $_ := set $common "authorizationCredentialsSecretRef" . }}{{ end }}{{ $hooks = append $hooks $common }}
@@ -355,8 +357,26 @@ data:
 {{- end -}}
 
 {{- define "grafana-crossplane.renderMuteIntervals" -}}
+{{- $raw := .intervals | default .time_intervals | default list -}}
+{{- $normalized := list -}}
+{{- range $item := $raw -}}
+  {{- $interval := dict -}}
+  {{- with ($item.daysOfMonth | default $item.days_of_month) }}{{ $_ := set $interval "daysOfMonth" . }}{{ end -}}
+  {{- with ($item.months) }}{{ $_ := set $interval "months" . }}{{ end -}}
+  {{- with ($item.weekdays) }}{{ $_ := set $interval "weekdays" . }}{{ end -}}
+  {{- with ($item.years) }}{{ $_ := set $interval "years" . }}{{ end -}}
+  {{- with ($item.location) }}{{ $_ := set $interval "location" . }}{{ end -}}
+  {{- $times := list -}}
+  {{- range $t := ($item.times | default list) -}}
+    {{- $start := $t.start | default $t.start_time -}}
+    {{- $end := $t.end | default $t.end_time -}}
+    {{- $times = append $times (dict "start" ($start | toString) "end" ($end | toString)) -}}
+  {{- end -}}
+  {{- with $times }}{{ $_ := set $interval "times" . }}{{ end -}}
+  {{- $normalized = append $normalized $interval -}}
+{{- end -}}
 intervals:
-  {{- toYaml (.intervals | default .time_intervals | default list) | nindent 2 }}
+  {{- toYaml $normalized | nindent 2 }}
 {{- end -}}
 
 {{- define "grafana-crossplane.resolveDatasource" -}}

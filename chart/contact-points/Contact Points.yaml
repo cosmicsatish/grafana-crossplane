@@ -1,0 +1,10 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: Example Email
+    receivers:
+      - type: email
+        settings:
+          addresses: youremail@example.com
+          singleEmail: false
+        disableResolveMessage: false

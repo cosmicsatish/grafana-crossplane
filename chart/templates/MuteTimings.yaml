@@ -12,8 +12,7 @@ spec:
   forProvider:
     name: {{ $item.name | quote }}
     disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else }}true{{ end }}
-    intervals:
-      {{- toYaml ($item.intervals | default $item.time_intervals | default list) | nindent 6 }}
+    {{- include "grafana-crossplane.renderMuteIntervals" $item | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}
