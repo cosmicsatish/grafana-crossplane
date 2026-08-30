@@ -1,0 +1,10 @@
+# Example Folder Definition
+folders:
+  - title: Payments
+    uid: payments
+    parentUid: general
+    permissions:
+      - role: Viewer
+        permission: View
+      - team: payments-team
+        permission: Admin

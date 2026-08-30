@@ -1,0 +1,24 @@
+# Example Contact Points (can be placed in chart/alerting/)
+contactPoints:
+  - name: slack-sre-channel
+    owner: sre
+    slack:
+      - endpointUrl: "https://hooks.slack.com/services/REPLACE_WITH_SLACK_WEBHOOK"
+        title: '{{ template "custom.alert.title" . }}'
+        text: '{{ template "custom.alert.message" . }}'
+
+  - name: pagerduty-critical
+    owner: sre
+    pagerduty:
+      - integrationKey: "REPLACE_WITH_PAGERDUTY_INTEGRATION_KEY"
+        severity: "critical"
+
+  - name: opsgenie-oncall
+    owner: sre
+    opsgenie:
+      - apiKey: "REPLACE_WITH_OPSGENIE_API_KEY"
+
+  - name: teams-platform-channel
+    owner: platform
+    teams:
+      - url: "https://outlook.office.com/webhook/..."

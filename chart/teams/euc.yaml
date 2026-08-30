@@ -1,0 +1,7 @@
+name: euc
+preset: observability_viewer
+syncGroups:
+- 8aa9ee10-a4a9-450f-bb7c-2b63529a6e13
+folderPermissions:
+- folder: euc
+  permission: Admin

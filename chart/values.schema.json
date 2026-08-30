@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "providerConfig": { "type": "object", "properties": { "name": { "type": "string", "minLength": 1 } } },
+    "grafana": { "type": "object", "properties": { "stackName": { "type": "string" }, "url": { "type": "string" } } },
+    "datasourceAliases": { "type": "object", "additionalProperties": { "type": "object", "required": ["uid"], "properties": { "uid": { "type": "string", "minLength": 1 } } } },
+    "teams": { "oneOf": [
+      { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+      { "type": "array", "items": { "type": "object", "required": ["name"] } }
+    ] },
+    "folders": { "oneOf": [
+      { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+      { "type": "array", "items": { "type": "object", "required": ["title"] } }
+    ] },
+    "serviceAccounts": { "oneOf": [
+      { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+      { "type": "array", "items": { "type": "object", "required": ["name"] } }
+    ] },
+    "roleAssignments": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+    "datasourcePermissions": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+    "datasources": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+    "lbac": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "datasourceUid": { "type": "string" } } },
+    "dashboards": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+    "alerting": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "disableProvenance": { "type": "boolean" } } },
+    "slos": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+    "syntheticMonitoring": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+    "rawResources": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+    "rolePresets": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "string" } } },
+    "rbac": { "type": "object", "properties": {
+      "roleCatalog": { "type": "object", "properties": { "enabled": { "type": "boolean" }, "required": { "type": "boolean" }, "path": { "type": "string" } } },
+      "roleUids": { "type": "object", "additionalProperties": { "type": "string", "minLength": 1 } }
+    } }
+  },
+  "allOf": [
+    { "if": { "properties": { "lbac": { "properties": { "enabled": { "const": true } } } } },
+      "then": { "properties": { "lbac": { "required": ["datasourceUid"] } } } }
+  ]
+}

@@ -1,0 +1,12 @@
+name: Private Cloud
+preset: observability_viewer
+syncGroups:
+- c8602e43-5647-4074-8116-ff77c8847e7c
+folderPermissions:
+- folder: private-cloud
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="osttra", product_name="privatecloud" }'

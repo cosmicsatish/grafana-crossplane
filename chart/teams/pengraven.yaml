@@ -1,0 +1,12 @@
+name: pengraven
+preset: observability_viewer
+syncGroups:
+- 0ea0e599-4d64-4a47-a89c-ee1bf69be090
+folderPermissions:
+- folder: pengraven
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="trioptima", product_name="pengraven" }'

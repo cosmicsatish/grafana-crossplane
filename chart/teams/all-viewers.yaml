@@ -1,0 +1,7 @@
+name: All viewers
+preset: grafana_viewer
+syncGroups:
+- 7cbbe835-1886-4f4c-b17b-fe7d5dbcc0e5
+folderPermissions:
+- folder: all-viewers
+  permission: View

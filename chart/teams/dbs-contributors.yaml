@@ -1,0 +1,18 @@
+name: DBS Contributors
+preset: observability_viewer
+roles:
+- fixed:plugins.app:reader
+- fixed:library.panels:reader
+syncGroups:
+- 1048c095-ee65-4132-bcb8-c294c5ba1180
+folderPermissions:
+- folder: dbs-contributors
+  permission: Edit
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit!="", business_unit!="reset", business_unit!="trioptima", business_unit!="osttra"
+  }'
+- '{ cluster="observability-prod", namespace=~"grafanacloud-config|grafana-operator|flux-system"
+  }'

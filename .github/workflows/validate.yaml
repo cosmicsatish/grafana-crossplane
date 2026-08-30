@@ -1,0 +1,29 @@
+name: Validate Grafana Control Plane
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - name: Lint and render
+        run: |
+          helm lint chart
+          helm lint chart -f chart/values-osttra.yaml
+          helm template grafana-admin chart >/dev/null
+          helm template grafana-admin chart -f chart/values-osttra.yaml >/dev/null

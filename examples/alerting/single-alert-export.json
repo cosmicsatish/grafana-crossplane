@@ -1,0 +1,31 @@
+{
+  "title": "API High Error Rate",
+  "rule_group": "api-gateway-alerts",
+  "condition": "threshold",
+  "for": "5m",
+  "keep_firing_for": "0s",
+  "labels": {
+    "severity": "critical",
+    "service": "api-gateway"
+  },
+  "annotations": {
+    "summary": "API 5xx error rate exceeds 5%"
+  },
+  "grafana_alert": {
+    "title": "API High Error Rate",
+    "condition": "threshold",
+    "no_data_state": "NoData",
+    "exec_err_state": "Error",
+    "intervalSeconds": 60,
+    "data": [
+      {
+        "refId": "A",
+        "datasourceUid": "grafanacloud-prom",
+        "model": {
+          "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m])) * 100",
+          "instant": true
+        }
+      }
+    ]
+  }
+}

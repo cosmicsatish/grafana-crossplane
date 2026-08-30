@@ -1,0 +1,12 @@
+name: traiana-fx-dev
+preset: observability_viewer
+syncGroups:
+- 6e9bf1f2-777c-473d-82d2-8b4e7fe22c7b
+folderPermissions:
+- folder: traiana-fx-dev
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="traiana", product_name="fx" }'

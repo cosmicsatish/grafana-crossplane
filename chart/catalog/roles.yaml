@@ -1,0 +1,2675 @@
+- version: 1
+  uid: fixed_lMcOPwSkxKY-qCK8NMJc5k6izLE
+  name: fixed:ldap:reader
+  displayName: Reader
+  description: Read LDAP configuration and status.
+  group: LDAP
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_p6AvnU4GCQyIh7-hbwI-bk3GYnU
+  name: fixed:ldap:writer
+  displayName: Writer
+  description: Read and update LDAP configuration and read LDAP status.
+  group: LDAP
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_oCqNwlVHLOpw7-jAlwp4HzYqwGY
+  name: fixed:org.users:reader
+  displayName: Reader (organizational)
+  description: Read users within a single organization.
+  group: User administration
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_VERj5nayasjgf_Yh0sWqqCkxWlw
+  name: fixed:org.users:writer
+  displayName: Writer (organizational)
+  description: Within a single organization, add a user, invite a user, read information
+    about a user and their role, remove a user from that organization, or change the
+    role of a user.
+  group: User administration
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_0LaUt1x6PP8hsZzEBhqPQZFUd8Q
+  name: fixed:settings:reader
+  displayName: Reader
+  description: Read Grafana instance settings.
+  group: Settings
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_OnRCXxZVINWpcKvTF5A1gecJ7pA
+  name: fixed:stats:reader
+  displayName: Reader
+  description: Read Grafana instance statistics.
+  group: Statistics
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_buZastUG3reWyQpPemcWjGqPAd0
+  name: fixed:users:reader
+  displayName: Reader (global)
+  description: Read all users and their information, such as team memberships, authentication
+    tokens, and quotas.
+  group: User administration
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_wjzgHHo_Ux25DJuELn_oiAdB_yM
+  name: fixed:users:writer
+  displayName: Writer (global)
+  description: "Read and update all attributes and settings for all users in Grafana:\
+    \ update user information, read user information, create or enable or disable\
+    \ a user, make a user a Grafana administrator, sign out a user, update a user\u2019\
+    s authentication token, or update quotas for all users."
+  group: User administration
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_0rYhZ2Qnzs8AdB1nX7gexk3fHDw
+  name: fixed:authentication.config:writer
+  displayName: Authentication config writer
+  description: Read and update authentication configuration and access configuration
+    UI.
+  group: Settings
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_QFxIT_FGtBqbIVJIwx1bLgI5z6c
+  name: fixed:general.auth.config:writer
+  displayName: General authentication config writer
+  description: Read and update the Grafana instance's general authentication configuration.
+  group: Settings
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_eAM0azEvnWFCJAjNkUKnGL_1-bU
+  name: fixed:usagestats:reader
+  displayName: Usage report reader
+  description: View usage statistics report
+  group: Statistics
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_WgPpC3qJRmVpVTJavFNwfS5RuzQ
+  name: fixed:roles:resetter
+  displayName: Resetter
+  description: Reset basic roles permissions to default.
+  group: Roles
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_W5aFaw8isAM27x_eWfElBhZ0iOc
+  name: fixed:roles:writer
+  displayName: Writer
+  description: Create, read, update, or delete all roles and built-in role assignments.
+    Assign or unassign roles to users, service accounts and teams.
+  group: Roles
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_GkfG-1NSwEGb4hpK3-E3qHyNltc
+  name: fixed:roles:reader
+  displayName: Reader
+  description: Read all access control roles and built-in role assignments.
+  group: Roles
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_72_8LU_0ukfm6BdblOw8Z9q-GQ8
+  name: fixed:reports:reader
+  displayName: Reader
+  description: Read all reports and shared report settings.
+  group: Reports
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_jBW3_7g1EWOjGVBYeVRwtFxhUNw
+  name: fixed:reports:writer
+  displayName: Writer
+  description: Create, read, update, or delete all reports and shared report settings.
+  group: Reports
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_gDi67bZclPA8UuAMVR-TeJv8kh8
+  name: fixed:banners:writer
+  displayName: Writer
+  description: Create, read, update, or delete announcement banner settings.
+  group: Banner settings
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_joIHDgMrGg790hMhUufVzcU4j44
+  name: fixed:settings:writer
+  displayName: Writer
+  description: Read and update Grafana instance settings.
+  group: Settings
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_0pyblzhcBXxHpTxn_NGQ0vE1XAs
+  name: fixed:serviceaccounts.permissions:reader
+  displayName: Permission reader
+  description: ''
+  group: Service accounts
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_cqblNJc6_iOatnMuwbrVh5u2XQo
+  name: fixed:serviceaccounts.permissions:writer
+  displayName: Permission writer
+  description: ''
+  group: Service accounts
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_QFjJAZ88iawMLInYOxPA1DB1w6I
+  name: fixed:serviceaccounts:reader
+  displayName: Reader
+  description: Read service accounts and service account tokens.
+  group: Service accounts
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_Ikw60fckA0MyiiZ73BawSfOULy4
+  name: fixed:serviceaccounts:creator
+  displayName: Creator
+  description: Create service accounts.
+  group: Service accounts
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: fixed_iBvUNUEZBZ7PUW0vdkN5iojc2sk
+  name: fixed:serviceaccounts:writer
+  displayName: Writer
+  description: Create, delete and read service accounts, manage service account permissions.
+  group: Service accounts
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: plugins_5-W6E3qMEyOYNSuRow3CKQG4-zU
+  name: plugins:grafana-kowalski-app:frontend-observability-admin
+  displayName: Frontend Observability Admin
+  description: Read/write access to everything in Frontend Observability plugin
+  group: Frontend Observability
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: plugins_xLeiaEUmf_FA3OEf2dJvuU9C6Ms
+  name: plugins:grafana-kowalski-app:frontend-observability-editor
+  displayName: Frontend Observability Editor
+  description: Read/write access to everything but app deletion in Frontend Observability
+    plugin
+  group: Frontend Observability
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: plugins_8XqiOKGUBGEUHV8jgiQgiTYZ3bg
+  name: plugins:grafana-kowalski-app:frontend-observability-viewer
+  displayName: Frontend Observability Viewer
+  description: Just View Access
+  group: Frontend Observability
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: plugins_nZmBIqAewQtf97JP4FZOEky4p1s
+  name: plugins:grafana-collector-app:collector-app-admin
+  displayName: Collector App Admin
+  description: Allows full access to the Collector App
+  group: Collector
+  updated: '2025-10-23T10:07:35Z'
+  created: '2025-10-23T10:07:35Z'
+  global: true
+- version: 1
+  uid: plugins_XyJZXUOQBTEWvuE9_sGSlr1ZVA4
+  name: plugins:grafana-adaptivelogs-app:admin
+  displayName: Admin
+  description: Read/write access to everything in Adaptive Logs
+  group: Adaptive Logs
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_7mmPJ2aBjXqjHntUw-SoROxscxo
+  name: plugins:grafana-adaptivelogs-app:expiring-exemptions-user
+  displayName: Expiring Exemptions User
+  description: Ability to use the expiring exemptions button
+  group: Adaptive Logs
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_P5mUforfzfTyZZYaYH2K7Uqra8U
+  name: plugins:grafana-adaptivelogs-app:patterns-editor
+  displayName: Patterns Editor
+  description: Read/write access to recommendations and patterns in Adaptive Logs
+  group: Adaptive Logs
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_j7NAUbu7VYSF9wXJhjBPKjmaiKY
+  name: plugins:grafana-adaptivelogs-app:patterns-reader
+  displayName: Patterns Reader
+  description: Read access to recommendations and patterns in Adaptive Logs
+  group: Adaptive Logs
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_IghS20T6wq5rWex17cLYm6jUnvc
+  name: plugins:grafana-adaptivelogs-app:plugin-access
+  displayName: Plugin Access
+  description: Access to the Adaptive Logs plugin
+  group: Adaptive Logs
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_NPSVnxAjkL5QNL2HRIZP4glTJh4
+  name: plugins:grafana-adaptivelogs-app:segments-admin
+  displayName: Segments Admin
+  description: Access to create and manipulate segments in Adaptive Logs
+  group: Adaptive Logs
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_XZ4_EzfEYIOMeSPqa9BKvvygHuE
+  name: plugins:grafana-pdc-app:private-networks-read
+  displayName: Private Networks Read
+  description: Read Private Networks
+  group: PDC
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_zUxe1m_eOFb7P4Ry1ESjzcuvrys
+  name: plugins:grafana-pdc-app:private-networks-write
+  displayName: Private Networks Write
+  description: Edit Private Networks
+  group: PDC
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_45emFpmDXTvOStsXvKgpZQ7cm-w
+  name: plugins:grafana-csp-app:aws-writer
+  displayName: AWS Writer
+  description: Read/Write access to AWS in Cloud provider plugin
+  group: Cloud provider
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_KJ1uV-ISTfVQ5xURakyoLjjh_d8
+  name: plugins:grafana-csp-app:azure-writer
+  displayName: Azure Writer
+  description: Read/Write access to Azure in Cloud provider plugin
+  group: Cloud provider
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_3yc6UtYQTq0_GREcjZVw_WQi6N0
+  name: plugins:grafana-csp-app:gcp-writer
+  displayName: GCP Writer
+  description: Read/Write access to GCP in Cloud provider plugin
+  group: Cloud provider
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_bV90qAzxQEwi0Uc6h3fjYFlKTEo
+  name: plugins:grafana-csp-app:reader
+  displayName: Reader
+  description: Read access in Cloud provider plugin
+  group: Cloud provider
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_QBiDQQnTy-9_yNzUJ5hXjk7-Suc
+  name: plugins:grafana-adaptive-metrics-app:admin
+  displayName: Admin
+  description: Read/write access to everything in Adaptive Metrics
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_3uXoOytpHnnYb-RUWDjI_cX7cJo
+  name: plugins:grafana-adaptive-metrics-app:rules-editor
+  displayName: Rules Editor
+  description: Read/write access to recommendations and rules in Adaptive Metrics
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_M1GkAFGQS94uub5AFRIQide1EHQ
+  name: plugins:grafana-adaptive-metrics-app:rules-reader
+  displayName: Rules Reader
+  description: Read access to recommendations and rules in Adaptive Metrics
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_t79CNCxk2gsyX1XAntZm8qUYmwI
+  name: plugins:grafana-adaptive-metrics-app:exemptions-editor
+  displayName: Exemptions Editor
+  description: Edit access to recommendation exemptions in Adaptive Metrics
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_1o-DSXB4Q9M-9dPHhV34A7zBZTc
+  name: plugins:grafana-adaptive-metrics-app:exemptions-reader
+  displayName: Exemptions Reader
+  description: Read access to recommendation exemptions in Adaptive Metrics
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_-C3tTrVowunezA0AS6GuUS8wqsI
+  name: plugins:grafana-adaptive-metrics-app:segments-editor
+  displayName: Segments Editor
+  description: Edit access to segments in Adaptive Metrics
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_z9Xw19HLSjHXU3ScBO4MYTwivzY
+  name: plugins:grafana-adaptive-metrics-app:segments-reader
+  displayName: Segments Reader
+  description: Read access to segments in Adaptive Metrics
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_FEbnkHtM_OqAh1FZF5cdQry8fQA
+  name: plugins:grafana-adaptive-metrics-app:config-editor
+  displayName: Config Editor
+  description: Edit access to Adaptive Metrics plugin config
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_IH14cXO6SnUAoTWn1gsK5ROr8LY
+  name: plugins:grafana-adaptive-metrics-app:config-reader
+  displayName: Config Reader
+  description: Read access to Adaptive Metrics plugin config
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_b3hcFRv0nu_Upo6BJD3az4UO1nY
+  name: plugins:grafana-adaptive-metrics-app:plugin-access
+  displayName: Plugin Access
+  description: Access to the Adaptive Metrics plugin
+  group: Adaptive Metrics
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_Tlh9OSn52ww7vInbDK0TWIMmzeI
+  name: plugins:grafana-adaptivetraces-app:admin
+  displayName: Admin
+  description: Read/write access to everything in Adaptive Traces
+  group: Adaptive Traces
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_W2JB2hSUnPNhpdwKZl6lyWLFP-Q
+  name: plugins:grafana-easystart-app:integrations-writer
+  displayName: Integrations Writer
+  description: Administer integrations
+  group: Integrations and Connections
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_L29tXYrdVTNAYJtWwV0L647PlXY
+  name: plugins:grafana-synthetic-monitoring-app:checks-reader
+  displayName: Checks reader
+  description: Read checks in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_er81afr-nyrJlnxo3k0a7lQraac
+  name: plugins:grafana-synthetic-monitoring-app:checks-writer
+  displayName: Checks writer
+  description: Create, edit and delete checks in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_gawkZpblRFBYaJRWa1X745MCHJQ
+  name: plugins:grafana-synthetic-monitoring-app:probes-reader
+  displayName: Probes reader
+  description: Read probes in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_i1yXQlG2y8zcXnJYyzh2R4YVj4A
+  name: plugins:grafana-synthetic-monitoring-app:probes-writer
+  displayName: Probes writer
+  description: Create, edit and delete probes in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_4-16SHSLbut8Dbq1yquHHgJQnfg
+  name: plugins:grafana-synthetic-monitoring-app:alerts-reader
+  displayName: Alerts reader
+  description: Read alerts in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_AUIz7SgVBMUldXQVrwjRdab7Tlo
+  name: plugins:grafana-synthetic-monitoring-app:alerts-writer
+  displayName: Alerts writer
+  description: Create, edit and delete alerts in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_AKQELp7kDFIhgEBNe3QGOYOuXdM
+  name: plugins:grafana-synthetic-monitoring-app:thresholds-reader
+  displayName: Thresholds reader
+  description: Read thresholds in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_5uOMCy1w4x7qVFzE9BrKQritDVk
+  name: plugins:grafana-synthetic-monitoring-app:thresholds-writer
+  displayName: Thresholds writer
+  description: Read and edit thresholds in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_CHHMGAre-N3yqSbcWu37ViIUTzg
+  name: plugins:grafana-synthetic-monitoring-app:access-tokens-writer
+  displayName: Access tokens writer
+  description: Create and delete access tokens in the Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_XoKF32xtq2zqQsXPukeaflCX6OQ
+  name: plugins:grafana-synthetic-monitoring-app:admin
+  displayName: Admin
+  description: Full access to write and manage checks, probes, alerts, thresholds,
+    and access tokens as well as enabling/disabling the Synthetic Monitoring plugin
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_Su68sXSwMWLkeVurx9Ui1BYLLkE
+  name: plugins:grafana-synthetic-monitoring-app:editor
+  displayName: Editor
+  description: Add, update and delete checks, probes, alerts, and thresholds in the
+    Synthetic Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_Ve2dGixdJGW-L-EJOcYBy9Xbfxc
+  name: plugins:grafana-synthetic-monitoring-app:reader
+  displayName: Reader
+  description: Read checks, probes, alerts, thresholds, and access tokens in the Synthetic
+    Monitoring app
+  group: Synthetic Monitoring
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins__ljInUbBXyWU2DPNDvQkijx0HbA
+  name: plugins:grafana-ml-app:ml-editor
+  displayName: ML Editor
+  description: Read and write access to ML features
+  group: Grafana AI/ML
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_YFDg8MrVtYhvdtSkB4WShEET5Eo
+  name: plugins:grafana-ml-app:ml-viewer
+  displayName: ML Viewer
+  description: Read access to ML features
+  group: Grafana AI/ML
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_rsZqmFWHL8BHPskW66H2xSttbBM
+  name: plugins:grafana-ml-app:sift-editor
+  displayName: Sift Editor
+  description: Read and write access to Sift features
+  group: Grafana AI/ML
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_OSWdJ1TeFzTRr7i0fbFRgN20JbY
+  name: plugins:grafana-ml-app:sift-viewer
+  displayName: Sift Viewer
+  description: Read access to Sift features
+  group: Grafana AI/ML
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_tfx9rD8sVwXUdbtiFFBVOfYP4fo
+  name: plugins:grafana-slo-app:slo-writer
+  displayName: SLO Writer
+  description: Manage SLOs in folders where you have folder edit permission
+  group: SLO
+  updated: '2026-01-22T22:52:19Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_C0KHdRF3ZvlzRXxstIFqIb82NbU
+  name: plugins:grafana-slo-app:slo-reader
+  displayName: SLO Reader
+  description: View SLOs in folders where you have folder read permission
+  group: SLO
+  updated: '2026-01-22T22:52:19Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_4o1UMh4INzhESIQJDchEmkST92Q
+  name: plugins:grafana-slo-app:slo-admin
+  displayName: SLO Admin
+  description: SLO Writer, plus the ability to modify org preferences
+  group: SLO
+  updated: '2026-01-22T22:52:19Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins__-TX6YZWQhggpBR-7b8z1LX3o8U
+  name: plugins:grafana-irm-app:admin
+  displayName: Admin
+  description: Read/write access to everything in IRM
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_PD5KYyIWBXC_JguPxf_eHLexKZA
+  name: plugins:grafana-irm-app:editor
+  displayName: Editor
+  description: 'Similar to the Admin role, minus the abilities to: create Integrations,
+    create Escalation Chains, create Outgoing Webhooks, update ChatOps settings, update
+    other user''s settings, and update general IRM settings.'
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_6O54QVNAXOsJ-ULTCRWNwFvx54E
+  name: plugins:grafana-irm-app:reader
+  displayName: Reader
+  description: Read-only access to everything in IRM
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_QbCwQ5k6AmCmNxRpa9G1rmpK4w8
+  name: plugins:grafana-irm-app:incident-access
+  displayName: Incident Access
+  description: Allows accessing Grafana IRM incidents
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_TeDZNfttUzmiIOfU_tP312CHzXM
+  name: plugins:grafana-irm-app:notifications-receiver
+  displayName: Notifications Receiver
+  description: Grants the ability to receive alert notifications. By virtue, also
+    grants the user the ability to edit their own IRM settings.
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins__XrCMjU1jJxS5BHmz3uGBvTDuPI
+  name: plugins:grafana-irm-app:oncaller
+  displayName: OnCaller
+  description: Grants read access to everything in IRM. In addition, grants edit access
+    to Alert Groups, Schedules and own settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_txlRQ-GPGDKc6ghfWE_eH7SJQQk
+  name: plugins:grafana-irm-app:alert-groups-reader
+  displayName: Alert Groups Reader
+  description: Read-only access to Alert Groups
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_X7Z-gOcvQvAKzb8FWM1-HbqDUnc
+  name: plugins:grafana-irm-app:alert-groups-editor
+  displayName: Alert Groups Editor
+  description: Read access to Alert Groups + ability to act on Alert Groups (ie. ack,
+    resolve, etc)
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_abUMuLfDA7DqXzcTtk5kmGK5VaM
+  name: plugins:grafana-irm-app:alert-groups-direct-paging
+  displayName: Alert Groups Direct Paging
+  description: Grants the ability to be able to manually create new Alert Groups (aka
+    Direct Paging)
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_5h0OuHDjj6kUPFzRHYLgQbpBl-k
+  name: plugins:grafana-irm-app:integrations-reader
+  displayName: Integrations Reader
+  description: Read-only access to Integrations
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_m1KIpLLguOcc6KmDB6lHf9_tX7E
+  name: plugins:grafana-irm-app:integrations-editor
+  displayName: Integrations Editor
+  description: Read/write access to Integrations
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_70KO5ECPLnVm8PMr0ztZhhjsFPc
+  name: plugins:grafana-irm-app:escalation-chains-reader
+  displayName: Escalation Chains Reader
+  description: Read-only access to Escalation Chains
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_HlShcEd1Xcr_sF2xBp4H-rOiyfU
+  name: plugins:grafana-irm-app:escalation-chains-editor
+  displayName: Escalation Chains Editor
+  description: Read/write access to Escalation Chains
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_-DYGckphX3RVmvGp1_utHornxa4
+  name: plugins:grafana-irm-app:schedules-reader
+  displayName: Schedules Reader
+  description: Read-only access to Schedules
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_SiUG0TOiRZRHgqgsYnJ0L9SySMQ
+  name: plugins:grafana-irm-app:schedules-editor
+  displayName: Schedules Editor
+  description: Read/write access to Schedules
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_4wpJE82vM0bo-K4uAdwUgLgEJTQ
+  name: plugins:grafana-irm-app:chatops-reader
+  displayName: ChatOps Reader
+  description: Read-only access to ChatOps settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_wapB6R_eQ6Cj1hw2DD1cmb3kfQ4
+  name: plugins:grafana-irm-app:chatops-editor
+  displayName: ChatOps Editor
+  description: Read/write access to ChatOps settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_bbh9Ecb179IGwqoQfJR1Y14AcPU
+  name: plugins:grafana-irm-app:outgoing-webhooks-reader
+  displayName: Outgoing Webhooks Reader
+  description: Read-only access to Outgoing Webhooks
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_Gdl5lvolDMeG6NmpFt0XceIGsWs
+  name: plugins:grafana-irm-app:outgoing-webhooks-editor
+  displayName: Outgoing Webhooks Editor
+  description: Read/write access to Outgoing Webhooks
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_7owoFGY32AAaye5kBUf2GEMLAoA
+  name: plugins:grafana-irm-app:maintenance-reader
+  displayName: Maintenance Reader
+  description: Read-only access to Integration Maintenance
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_b79qyo7HbBmrx2bDZvUNzEIwF7g
+  name: plugins:grafana-irm-app:maintenance-editor
+  displayName: Maintenance Editor
+  description: Read/write access to Integration Maintenance
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_zq7XsvGprUh4M4aE36JSW335SFw
+  name: plugins:grafana-irm-app:api-keys-reader
+  displayName: API Keys Reader
+  description: Read-only access to OnCall API Keys
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_i0qnFwBWUdEagqk1jBPyPdkitG4
+  name: plugins:grafana-irm-app:api-keys-editor
+  displayName: API Keys Editor
+  description: Read/write access to OnCall API Keys. Also grants access to be able
+    to consume the API.
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_sGDHOD8Mne1D7yAj5xOX2_nwO6o
+  name: plugins:grafana-irm-app:notification-settings-reader
+  displayName: Notification Settings Reader
+  description: Read-only access to IRM Notification Settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_UMPo4f5A4NR5P-rCpFeM9bXx29s
+  name: plugins:grafana-irm-app:notification-settings-editor
+  displayName: Notification Settings Editor
+  description: Read/write access to IRM Notification Settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_zgHsr4TpZ2Ka6-5lbdm-tGTVqaQ
+  name: plugins:grafana-irm-app:user-settings-reader
+  displayName: User Settings Reader
+  description: Read-only access to own IRM User Settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_-kI0MHMskqWlihRXZECoE7bMos8
+  name: plugins:grafana-irm-app:user-settings-editor
+  displayName: User Settings Editor
+  description: Read/write access to own IRM User Settings + ability to view basic
+    information about other IRM users
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_HnnYq2ZfViQMid3xXr3SRWXEOzw
+  name: plugins:grafana-irm-app:user-settings-admin
+  displayName: User Settings Admin
+  description: Read/write access to your own, plus other's IRM User Settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_qHXMDYxGGsilbWW8PrGbQaDYhLg
+  name: plugins:grafana-irm-app:settings-reader
+  displayName: Settings Reader
+  description: Read-only access to IRM Settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_lZ94sZkwmIQqdl-u1-thNcep8j4
+  name: plugins:grafana-irm-app:settings-editor
+  displayName: Settings Editor
+  description: Read/write access to IRM Settings
+  group: IRM
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_gzpJ1K-WsbOj6KWeosi_NxY9_kI
+  name: plugins:grafana-labels-app:labels-writer
+  displayName: Labels Writer
+  description: Read/write/create/delete Labels
+  group: Grafana IRM Labels
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_RL3T5c7li2glWDn2iLKcGGUUvfg
+  name: plugins:grafana-labels-app:labels-reader
+  displayName: Labels Reader
+  description: Read-only access to Labels
+  group: Grafana IRM Labels
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_3sZxwBX167f-_xB8gtFZR_etDzU
+  name: plugins:grafana-attributions-app:cost-attributions-viewer
+  displayName: Cost Attributions Viewer
+  description: Permission to view the Cost Attributions application and its data
+  group: Attributions
+  updated: '2025-10-23T10:07:36Z'
+  created: '2025-10-23T10:07:36Z'
+  global: true
+- version: 1
+  uid: plugins_6YkpqBmtueTcvhdLJQnSQn0YP44
+  name: plugins:grafana-auth-app:writer
+  displayName: Writer
+  description: Write and manage access policies for Grafana Cloud
+  group: 'Grafana Cloud: Access Policies'
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_bZEQFP3cWredKtze3fQ8xOXoh9I
+  name: plugins:grafana-app-observability-app:admin
+  displayName: Admin
+  description: Read/write access to everything in Application Observability plugin
+  group: Application Observability
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_Lneziiee78I4d5me1heTVoZS0hU
+  name: plugins:grafana-app-observability-app:viewer
+  displayName: Viewer
+  description: View access in Application Observability plugin
+  group: Application Observability
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_UWup9yBiZBaJ81s_SvLf93eI-Z4
+  name: plugins:grafana-asserts-app:knowledge-graph-writer
+  displayName: Knowledge graph writer
+  description: Full access including rule and configuration management; auto-granted
+    to Grafana Editors.
+  group: Knowledge graph
+  updated: '2026-03-24T23:06:47Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_giQ7iHQ8-4_xFo6StbpoC-Pjx70
+  name: plugins:grafana-asserts-app:knowledge-graph-reader
+  displayName: Knowledge graph reader
+  description: Read-only access to insights and entities; auto-granted to Grafana
+    Viewers.
+  group: Knowledge graph
+  updated: '2026-03-24T23:06:47Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_BkFh5_AJgIL0Gxc48N31A_UFDI8
+  name: plugins:grafana-asserts-app:knowledge-graph-access
+  displayName: Knowledge graph access
+  description: Plugin extension access only; assign manually to service accounts or
+    external plugins consuming Knowledge Graph extension components.
+  group: Knowledge graph
+  updated: '2026-03-24T23:06:47Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 2
+  uid: plugins_G4uPFRZvF6TukV4o2RIOgFIJY58
+  name: plugins:grafana-assistant-app:assistant-user
+  displayName: Assistant User
+  description: Basic access to Grafana Assistant with read-only capabilities
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 2
+  uid: plugins_kJ5iDjJI8ozroaF2LFfv557xRmk
+  name: plugins:grafana-assistant-app:assistant-mcp-user
+  displayName: Assistant MCP User
+  description: Can use Grafana Assistant and add personal MCP servers
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 2
+  uid: plugins_bA1IkBmtqmQEx2z0xw8q6oUgB54
+  name: plugins:grafana-assistant-app:assistant-admin
+  displayName: Assistant Admin
+  description: Can manage both user and tenant-wide Assistant resources and settings
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 2
+  uid: plugins_5YP3kORYcRlPoQZGTtvz8D0LzcU
+  name: plugins:grafana-assistant-app:assistant-investigation-user
+  displayName: Assistant Investigation User
+  description: Can use Assistant Backend Investigations
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_JA566OrYaxV4UP2KwHGW_Z0usSU
+  name: plugins:k6-app:admin
+  displayName: Admin
+  description: Admin access to everything in k6.
+  group: Performance Testing (k6)
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_Bf5-jOw4JvW4C_9e62mnFxUWFFw
+  name: plugins:k6-app:editor
+  displayName: Editor
+  description: Read/write access to k6 with limited scopes
+  group: Performance Testing (k6)
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_3CjSWRntyKRwbJEmgNtKn4A3o4U
+  name: plugins:k6-app:reader
+  displayName: Reader
+  description: Read-only access to k6
+  group: Performance Testing (k6)
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_NOPJR-YsFXqf7d5V9jqxwHHU9Uw
+  name: plugins:grafana-cmab-app:full-admin
+  displayName: Full admin
+  description: Full access to all features
+  group: Cost Management and Billing
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_Dw9qIDO6XkmAkQNea5vLGpw0DyA
+  name: plugins:grafana-cmab-app:billing-and-usage-reader
+  displayName: Billing and usage reader
+  description: Read-only access to billing and usage data
+  group: Cost Management and Billing
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_RsaZX9iSx9cFobaJ75eCNwN9rKk
+  name: plugins:grafana-cmab-app:invoice-reader
+  displayName: Invoice reader
+  description: Read-only access to invoices, FOCUS & usage data
+  group: Cost Management and Billing
+  updated: '2026-01-08T06:40:46Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_lF_nX_OP8NK5By69-pHXN7GVO9w
+  name: plugins:grafana-cmab-app:cost-attribution-admin
+  displayName: Cost attribution admin
+  description: Full access to cost attributions
+  group: Cost Management and Billing
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_XuehygAkagTz4kJ5186TVhk3nfw
+  name: plugins:grafana-cmab-app:cost-attribution-reader
+  displayName: Cost attribution reader
+  description: Read-only access to cost attributions
+  group: Cost Management and Billing
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_hfx2x2vFJEfhBgGiA88nyVYuzLw
+  name: plugins:grafana-cmab-app:usage-alerts-admin
+  displayName: Usage alerts admin
+  description: Full access to usage alerts
+  group: Cost Management and Billing
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: plugins_68RFd0HC9XM4urmdiBYpd98eFvA
+  name: plugins:grafana-cmab-app:usage-alerts-reader
+  displayName: Usage alerts reader
+  description: Read-only access to usage alerts
+  group: Cost Management and Billing
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_E06l4cx0JFm47EeLBE4nmv3pnSo
+  name: fixed:folders.permissions:reader
+  displayName: Permission reader
+  description: ''
+  group: Folders
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_3GAgpQ_hWG8o7-lwNb86_VB37eI
+  name: fixed:folders.permissions:writer
+  displayName: Permission writer
+  description: ''
+  group: Folders
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_D2ddpGxJYlw0mbsTS1ek9fj0kj4
+  name: fixed:datasources.caching:reader
+  displayName: Cache settings reader
+  description: View data source query caching settings.
+  group: Data sources
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_JtFjHr7jd7hSqUYcktKvRvIOGRE
+  name: fixed:datasources.caching:writer
+  displayName: Cache settings writer
+  description: Update data source query caching settings.
+  group: Data sources
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_ErYA-cTN3yn4h4GxaVPcawRhiOY
+  name: fixed:datasources.permissions:reader
+  displayName: Permission reader
+  description: ''
+  group: Data sources
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_aiQh9YDfLOKjQhYasF9_SFUjQiw
+  name: fixed:datasources.permissions:writer
+  displayName: Permission writer
+  description: ''
+  group: Data sources
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_HMLJlKe9MOgHOs3vqvzl4Nqkgy4
+  name: fixed:receivers.permissions:reader
+  displayName: Alerting receiver permission reader
+  description: ''
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_gFAyTppaRi_OoLr0Pk1h7qz4Euk
+  name: fixed:receivers.permissions:writer
+  displayName: Alerting receiver permission writer
+  description: ''
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_fRGKL_vAqUsmUWq5EYKnOha9DcA
+  name: fixed:alerting.rules:reader
+  displayName: Rules Reader
+  description: Read alert rules in all Grafana folders and external providers
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_YJJGwAalUwDZPrXSyFH8GfYBXAc
+  name: fixed:alerting.rules:writer
+  displayName: Rules Writer
+  description: Add, update, and delete rules in any Grafana folder and external providers
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_ut5fVS-Ulh_ejFoskFhJT_rYg0Y
+  name: fixed:alerting.instances:reader
+  displayName: Instances and Silences Reader
+  description: Read instances and silences of Grafana and external providers
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_pKOBJE346uyqMLdgWbk1NsQfEl0
+  name: fixed:alerting.instances:writer
+  displayName: Silences Writer
+  description: Add and update silences in Grafana and external providers
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_hmBn0lX5h1RZXB9Vaot420EEdA0
+  name: fixed:alerting.notifications:reader
+  displayName: Notifications Reader
+  description: Read notification policies and contact points in Grafana and external
+    providers
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_XplK6HPNxf9AP5IGTdB5Iun4tJc
+  name: fixed:alerting.notifications:writer
+  displayName: Notifications Writer
+  description: Add, update, and delete contact points and notification policies in
+    Grafana and external providers
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_O2oP1_uBFozI2i93klAkcvEWR30
+  name: fixed:alerting:reader
+  displayName: Full read-only access
+  description: Read alert rules, instances, silences, contact points, and notification
+    policies in Grafana and all external providers
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_-PAZgSJsDlRD8NUg-PFSeH_BkJY
+  name: fixed:alerting:writer
+  displayName: Full write access
+  description: Add, update and delete alert rules, instances, silences, contact points,
+    and notification policies in Grafana and all external providers
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_ceFufpsSIv8LgBB81M9_NSHydxg
+  name: fixed:alerting:admin
+  displayName: Full admin access
+  description: Full write access in Grafana and all external providers, including
+    their permissions, protected fields and secrets
+  group: Alerting
+  updated: '2026-01-09T11:04:56Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_y7pFjdEkxpx5ETdcxPvp0AgRuUo
+  name: fixed:alerting.provisioning:writer
+  displayName: Write via Provisioning API
+  description: Manage all alert rules, contact points, notification policies, silences,
+    etc. in the organization via provisioning API.
+  group: Alerting
+  updated: '2026-03-18T08:37:48Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_9fmzXXZZG-Od0Amy2ofEG8Uk--c
+  name: fixed:alerting.provisioning.secrets:reader
+  displayName: Read via Provisioning API + Export Secrets
+  description: Read all alert rules, contact points, notification policies, silences,
+    etc. in the organization via provisioning API and use export with decrypted secrets
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_TORFtFQiHgSlTGnW-ofLa0b3rxI
+  name: fixed:alerting.provisioning.provenance:writer
+  displayName: Set provisioning status
+  description: Set provisioning status for alerting resources. Should be used together
+    with other regular roles (Notifications Writer and/or Rules Writer)
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_e7HL8sF-9P8aZwmKqhN45Ob0WOI
+  name: fixed:alerting.receivers:reader
+  displayName: Contact Point Reader
+  description: Read all contact points in Grafana
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_h-ZX5WBw4bfcmzFStUF3_IWfngk
+  name: fixed:alerting.receivers:creator
+  displayName: Contact Point Creator
+  description: Create new contact points in Grafana
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_XWX0KuQZNhgVXmzmQPFpdX5cArU
+  name: fixed:alerting.receivers:writer
+  displayName: Contact Point Writer
+  description: Create, update, and delete all contact points in Grafana
+  group: Alerting
+  updated: '2025-10-23T10:07:37Z'
+  created: '2025-10-23T10:07:37Z'
+  global: true
+- version: 1
+  uid: fixed_irwxMD5Lx5dbHqU7ahIgGc2ssfg
+  name: fixed:alerting.templates:reader
+  displayName: Templates Reader
+  description: Read all templates in Grafana alerting
+  group: Alerting
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_Ntb782dlLhaBJMLBo2ohdcB3mas
+  name: fixed:alerting.templates:writer
+  displayName: Templates Writer
+  description: Create, update, and delete all templates in Grafana alerting
+  group: Alerting
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_ENpv0QyUkQYV8WG_c8RHefVMwCE
+  name: fixed:alerting.time-intervals:reader
+  displayName: Time Intervals Reader
+  description: Read all time intervals in Grafana alerting
+  group: Alerting
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_J-L93TBpJby55gkKdGdT9F17a0o
+  name: fixed:alerting.time-intervals:writer
+  displayName: Time Intervals Writer
+  description: Create, update, and delete all time intervals in Grafana alerting
+  group: Alerting
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_ByG4cCa4s9Jc_VpRwq80y_jypcQ
+  name: fixed:alerting.routes:reader
+  displayName: Notification Policies Reader
+  description: Read all notification policies in Grafana alerting
+  group: Alerting
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 2
+  uid: fixed_uSfE2ZCFozB2VvCU9B7R-adgkg4
+  name: fixed:alerting.routes:writer
+  displayName: Notification Policies Writer
+  description: Create, update and delete notification policies in Grafana alerting
+  group: Alerting
+  updated: '2026-04-07T10:30:45Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_f17oxuXW_58LL8mYJsm4T_mCeIw
+  name: fixed:dashboards.permissions:reader
+  displayName: Permission reader
+  description: ''
+  group: Dashboards
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_CcznxhWX_Yqn8uWMXMQ-b5iFW9k
+  name: fixed:dashboards.permissions:writer
+  displayName: Permission writer
+  description: ''
+  group: Dashboards
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_AcZRiNYx7NueYkUqzw1o2OGGUAA
+  name: fixed:plugins.app:reader
+  displayName: Application Plugins Access
+  description: Access application plugins (still enforcing the organization role)
+  group: Plugins
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_MRYpGk7kpNNwt2VoVOXFiPnQziE
+  name: fixed:plugins:writer
+  displayName: Writer
+  description: Enable and disable plugins and edit plugins' settings
+  group: Plugins
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_yEOKidBcWgbm74x-nTa3lW5lOyY
+  name: fixed:plugins:maintainer
+  displayName: Maintainer
+  description: Install, uninstall plugins. Needs to be assigned globally.
+  group: Plugins
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_bgk1FCyR6OEDwhgirZlQgu5LlCA
+  name: fixed:provisioning:writer
+  displayName: Writer
+  description: Reload provisioning.
+  group: Provisioning
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_C2x8IxkiBc1KZVjyYH775T9jNMQ
+  name: fixed:datasources:reader
+  displayName: Reader
+  description: Read and query all data sources.
+  group: Data sources
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_q8HXq8kjjA5IlHHgBJlKlUyaNik
+  name: fixed:datasources:writer
+  displayName: Writer
+  description: Create, update, delete, read, or query data sources.
+  group: Data sources
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_entg--fHmDqWY2-69N0ocawK0Os
+  name: fixed:datasources.id:reader
+  displayName: Data source ID reader
+  description: Read the ID of a data source based on its name.
+  group: Infrequently used
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_XX8jHREgUt-wo1A-rPXIiFlX6Zw
+  name: fixed:datasources:creator
+  displayName: Creator
+  description: Create data sources.
+  group: Data sources
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_0SZPJlTHdNEe8zO91zv7Zwiwa2w
+  name: fixed:organization:reader
+  displayName: Reader
+  description: Read an organization, such as its ID, name, address, or quotas.
+  group: Organizations
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_Y4jGqDd8w1yCrPwlik8z5Iu8-3M
+  name: fixed:organization:writer
+  displayName: Writer
+  description: Read an organization, its quotas, or its preferences. Update organization
+    properties, or its preferences.
+  group: Organizations
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_CMm-uuBaPUBf4r8XG3jIvxo55bg
+  name: fixed:organization:maintainer
+  displayName: Maintainer
+  description: Create, read, write, or delete an organization. Read or write an organization's
+    quotas. Needs to be assigned globally.
+  group: Organizations
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_nzVQoNSDSn0fg1MDgO6XnZX2RZI
+  name: fixed:teams:creator
+  displayName: Creator
+  description: Create teams and read organisation users (required to manage the created
+    teams).
+  group: Teams
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_xw1T0579h620MOYi4L96GUs7fZY
+  name: fixed:teams:writer
+  displayName: Writer
+  description: Create, read, write, or delete a team as well as controlling team memberships.
+  group: Teams
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_Z8pB0GQlrqRt8IZBCJQxPWvJPgQ
+  name: fixed:teams:read
+  displayName: Reader
+  description: List all teams.
+  group: Teams
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_qDzW9mzx9yM91T5Bi8dHUM2muTw
+  name: fixed:datasources:explorer
+  displayName: Explorer
+  description: Enable the Explore and Drilldown features. Data source permissions
+    still apply; you can only query data sources for which you have query permissions.
+  group: Data sources
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_hpZnoizrfAJsrceNcNQqWYV-xNU
+  name: fixed:annotations:reader
+  displayName: Reader (organization)
+  description: Read organization annotations and annotation tags
+  group: Annotations
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_ZVW-Aa9Tzle6J4s2aUFcq1StKWE
+  name: fixed:annotations:writer
+  displayName: Writer (organization)
+  description: Update organization annotations.
+  group: Annotations
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_ZorKUcEPCM01A1fPakEzGBUyU64
+  name: fixed:dashboards:creator
+  displayName: Creator
+  description: Create dashboards under the root folder.
+  group: Dashboards
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_Sgr67JTOhjQGFlzYRahOe45TdWM
+  name: fixed:dashboards:reader
+  displayName: Reader
+  description: Read all dashboards.
+  group: Dashboards
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_OK2YOQGIoI1G031hVzJB6rAJQAs
+  name: fixed:dashboards:writer
+  displayName: Writer
+  description: Create, read, write or delete all dashboards and their permissions.
+  group: Dashboards
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_gGLRbZGAGB6n9uECqSh_W382RlQ
+  name: fixed:folders:creator
+  displayName: Creator
+  description: Create folders under root level
+  group: Folders
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_yeW-5QPeo-i5PZUIUXMlAA97GnQ
+  name: fixed:folders:reader
+  displayName: Reader
+  description: Read all folders and dashboards.
+  group: Folders
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_wJXLoTzgE7jVuz90dryYoiogL0o
+  name: fixed:folders:writer
+  displayName: Writer
+  description: Create, read, write or delete all folders and dashboards and their
+    permissions.
+  group: Folders
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_f_GHHRBciaqESXfGz2oCcooqHxs
+  name: fixed:dashboards.public:writer
+  displayName: Writer (public)
+  description: Create, write or disable a public dashboard.
+  group: Dashboards
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_U4tE1bcEggOe8Pkwj8AT_TC8W1A
+  name: fixed:featuremgmt:reader
+  displayName: Reader
+  description: Read feature toggles
+  group: Feature Management
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_bIlWKp0r4boOW6O7UKVH1KH0i9o
+  name: fixed:featuremgmt:writer
+  displayName: Writer
+  description: Write feature toggles
+  group: Feature Management
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_6eX6ItfegCIY5zLmPqTDW8ZV7KY
+  name: fixed:library.panels:creator
+  displayName: Creator
+  description: Create library panel under the root folder.
+  group: Library panels
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_tvTr9CnZ6La5vvUO_U_X1LPnhUs
+  name: fixed:library.panels:reader
+  displayName: Reader
+  description: Read all library panels.
+  group: Library panels
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_JTljAr21LWLTXCkgfBC4H0lhBC8
+  name: fixed:library.panels:writer
+  displayName: Writer
+  description: Create, read, write or delete all library panels and their permissions.
+  group: Library panels
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_ct0DghiBWR_2BiQm3EvNPDVmpio
+  name: fixed:library.panels:general.reader
+  displayName: Reader (root)
+  description: Read all library panels under the root folder.
+  group: Library panels
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_DgprkmqfN_1EhZ2v1_d1fYG8LzI
+  name: fixed:library.panels:general.writer
+  displayName: Writer (root)
+  description: Create, read, write or delete all library panels and their permissions
+    under the root folder.
+  group: Library panels
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_dAzn7RqEaljJ-QbLbBqjQ9uFt84
+  name: fixed:snapshots:creator
+  displayName: Creator
+  description: Create snapshots
+  group: Snapshots
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_x5Nt1nCVP7BrqS5BCDFv83M-1I8
+  name: fixed:snapshots:deleter
+  displayName: Deleter
+  description: Delete snapshots
+  group: Snapshots
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_JgcVa4iAXbNgftwQIeGxdqhDzCU
+  name: fixed:snapshots:reader
+  displayName: Reader
+  description: Read snapshots
+  group: Snapshots
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_JA_jZCZLQgjR_K-Ol4z047Fqwzo
+  name: fixed:annotations.all:reader
+  displayName: Reader (all)
+  description: Read all annotations and tags
+  group: Annotations
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_-KH4XxwEyEObak_rVvy9dmrlFNw
+  name: fixed:annotations.all:writer
+  displayName: Writer (all)
+  description: Update all annotations.
+  group: Annotations
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_dTgCv9Wxrp_WHAhwHYIgeboxKpE
+  name: fixed:support.bundles:writer
+  displayName: Writer
+  description: Create, delete, list and download support bundles
+  group: Support bundles
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_gcPjI3PTUJwRx-GJZwDhNa7zbos
+  name: fixed:support.bundles:reader
+  displayName: Reader
+  description: List and download support bundles
+  group: Support bundles
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_BoxvYJ7Yt485ISJgDiHCouWCx2Q
+  name: fixed:secret.securevalues:creator
+  displayName: Secure Values Creator
+  description: Create secure values.
+  group: Secrets Manager
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_BJmeHUHcTiJtTlllfygnyVWO_Kc
+  name: fixed:secret.securevalues:reader
+  displayName: Secure Values Reader
+  description: Read and list secure values.
+  group: Secrets Manager
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_1xSPRCIeqg-PsxCziybCDp1jylQ
+  name: fixed:secret.securevalues:updater
+  displayName: Secure Values Updater
+  description: Update secure values.
+  group: Secrets Manager
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_KB7I9NMtx0HqBQL_tB1rk0ftBmM
+  name: fixed:secret.securevalues:deleter
+  displayName: Secure Values Deleter
+  description: Delete secure values.
+  group: Secrets Manager
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_jzKh0B7CpmY-MJd1Tnhjh_zZF4Q
+  name: fixed:secret.keepers:reader
+  displayName: Keepers Reader
+  description: Read and list keepers.
+  group: Secrets Manager
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_L11wNUP3j7bL1JT2fPHWIblYYP4
+  name: fixed:secret.keepers:writer
+  displayName: Keepers Writer
+  description: Create, update and delete keepers.
+  group: Secrets Manager
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_JIn-Mrnm4avL-3x_BoT3WOzRXWo
+  name: fixed:teams.permissions:reader
+  displayName: Permission reader
+  description: ''
+  group: Teams
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_klHrAnRMf3lY64KLtb3P4Chzy3Y
+  name: fixed:teams.permissions:writer
+  displayName: Permission writer
+  description: ''
+  group: Teams
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_LLk2p7TRuBztOAksTQb1Klc8YTk
+  name: fixed:migrationassistant:migrator
+  displayName: Organization resource migrator
+  description: Migrate organization resources.
+  group: Migration Assistant
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_JlBJ2_gizP8zhgaeGE2rjyZe2Rs
+  name: fixed:dashboards.insights:reader
+  displayName: Insights reader
+  description: View presence indicators on dashboards and dashboard insights for all
+    dashboards
+  group: Dashboards
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_EBZ3NwlfecNPp2p0XcZRC1nfEYk
+  name: fixed:datasources.insights:reader
+  displayName: Insights reader
+  description: View data sources insights
+  group: Data sources
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_OADpuXvNEylO2Kelu3GIuBXEAYE
+  name: fixed:licensing:reader
+  displayName: Reader
+  description: Read licensing information and licensing reports.
+  group: Licenses
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: fixed_gzbz3rJpQMdaKHt-E4q0PVaKMoE
+  name: fixed:licensing:writer
+  displayName: Writer
+  description: Read licensing information and licensing reports, update and delete
+    the license token.
+  group: Licenses
+  updated: '2025-10-23T10:07:38Z'
+  created: '2025-10-23T10:07:38Z'
+  global: true
+- version: 1
+  uid: plugins_kIM-ufGsszqmFjXpzQD6ihewxL8
+  name: plugins:grafana-collector-app:collector-app-reader
+  displayName: Collector App Reader
+  description: Allows read-only access to Grafana Collector App
+  group: Collector
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: plugins_XLOJmkOOoWIc-msCEN5auFXvQ0s
+  name: plugins:grafana-k8s-app:admin
+  displayName: Admin
+  description: Admin access to everything in k8s plugin.
+  group: Kubernetes Monitoring
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: plugins_Qhx9LErs5fnRsFs7yPgGRzHDDzs
+  name: plugins:grafana-k8s-app:reader
+  displayName: Reader
+  description: Read-only access to k8s plugin
+  group: Kubernetes Monitoring
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: plugins_V0_6E2opVn3C-dA8MsZXgXZ9-dM
+  name: plugins:grafana-kowalski-app:frontend-observability-sourcemap-uploader
+  displayName: Frontend Observability Sourcemap Uploader
+  description: View access with the ability to also read settings and upload sourcemaps
+  group: Frontend Observability
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: plugins_lGUAcTXh1tDh1OdGIkH63tRqzJ4
+  name: plugins:grafana-pathfinder-app:interactive-learning-user
+  displayName: Interactive learning User
+  description: Access to Interactive learning
+  group: Interactive learning
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: fixed_8aB9VCet3Iig7aYhaXql5ZAdvUc
+  name: fixed:provisioning.repositories:reader
+  displayName: Repositories Reader
+  description: Read and list provisioning repositories.
+  group: Provisioning
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: fixed_rKnVaBKQID4k0FIUg6QfNfKQN1E
+  name: fixed:provisioning.repositories:writer
+  displayName: Repositories Writer
+  description: Create, update and delete provisioning repositories.
+  group: Provisioning
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: fixed_DBn99lJwPhye5VF3TxgAokizC-I
+  name: fixed:provisioning.jobs:reader
+  displayName: Jobs Reader
+  description: Read and list provisioning jobs.
+  group: Provisioning
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: fixed_K1UyhyGOYPcWrHtZ1m14RKHPwS0
+  name: fixed:provisioning.jobs:writer
+  displayName: Jobs Writer
+  description: Create, update and delete provisioning jobs.
+  group: Provisioning
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: fixed_LRxwyFUv4KCsj6cBWlDTDJRs7sA
+  name: fixed:provisioning.historicjobs:reader
+  displayName: Historic Jobs Reader
+  description: Read and list provisioning historic jobs.
+  group: Provisioning
+  updated: '2026-01-08T06:40:46Z'
+  created: '2026-01-08T06:40:46Z'
+  global: true
+- version: 1
+  uid: fixed_KQebowM1-87i6O9xQiINqBczxxo
+  name: fixed:advisor.checks:reader
+  displayName: Advisor Check Reader
+  description: Read and list advisor checks.
+  group: Advisor
+  updated: '2026-01-09T11:04:55Z'
+  created: '2026-01-09T11:04:55Z'
+  global: true
+- version: 1
+  uid: fixed_v_IAfyu-uIQhLauowRjdod_Tc0c
+  name: fixed:advisor.checks:writer
+  displayName: Advisor Check Writer
+  description: Create, update and delete advisor checks.
+  group: Advisor
+  updated: '2026-01-09T11:04:55Z'
+  created: '2026-01-09T11:04:55Z'
+  global: true
+- version: 1
+  uid: fixed_ARymHdS191yuktsn-GTZqpWHbdk
+  name: fixed:advisor.checktypes:reader
+  displayName: Advisor Check Types Reader
+  description: Read and list advisor check types.
+  group: Advisor
+  updated: '2026-01-09T11:04:55Z'
+  created: '2026-01-09T11:04:55Z'
+  global: true
+- version: 1
+  uid: fixed_scMeHHoUmtR3bDDla9Tk_h6EA-k
+  name: fixed:advisor.checktypes:writer
+  displayName: Advisor Check Types Writer
+  description: Create, update and delete advisor check types.
+  group: Advisor
+  updated: '2026-01-09T11:04:55Z'
+  created: '2026-01-09T11:04:55Z'
+  global: true
+- version: 1
+  uid: fixed_n8bHgQLNCiOBJOMSDSFkgxRmCDI
+  name: fixed:advisor.register:writer
+  displayName: Advisor Register Writer
+  description: Register default advisor check types.
+  group: Advisor
+  updated: '2026-01-09T11:04:55Z'
+  created: '2026-01-09T11:04:55Z'
+  global: true
+- version: 1
+  uid: fixed_R70D-XkDdaw5utTS_BteB14P_MA
+  name: fixed:provisioning.connections:reader
+  displayName: Connections Reader
+  description: Read and list provisioning connections.
+  group: Provisioning
+  updated: '2026-01-09T11:04:55Z'
+  created: '2026-01-09T11:04:55Z'
+  global: true
+- version: 1
+  uid: fixed_a40V0_lrYTn144-j_yiBnHs46aM
+  name: fixed:provisioning.connections:writer
+  displayName: Connections Writer
+  description: Create, update and delete provisioning connections.
+  group: Provisioning
+  updated: '2026-01-09T11:04:56Z'
+  created: '2026-01-09T11:04:56Z'
+  global: true
+- version: 1
+  uid: fixed_SvZgD-RwbQY7rW0A2SMfpHHiH5g
+  name: fixed:provisioning.settings:reader
+  displayName: Settings Reader
+  description: Read provisioning settings.
+  group: Provisioning
+  updated: '2026-01-09T11:04:56Z'
+  created: '2026-01-09T11:04:56Z'
+  global: true
+- version: 1
+  uid: fixed_ASfMwmtm6wQ-c5BaQU4-czXjvoc
+  name: fixed:provisioning.stats:reader
+  displayName: Stats Reader
+  description: Read provisioning stats.
+  group: Provisioning
+  updated: '2026-01-09T11:04:56Z'
+  created: '2026-01-09T11:04:56Z'
+  global: true
+- version: 1
+  uid: fixed_1MHLtSHR6cALrgyVttGwW4nmBVE
+  name: fixed:alerting.enrichments:reader
+  displayName: Enrichments Reader
+  description: Read alert enrichment data in Grafana
+  group: Alerting
+  updated: '2026-01-27T15:29:33Z'
+  created: '2026-01-27T15:29:33Z'
+  global: true
+- version: 1
+  uid: fixed_HKLeTcYmHcm64lzJ5gYKOTQ8sg8
+  name: fixed:alerting.enrichments:writer
+  displayName: Enrichments Writer
+  description: Add, update, and delete alert enrichment data in Grafana
+  group: Alerting
+  updated: '2026-01-27T15:29:33Z'
+  created: '2026-01-27T15:29:33Z'
+  global: true
+- version: 2
+  uid: plugins_HVEFz3K7GwIxMSNu-yROe94TsQM
+  name: plugins:grafana-assistant-app:assistant-cli-user
+  displayName: Assistant CLI User
+  description: Can authenticate and manage CLI tokens for Grafana Assistant
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2026-02-17T11:16:05Z'
+  global: true
+- version: 2
+  uid: plugins_4IlxHi-PZBAt2n47dMd1M0hUazM
+  name: plugins:grafana-assistant-app:assistant-system-investigation-viewer
+  displayName: Assistant System Investigation Viewer
+  description: Can view system-created investigations (from webhooks, alerts, and
+    incidents)
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2026-02-17T11:16:05Z'
+  global: true
+- version: 1
+  uid: fixed_-rEsxR-pZg1-fQL-XDQaouEpK98
+  name: fixed:queries:reader
+  displayName: Reader
+  description: Read saved queries.
+  group: Saved queries
+  updated: '2026-02-17T17:01:36Z'
+  created: '2026-02-17T17:01:36Z'
+  global: true
+- version: 1
+  uid: fixed_7TMOlueweuPX_PhffesRB2FTQn4
+  name: fixed:queries:writer
+  displayName: Writer
+  description: Create, update, and delete saved queries.
+  group: Saved queries
+  updated: '2026-02-17T17:01:36Z'
+  created: '2026-02-17T17:01:36Z'
+  global: true
+- version: 2
+  uid: plugins_NzJwMMeQmbzkBhQrWbTf14SnFqU
+  name: plugins:grafana-assistant-app:assistant-cloud-mcp-user
+  displayName: Assistant Cloud MCP User
+  description: Can authorize and manage external MCP client connections to Grafana
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2026-02-20T15:45:50Z'
+  global: true
+- version: 1
+  uid: plugins_2Lz9_ZXUzH9GVeV0SzQtQLFYVaY
+  name: plugins:grafana-adaptivelogs-app:drop-rules-reader
+  displayName: Drop Rules Reader
+  description: Read access to drop rules in Adaptive Logs
+  group: Adaptive Logs
+  updated: '2026-02-24T15:40:17Z'
+  created: '2026-02-24T15:40:17Z'
+  global: true
+- version: 1
+  uid: fixed_pC-Ofc7pvmj7Yyfc7oliu67RxEQ
+  name: fixed:alerting.inhibition-rules:reader
+  displayName: Inhibition Rules Reader
+  description: Read all inhibition rules in Grafana alerting
+  group: Alerting
+  updated: '2026-02-25T09:54:06Z'
+  created: '2026-02-25T09:54:06Z'
+  global: true
+- version: 1
+  uid: fixed_0uRAEVdAXFyxEuqoVhspH6DjvKc
+  name: fixed:alerting.inhibition-rules:writer
+  displayName: Inhibition Rules Writer
+  description: Create, update, and delete all inhibition rules in Grafana alerting
+  group: Alerting
+  updated: '2026-02-25T09:54:06Z'
+  created: '2026-02-25T09:54:06Z'
+  global: true
+- version: 2
+  uid: plugins_kE4Pz8EHTnFcMB3WzIKrTH22d1Q
+  name: plugins:grafana-dbo11y-app:reader
+  displayName: Reader
+  description: Read access to Database Observability plugin, including viewing Fleet
+    Management pipelines
+  group: Database Observability
+  updated: '2026-05-06T11:09:17Z'
+  created: '2026-03-09T11:42:36Z'
+  global: true
+- version: 2
+  uid: plugins_QX3C-QmZbRHbyMa3ft54lVC_M3M
+  name: plugins:grafana-dbo11y-app:admin
+  displayName: Admin
+  description: Full access to the Database Observability plugin, including the Add
+    Database wizard and the manual configuration flow. Managing Fleet Management pipelines
+    (deploy via Fleet, edit, delete) additionally requires the Collector App Admin
+    role.
+  group: Database Observability
+  updated: '2026-05-06T11:09:17Z'
+  created: '2026-03-11T14:40:46Z'
+  global: true
+- version: 1
+  uid: fixed_rWNhdHUNdZkN8S6e5LAmKKtWt2w
+  name: fixed:alerting.notifications.external:reader
+  displayName: External Notifications Reader
+  description: Read notification policies and contact points in external providers
+  group: Alerting
+  updated: '2026-03-18T08:37:47Z'
+  created: '2026-03-18T08:37:47Z'
+  global: true
+- version: 1
+  uid: fixed_TSFB5oWYpd8nZgEUeQ0h4FyGmH0
+  name: fixed:alerting.notifications.external:writer
+  displayName: External Notifications Writer
+  description: Add, update, and delete contact points and notification policies in
+    external providers
+  group: Alerting
+  updated: '2026-03-18T08:37:47Z'
+  created: '2026-03-18T08:37:47Z'
+  global: true
+- version: 1
+  uid: fixed_i9dSUw29nVAQnlXrInDOpP_aqAc
+  name: fixed:live:writer
+  displayName: Writer
+  description: Push metrics and events to Grafana Live streams (via /api/live/push).
+  group: Live
+  updated: '2026-03-24T10:20:19Z'
+  created: '2026-03-24T10:20:19Z'
+  global: true
+- version: 2
+  uid: plugins_UsoERz8Dp08bUnrvZYM-1n_lk5Q
+  name: plugins:grafana-assistant-app:assistant-sandbox-admin
+  displayName: Assistant Sandbox Admin
+  description: Can manage Python sandbox settings
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2026-03-27T17:04:05Z'
+  global: true
+- version: 1
+  uid: plugins_meJiquPt8WKdJpu_QnCr2FPUcyQ
+  name: plugins:grafana-easystart-app:integrations-admin
+  displayName: Integrations Admin
+  description: Full control over integrations including uninstall, tokens, and alert
+    rules
+  group: Integrations and Connections
+  updated: '2026-03-31T13:55:14Z'
+  created: '2026-03-31T13:55:14Z'
+  global: true
+- version: 1
+  uid: fixed_O7zjTgg7qRhY_xbyXcpzrH7sqW8
+  name: fixed:notifications.alerting.grafana.app:routingtrees.permissions:reader
+  displayName: Alerting route permission reader
+  description: ''
+  group: Alerting
+  updated: '2026-04-07T10:30:45Z'
+  created: '2026-04-07T10:30:45Z'
+  global: true
+- version: 1
+  uid: fixed_5vfp5ZISD0mhevK6KFLFcuMp60M
+  name: fixed:notifications.alerting.grafana.app:routingtrees.permissions:writer
+  displayName: Alerting route permission writer
+  description: ''
+  group: Alerting
+  updated: '2026-04-07T10:30:45Z'
+  created: '2026-04-07T10:30:45Z'
+  global: true
+- version: 1
+  uid: fixed_bw49IoZC6KEicSfgNxNEuukxXa4
+  name: fixed:alerting.managed-routes:creator
+  displayName: Notification Policies Creator
+  description: Create notification policies in Grafana alerting
+  group: Alerting
+  updated: '2026-04-07T10:30:45Z'
+  created: '2026-04-07T10:30:45Z'
+  global: true
+- version: 5
+  uid: plugins_YOpcQbhznPw6FgxcrJ0Zvjgk0UQ
+  name: plugins:grafana-sigil-app:sigil-viewer
+  displayName: Sigil Viewer
+  description: Read access to Sigil landing page and tutorial.
+  group: AI Observability
+  updated: '2026-07-27T13:14:11Z'
+  created: '2026-04-22T06:35:26Z'
+  global: true
+- version: 5
+  uid: plugins_t2d1pFLTVonaaijrAoHCbfDq3XM
+  name: plugins:grafana-sigil-app:sigil-data-reader
+  displayName: Sigil Data Reader
+  description: Read access to Sigil dashboards, traces, model cards, and evaluation
+    pages without conversation access.
+  group: AI Observability
+  updated: '2026-07-27T13:14:11Z'
+  created: '2026-04-22T06:35:26Z'
+  global: true
+- version: 5
+  uid: plugins_bIkKdr4o1NrFALqh5zZ1L_azCPw
+  name: plugins:grafana-sigil-app:sigil-reader
+  displayName: Sigil Reader
+  description: Read access to Sigil dashboards, conversations, traces, model cards,
+    and evaluation pages.
+  group: AI Observability
+  updated: '2026-07-27T13:14:11Z'
+  created: '2026-04-22T06:35:26Z'
+  global: true
+- version: 5
+  uid: plugins_bsLWVUP3K5-of_ign6WRgRH7F24
+  name: plugins:grafana-sigil-app:sigil-feedback-writer
+  displayName: Sigil Feedback Writer
+  description: Can write conversation feedback (ratings and annotations).
+  group: AI Observability
+  updated: '2026-07-27T13:14:11Z'
+  created: '2026-04-22T06:35:26Z'
+  global: true
+- version: 5
+  uid: plugins_23uEHsmOGZ9CXyyyB4rN8U94kqQ
+  name: plugins:grafana-sigil-app:sigil-admin
+  displayName: Sigil Admin
+  description: Full Sigil plugin access, including feedback, evaluation, and datasource
+    settings writes.
+  group: AI Observability
+  updated: '2026-07-27T13:14:11Z'
+  created: '2026-04-22T06:35:26Z'
+  global: true
+- version: 1
+  uid: fixed_F7hCWhf_LtlXdROvtizDXZlhpBw
+  name: fixed:playlists:reader
+  displayName: Reader
+  description: Read and list playlists.
+  group: Playlists
+  updated: '2026-04-22T11:19:10Z'
+  created: '2026-04-22T11:19:10Z'
+  global: true
+- version: 1
+  uid: fixed_8sLPV9RM3THrLbzVMA428SzYyHw
+  name: fixed:playlists:writer
+  displayName: Writer
+  description: Create, update, and delete playlists.
+  group: Playlists
+  updated: '2026-04-22T11:19:10Z'
+  created: '2026-04-22T11:19:10Z'
+  global: true
+- version: 1
+  uid: plugins_Yp95MZlmGcmtV5AOvNSIF6AYbg0
+  name: plugins:grafana-easystart-app:integrations-reader
+  displayName: Integrations Reader
+  description: Read-only access to browse integrations catalog
+  group: Integrations and Connections
+  updated: '2026-04-28T14:04:40Z'
+  created: '2026-04-28T14:04:40Z'
+  global: true
+- version: 1
+  uid: plugins_gzT_WKezxWdMfH2u9ikMd258aNw
+  name: plugins:grafana-adaptivelogs-app:archive-reader
+  displayName: Archive Reader
+  description: Read access to archive configuration, rules, and replay in Adaptive
+    Logs
+  group: Adaptive Logs
+  updated: '2026-05-05T18:43:49Z'
+  created: '2026-05-05T18:43:49Z'
+  global: true
+- version: 1
+  uid: plugins_ZuwlJQfdcIbQXuWAI4ohMJbfjrk
+  name: plugins:grafana-adaptivelogs-app:archive-configuration-admin
+  displayName: Archive Configuration Admin
+  description: Write access to archive configuration in Adaptive Logs
+  group: Adaptive Logs
+  updated: '2026-05-05T18:43:49Z'
+  created: '2026-05-05T18:43:49Z'
+  global: true
+- version: 1
+  uid: plugins_foROCuHp0r9dOofQZGnRKnEQTp8
+  name: plugins:grafana-adaptivelogs-app:archive-rules-editor
+  displayName: Archive Rules Editor
+  description: Write access to archive rules in Adaptive Logs
+  group: Adaptive Logs
+  updated: '2026-05-05T18:43:49Z'
+  created: '2026-05-05T18:43:49Z'
+  global: true
+- version: 1
+  uid: plugins_otWREOmnHf2kRKXvqMc4ayjYSM8
+  name: plugins:grafana-adaptivelogs-app:archive-replay-controller
+  displayName: Archive Replay Controller
+  description: Create and delete archive replay requests in Adaptive Logs
+  group: Adaptive Logs
+  updated: '2026-05-05T18:43:49Z'
+  created: '2026-05-05T18:43:49Z'
+  global: true
+- version: 1
+  uid: fixed_tKsnflM69PHBFvDKdlsuXVvdwG0
+  name: fixed:alerting.alertmanager-imports:writer
+  displayName: Alerting alertmanager imports writer
+  description: Read, write, and delete Prometheus/Mimir-compatible alertmanager configurations
+    imported via the convert API.
+  group: Alerting
+  updated: '2026-05-12T10:53:19Z'
+  created: '2026-05-12T10:53:19Z'
+  global: true
+- version: 3
+  uid: team-network-viewer
+  name: team-network-viewer
+  description: Read-only access to the Team Network folder, its dashboards, and the
+    shared Mimir/Loki datasources.
+  group: ''
+  updated: '2026-06-25T05:54:02Z'
+  created: '2026-06-25T05:53:20Z'
+  global: true
+- version: 1
+  uid: alerting_admin
+  name: alerting_admin
+  description: Alerting administration persona
+  group: ''
+  updated: '2026-06-25T06:35:49Z'
+  created: '2026-06-25T06:35:49Z'
+  global: true
+- version: 1
+  uid: dashboard_folder_writer
+  name: dashboard_folder_writer
+  description: Dashboard and folder authoring
+  group: ''
+  updated: '2026-06-25T06:35:54Z'
+  created: '2026-06-25T06:35:54Z'
+  global: true
+- version: 1
+  uid: governance_reader
+  name: governance_reader
+  description: RBAC, users, teams, and service-account governance visibility
+  group: ''
+  updated: '2026-06-25T06:35:57Z'
+  created: '2026-06-25T06:35:57Z'
+  global: true
+- version: 1
+  uid: grafana_admin_full
+  name: grafana_admin_full
+  description: Full Grafana administration (assign sparingly)
+  group: ''
+  updated: '2026-06-25T06:36:04Z'
+  created: '2026-06-25T06:36:04Z'
+  global: true
+- version: 1
+  uid: plugin_operator
+  name: plugin_operator
+  description: Synthetic monitoring, incident, and k6 plugin operator
+  group: ''
+  updated: '2026-06-25T06:36:09Z'
+  created: '2026-06-25T06:36:09Z'
+  global: true
+- version: 1
+  uid: ai_ml_viewer
+  name: ai_ml_viewer
+  description: Grafana AI/ML and Sift investigation access
+  group: ''
+  updated: '2026-06-25T06:36:11Z'
+  created: '2026-06-25T06:36:11Z'
+  global: true
+- version: 1
+  uid: alerting_writer
+  name: alerting_writer
+  description: Alerting and folder writer persona
+  group: ''
+  updated: '2026-06-25T06:36:14Z'
+  created: '2026-06-25T06:36:14Z'
+  global: true
+- version: 1
+  uid: reports_author
+  name: reports_author
+  description: Create and manage scheduled PDF reports
+  group: ''
+  updated: '2026-06-25T06:36:16Z'
+  created: '2026-06-25T06:36:16Z'
+  global: true
+- version: 1
+  uid: adaptive_editor
+  name: adaptive_editor
+  description: Access and manage Adaptive Metrics/Logs for the team only.
+  group: ''
+  updated: '2026-06-25T06:36:20Z'
+  created: '2026-06-25T06:36:20Z'
+  global: true
+- version: 2
+  uid: plugins_Eit_lnlQbNEqwPZlqYpuI-NY0q8
+  name: plugins:grafana-assistant-app:gcx-user
+  displayName: gcx User
+  description: Can authorize gcx CLI connections to Grafana.
+  group: AI
+  updated: '2026-08-20T07:44:36Z'
+  created: '2026-06-25T07:21:44Z'
+  global: true
+- version: 1
+  uid: fixed_81ewa_t30G_KtKCYXLOlhYoixbg
+  name: fixed:alerting.notifications.config:reader
+  displayName: Alerting Notifications Config Reader
+  description: Read the alerting notifications configuration, including external Alertmanager
+    sync state.
+  group: Alerting
+  updated: '2026-06-30T11:06:38Z'
+  created: '2026-06-30T11:06:38Z'
+  global: true
+- version: 1
+  uid: fixed_JUJgqtKuWByW6o3ggE73E7yioas
+  name: fixed:alerting.notifications.config:writer
+  displayName: Alerting Notifications Config Writer
+  description: Update the alerting notifications configuration, including the external
+    Alertmanager sync target.
+  group: Alerting
+  updated: '2026-06-30T11:06:38Z'
+  created: '2026-06-30T11:06:38Z'
+  global: true
+- version: 1
+  uid: fixed_rZDjMdg2EKplV0xKrPa5rPlRm0M
+  name: fixed:dashboardtemplates:reader
+  displayName: Reader
+  description: Read dashboard templates.
+  group: Dashboard templates
+  updated: '2026-07-14T12:10:12Z'
+  created: '2026-07-14T12:10:12Z'
+  global: true
+- version: 1
+  uid: fixed_6t8K_lMFeGl9c8k-pWOD-CDgN9M
+  name: fixed:dashboardtemplates:writer
+  displayName: Writer
+  description: Create, update, and delete dashboard templates.
+  group: Dashboard templates
+  updated: '2026-07-14T12:10:12Z'
+  created: '2026-07-14T12:10:12Z'
+  global: true
+- version: 1
+  uid: fixed_hDoUz8FNyHUJT6jOczgdba_uh_Y
+  name: fixed:plugins.plugins:reader
+  displayName: Plugins Reader
+  description: Read and list plugins.
+  group: Plugins
+  updated: '2026-07-21T15:25:07Z'
+  created: '2026-07-21T15:25:07Z'
+  global: true
+- version: 1
+  uid: fixed_Tr_xPvXFUGa4gSEQbpX6-WFoRJM
+  name: fixed:plugins.plugins:writer
+  displayName: Plugins Writer
+  description: Create, update and delete plugins.
+  group: Plugins
+  updated: '2026-07-21T15:25:07Z'
+  created: '2026-07-21T15:25:07Z'
+  global: true
+- version: 1
+  uid: fixed_2W6tVsL0_zJuBka0iV1CNe5NEvY
+  name: fixed:plugins.metas:reader
+  displayName: Plugin Metas Reader
+  description: Read and list plugin metadata.
+  group: Plugins
+  updated: '2026-07-21T15:25:07Z'
+  created: '2026-07-21T15:25:07Z'
+  global: true
+- version: 1
+  uid: fixed_4qx5G08ghnMptZB_dTk5Y8ZG7mo
+  name: fixed:plugins.metas:writer
+  displayName: Plugin Metas Writer
+  description: Create, update and delete plugin metadata.
+  group: Plugins
+  updated: '2026-07-21T15:25:07Z'
+  created: '2026-07-21T15:25:07Z'
+  global: true
+- version: 1
+  uid: f9bb20c1-2dad-49eb-8919-08bf7117bd84
+  name: fixed:maintwindows.ext.grafana.app:maint-windows:viewer
+  displayName: maint-windows Viewer
+  description: Read MaintenanceEvents
+  group: maint-windows
+  updated: '2026-07-21T15:25:07Z'
+  created: '2026-07-21T15:25:07Z'
+  global: true
+- version: 1
+  uid: af73147c-f0f2-434a-91c4-0366df975e25
+  name: fixed:maintwindows.ext.grafana.app:maint-windows:admin
+  displayName: maint-windows Admin
+  description: Allows all actions on MaintenanceEvents
+  group: maint-windows
+  updated: '2026-07-21T15:25:07Z'
+  created: '2026-07-21T15:25:07Z'
+  global: true
+- version: 1
+  uid: plugins_7MtL7FuCMKcKS3zI5vUeXJ00wg8
+  name: plugins:grafana-agento11y-app:agento11y-viewer
+  displayName: Agento11y Viewer
+  description: Read access to Agento11y landing page and tutorial.
+  group: Agent Observability
+  updated: '2026-07-24T02:54:39Z'
+  created: '2026-07-24T02:54:39Z'
+  global: true
+- version: 1
+  uid: plugins_T6exmFqLcMoS_Cxn3vutRSPQVRo
+  name: plugins:grafana-agento11y-app:agento11y-data-reader
+  displayName: Agento11y Data Reader
+  description: Read access to Agento11y dashboards, traces, model cards, and evaluation
+    pages without conversation access.
+  group: Agent Observability
+  updated: '2026-07-24T02:54:39Z'
+  created: '2026-07-24T02:54:39Z'
+  global: true
+- version: 1
+  uid: plugins_GrA1M7xq4UU3SItsBery64lEtvw
+  name: plugins:grafana-agento11y-app:agento11y-reader
+  displayName: Agento11y Reader
+  description: Read access to Agento11y dashboards, conversations, traces, model cards,
+    and evaluation pages.
+  group: Agent Observability
+  updated: '2026-07-24T02:54:39Z'
+  created: '2026-07-24T02:54:39Z'
+  global: true
+- version: 1
+  uid: plugins_9WYjF-Ne_Xy9mB6mHAPU5wjBwCg
+  name: plugins:grafana-agento11y-app:agento11y-feedback-writer
+  displayName: Agento11y Feedback Writer
+  description: Can write conversation feedback (ratings and annotations).
+  group: Agent Observability
+  updated: '2026-07-24T02:54:39Z'
+  created: '2026-07-24T02:54:39Z'
+  global: true
+- version: 3
+  uid: plugins_S9g5YYGWFpQhVU6vzlGzEvDyLCw
+  name: plugins:grafana-agento11y-app:agento11y-admin
+  displayName: Agento11y Admin
+  description: Full Agento11y plugin access, including feedback, evaluation, guards,
+    policy services, and datasource settings writes.
+  group: Agent Observability
+  updated: '2026-08-18T12:07:15Z'
+  created: '2026-07-24T02:54:39Z'
+  global: true
+- version: 2
+  uid: 85f65593-ee40-4607-b5aa-6dfce96fe0de
+  name: fixed:pathfinderbackend.ext.grafana.app:pathfinder-backend:completion-writer
+  displayName: Pathfinder Completion Writer
+  description: Record guide completions
+  group: Pathfinder
+  updated: '2026-08-13T15:33:22Z'
+  created: '2026-07-28T11:31:57Z'
+  global: true
+- version: 2
+  uid: 70ea95cc-df73-439d-8a90-6da7c036a80b
+  name: fixed:pathfinderbackend.ext.grafana.app:pathfinder-backend:guide-editor
+  displayName: Pathfinder Guide Editor
+  description: Author interactive guides
+  group: Pathfinder
+  updated: '2026-08-13T15:33:22Z'
+  created: '2026-07-28T11:31:57Z'
+  global: true
+- version: 2
+  uid: 5c3d985b-cb49-4199-9f66-25672a46648d
+  name: fixed:pathfinderbackend.ext.grafana.app:pathfinder-backend:reader
+  displayName: Pathfinder Reader
+  description: Read interactive guides
+  group: Pathfinder
+  updated: '2026-08-13T15:33:22Z'
+  created: '2026-07-28T11:31:57Z'
+  global: true
+- version: 1
+  uid: fixed_h8fbh151mNilx5Mo1GJjOAOOGg0
+  name: fixed:smtp.settings:writer
+  displayName: SMTP settings writer
+  description: Read and update the Grafana instance's SMTP configuration.
+  group: Settings
+  updated: '2026-08-04T10:48:46Z'
+  created: '2026-08-04T10:48:46Z'
+  global: true
+- version: 1
+  uid: fixed_OJK8YPYtDzrqOo3HadDF7kSyKR0
+  name: fixed:advisor.translations:reader
+  displayName: Advisor Translations Reader
+  description: Read advisor UI translations.
+  group: Advisor
+  updated: '2026-08-25T10:30:56Z'
+  created: '2026-08-25T10:30:56Z'
+  global: true
+- version: 2
+  uid: dfwcuvkgaqa68b
+  name: custom:datasources:loki-lbac:query
+  displayName: Loki LBAC Query Permission
+  description: ''
+  group: ''
+  updated: '2026-08-26T15:06:31Z'
+  created: '2026-08-26T15:01:17Z'
+  global: false
+- version: 1
+  uid: 752c2b1d-dcc2-4395-85ff-1a514a88e21e
+  name: fixed:kgatlas.ext.grafana.app:kg-atlas:reader
+  displayName: kg-atlas Reader
+  description: Read KgSchemas and SystemKgSchemas
+  group: kg-atlas
+  updated: '2026-08-27T21:40:16Z'
+  created: '2026-08-27T21:40:16Z'
+  global: true
+- version: 1
+  uid: 36022ba8-e39e-4d22-8a7e-e2197eab4f15
+  name: fixed:kgatlas.ext.grafana.app:kg-atlas:admin
+  displayName: kg-atlas Admin
+  description: Allows all actions on KgSchemas and SystemKgSchemas
+  group: kg-atlas
+  updated: '2026-08-27T21:40:16Z'
+  created: '2026-08-27T21:40:16Z'
+  global: true
+- version: 1
+  uid: e7d54e58-f33c-470f-b972-3fc2c1fff545
+  name: fixed:kgatlas.ext.grafana.app:kg-atlas:editor
+  displayName: kg-atlas Editor
+  description: Create, Read, Update, and Delete KgSchemas and SystemKgSchemas
+  group: kg-atlas
+  updated: '2026-08-27T21:40:16Z'
+  created: '2026-08-27T21:40:16Z'
+  global: true

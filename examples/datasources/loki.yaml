@@ -1,0 +1,22 @@
+# Example: Production Loki Datasource with Permissions & Custom Labels
+name: Production Loki
+type: loki
+uid: prod-loki
+url: http://loki-gateway.monitoring.svc.cluster.local:3100
+isDefault: false
+owner: platform
+labels:
+  environment: production
+  domain: logging
+  tier: logs
+jsonData:
+  maxLines: 5000
+permissions:
+  - permission: Admin
+    team: admins
+  - permission: Query
+    team: sre
+  - permission: Query
+    serviceAccount: log-downloader
+  - permission: Query
+    builtInRole: Viewer

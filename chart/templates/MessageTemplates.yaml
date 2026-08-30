@@ -1,0 +1,18 @@
+{{- if and .Values.alerting (default true .Values.alerting.enabled) }}
+{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "message-templates") | fromYaml).items | default list }}
+{{- range $f := $files }}
+  {{- $items := $f.parsed.messageTemplates | default $f.parsed.templates | default list }}
+  {{- range $item := $items }}
+---
+apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
+kind: MessageTemplate
+{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $item.name) "wave" "2" "owner" $item.owner "root" $) -}}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    name: {{ $item.name | quote }}
+    template: {{ if hasKey $item "template" }}{{ $item.template | quote }}{{ else }}{{ $item.content | default "" | quote }}{{ end }}
+    disableProvenance: {{ if hasKey $item "disableProvenance" }}{{ $item.disableProvenance }}{{ else }}true{{ end }}
+  {{- end }}
+{{- end }}
+{{- end }}

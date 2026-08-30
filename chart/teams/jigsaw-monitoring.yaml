@@ -1,0 +1,12 @@
+name: jigsaw-monitoring
+preset: observability_viewer
+syncGroups:
+- e30a074a-6db5-43cf-9b5c-cb665dadaffb
+folderPermissions:
+- folder: jigsaw-monitoring
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="osttra", product_name="jigsaw" }'

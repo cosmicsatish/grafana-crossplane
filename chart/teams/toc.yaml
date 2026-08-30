@@ -1,0 +1,16 @@
+name: TOC
+presets:
+- editor
+- alerting_manager
+- reports_editor
+syncGroups:
+- e0456184-7a0e-436d-ba46-0b1a134a66e6
+folderPermissions:
+- folder: toc
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit!="reset", business_unit!="trioptima", business_unit!="osttra" }'
+email: traiana-noc@osttra.com

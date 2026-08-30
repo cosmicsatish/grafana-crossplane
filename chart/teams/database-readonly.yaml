@@ -1,0 +1,12 @@
+name: database readonly
+preset: observability_viewer
+syncGroups:
+- d1fa8fec-1ca1-455b-b9d9-04a60c70d4db
+folderPermissions:
+- folder: database-readonly
+  permission: Edit
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="osttra", product_name="database" }'

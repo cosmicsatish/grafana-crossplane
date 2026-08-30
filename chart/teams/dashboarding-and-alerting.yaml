@@ -1,0 +1,11 @@
+name: Dashboarding and Alerting
+presets:
+- dashboard_editor
+- alerting_manager
+roles:
+- fixed:library.panels:reader
+syncGroups:
+- 77bb500c-7833-4f9e-9d22-263a232f05a1
+folderPermissions:
+- folder: dashboarding-and-alerting
+  permission: Admin

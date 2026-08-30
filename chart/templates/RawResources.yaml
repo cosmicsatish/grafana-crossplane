@@ -1,0 +1,10 @@
+{{- if and .Values.rawResources (default true .Values.rawResources.enabled) }}
+{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "resources") | fromYaml).items | default list }}
+{{- range $f := $files }}
+  {{- $r := $f.parsed }}
+  {{- if and $r.apiVersion $r.kind $r.metadata $r.spec }}
+---
+{{ toYaml $r }}
+  {{- end }}
+{{- end }}
+{{- end }}

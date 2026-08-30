@@ -1,0 +1,42 @@
+{{- if and .Values.teams (default true .Values.teams.enabled) }}
+{{- $teams := (include "grafana-admin-platform.teamsList" . | fromYaml).teams | default list }}
+{{- range $team := $teams }}
+{{- $name := $team.name | required "team.name is required" }}
+{{- $slug := $team.slug | default (include "grafana-admin-platform.slugify" $name) }}
+---
+apiVersion: oss.grafana.m.crossplane.io/v1alpha1
+kind: Team
+metadata:
+  name: {{ $slug | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  labels:
+    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- with $team.owner }}owner: {{ . | quote }}{{ end }}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    name: {{ $name | quote }}
+    {{- with $team.email }}
+    email: {{ . | quote }}
+    {{- end }}
+{{- if $team.syncGroups }}
+---
+apiVersion: enterprise.grafana.m.crossplane.io/v1alpha1
+kind: TeamExternalGroup
+metadata:
+  name: {{ printf "%s-external-groups" $slug | trunc 63 | trimSuffix "-" | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    teamRef:
+      name: {{ $slug | quote }}
+    groups:
+      {{- toYaml $team.syncGroups | nindent 6 }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,10 @@
+# Example Service Account Definition
+serviceAccounts:
+  - name: payments-ci-bot
+    resourceName: payments-ci-bot
+    role: Viewer
+    secretName: payments-ci-token
+    tokenExpires: 1y # Human-readable duration: 30d, 90d, 6m, 1y, 2y
+    fixedRoles:
+      - fixed:folders:reader
+      - fixed:dashboards:reader

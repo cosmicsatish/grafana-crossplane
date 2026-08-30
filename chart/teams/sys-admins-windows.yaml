@@ -1,0 +1,7 @@
+name: sys admins windows
+preset: observability_viewer
+syncGroups:
+- 69c0d1eb-e10c-4c6e-b353-c40d12e96472
+folderPermissions:
+- folder: sys-admins-windows
+  permission: Admin

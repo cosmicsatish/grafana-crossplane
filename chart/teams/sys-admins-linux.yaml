@@ -1,0 +1,12 @@
+name: sys admins linux
+preset: observability_viewer
+syncGroups:
+- ca81db7f-5374-4b53-90d2-e5658e3cb9cb
+folderPermissions:
+- folder: sys-admins-linux
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="osttra", product_name="sysadmin-linux" }'

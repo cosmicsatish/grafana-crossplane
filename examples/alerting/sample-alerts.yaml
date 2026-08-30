@@ -1,0 +1,99 @@
+# Comprehensive Example Alerting Definitions
+# Fully compatible with Grafana Alerting Provisioning (human-editable in UI)
+
+contactPoints:
+  - name: sample-slack-alerts
+    owner: platform
+    slack:
+      - endpointUrl: "https://hooks.slack.com/services/REPLACE_WITH_SLACK_WEBHOOK"
+        title: '{{ template "sample.alert.title" . }}'
+        text: '{{ template "sample.alert.message" . }}'
+
+  - name: sample-email-alerts
+    owner: platform
+    email:
+      - addresses:
+          - "oncall-team@example.com"
+        singleEmail: true
+
+  - name: sample-pagerduty-alerts
+    owner: platform
+    pagerduty:
+      - integrationKey: "REPLACE_WITH_PAGERDUTY_INTEGRATION_KEY"
+        severity: "critical"
+
+muteTimings:
+  - name: sample-weekend-maintenance
+    owner: platform
+    intervals:
+      - weekdays: ["sunday"]
+        times:
+          - start: "02:00"
+            end: "04:00"
+
+messageTemplates:
+  - name: sample-alert-template
+    owner: platform
+    template: |
+      {{ define "sample.alert.title" }}
+        [{{ .Status | toUpper }}] {{ .CommonLabels.alertname }} ({{ .CommonLabels.severity }})
+      {{ end }}
+      {{ define "sample.alert.message" }}
+        Summary: {{ .CommonAnnotations.summary }}
+        Description: {{ .CommonAnnotations.description }}
+        Runbook: {{ .CommonAnnotations.runbook_url }}
+      {{ end }}
+
+notificationPolicies:
+  - name: sample-notification-policy
+    owner: platform
+    contactPoint: sample-email-alerts
+    groupWait: "30s"
+    groupInterval: "5m"
+    repeatInterval: "4h"
+    groupBy:
+      - "alertname"
+      - "grafana_folder"
+    policy:
+      - contactPoint: sample-slack-alerts
+        matcher:
+          - label: "severity"
+            match: "="
+            value: "warning"
+      - contactPoint: sample-pagerduty-alerts
+        matcher:
+          - label: "severity"
+            match: "="
+            value: "critical"
+
+ruleGroups:
+  - name: sample-platform-alerts
+    folderUid: sre
+    intervalSeconds: 60
+    owner: platform
+    rules:
+      - name: HighCPUUsageSample
+        condition: B
+        for: 5m
+        annotations:
+          summary: "Instance CPU usage above 90%"
+          description: "CPU usage exceeded 90% threshold for more than 5 minutes."
+          runbook_url: "https://wiki.example.com/ops/cpu-alerts"
+        labels:
+          severity: critical
+          team: sre
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              - from: 600
+                to: 0
+            datasourceUid: "grafanacloud-prom"
+            model: '{"editorMode":"code","expr":"100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)","instant":true,"range":false,"refId":"A"}'
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              - from: 600
+                to: 0
+            datasourceUid: "-100"
+            model: '{"conditions":[{"evaluator":{"params":[90],"type":"gt"},"operator":{"type":"and"},"query":{"params":["A"]},"reducer":{"params":[],"type":"last"},"type":"query"}],"datasource":{"name":"Expression","type":"__expr__","uid":"__expr__"},"expression":"A","hide":false,"intervalMs":1000,"maxDataPoints":43200,"refId":"B","type":"threshold"}'

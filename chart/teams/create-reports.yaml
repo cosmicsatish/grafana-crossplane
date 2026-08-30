@@ -1,0 +1,9 @@
+name: Create Reports
+presets:
+- observability_viewer
+- reports_editor
+syncGroups:
+- ed72c4d2-7df2-4b2a-b1af-54d75f075cf0
+folderPermissions:
+- folder: create-reports
+  permission: Admin

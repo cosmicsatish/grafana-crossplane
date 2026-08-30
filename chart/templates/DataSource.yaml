@@ -1,0 +1,50 @@
+{{- if and .Values.datasources (default true .Values.datasources.enabled) }}
+{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "datasources") | fromYaml).items | default list }}
+{{- $list := list }}
+{{- range $f := $files }}
+  {{- $d := $f.parsed }}
+  {{- if $d.datasources }}{{ $list = concat $list $d.datasources }}
+  {{- else if $d.dataSources }}{{ $list = concat $list $d.dataSources }}
+  {{- else if and (not $d.apiVersion) $d.name }}{{ $list = append $list $d }}
+  {{- else if kindIs "slice" $d }}{{ $list = concat $list $d }}
+  {{- end }}
+{{- end }}
+{{- with .Values.datasourcesList }}{{- if kindIs "slice" . }}{{ $list = concat $list . }}{{ end }}{{- end }}
+{{- range $d := $list }}
+  {{- $name := $d.name | required "datasource.name is required" }}
+  {{- $slug := $d.resourceName | default (include "grafana-admin-platform.slugify" $name) }}
+---
+apiVersion: oss.grafana.m.crossplane.io/v1alpha1
+kind: DataSource
+metadata:
+  name: {{ $slug | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  labels:
+    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    name: {{ $name | quote }}
+    uid: {{ $d.uid | default $slug | quote }}
+    {{- with $d.type }}type: {{ . | quote }}{{ end }}
+    {{- with $d.url }}url: {{ . | quote }}{{ end }}
+    {{- $access := $d.accessMode | default $d.access | default "proxy" }}
+    {{- if $access }}accessMode: {{ $access | quote }}{{ end }}
+    {{- with ($d.basicAuthEnabled | default $d.basicAuth) }}basicAuthEnabled: {{ . }}{{ end }}
+    {{- with ($d.basicAuthUsername | default $d.basicAuthUser) }}basicAuthUsername: {{ . | quote }}{{ end }}
+    {{- with $d.database }}databaseName: {{ . | quote }}{{ end }}
+    {{- with $d.jsonData }}jsonDataEncoded: {{ toJson . | quote }}{{ end }}
+    {{- with $d.jsonDataEncoded }}jsonDataEncoded: {{ . | quote }}{{ end }}
+    {{- with $d.secureJsonDataEncoded }}secureJsonDataEncoded: {{ . | quote }}{{ end }}
+    {{- with $d.httpHeadersSecretRef }}httpHeadersSecretRef:
+      {{- toYaml . | nindent 6 }}{{ end }}
+    {{- with $d.passwordSecretRef }}passwordSecretRef:
+      {{- toYaml . | nindent 6 }}{{ end }}
+    {{- with $d.basicAuthPasswordSecretRef }}basicAuthPasswordSecretRef:
+      {{- toYaml . | nindent 6 }}{{ end }}
+    {{- with $d.isDefault }}isDefault: {{ . }}{{ end }}
+    {{- with $d.editable }}editable: {{ . }}{{ end }}
+    {{- with $d.readOnly }}readOnly: {{ . }}{{ end }}
+  {{- end }}
+{{- end }}

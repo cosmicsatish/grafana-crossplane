@@ -1,0 +1,7 @@
+name: NFT Team
+preset: observability_viewer
+syncGroups:
+- 56930fcb-a7eb-410d-b2b7-a365bb511993
+folderPermissions:
+- folder: nft-team
+  permission: Admin

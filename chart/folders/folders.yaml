@@ -1,0 +1,218 @@
+# ==============================================================================
+# GRAFANA FOLDERS & PERMISSIONS
+# ==============================================================================
+# Each folder automatically derives its UID from its title.
+# Permissions support: BasicRole (Viewer/Editor/Admin), Team, or User.
+# ==============================================================================
+
+folders:
+
+  - title: Osttra
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Teams
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: SRE
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: DBS Leads
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: DBS Contributors
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: ElasticSearch
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: TOC
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Admins
+    permissions:
+    - role: Admin
+      permission: Admin
+
+  - title: All viewers
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Application Support
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Cyber Security Team
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Dashboarding and Alerting
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Create Reports
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: database readonly
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Editors
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: euc
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: fortimail
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: GrafanaAdmin
+    permissions:
+    - role: Admin
+      permission: Admin
+
+  - title: group admins
+    permissions:
+    - role: Admin
+      permission: Admin
+
+  - title: InfoSec
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: jigsaw-monitoring
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Network
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: NFT Team
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: operation-automation
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: optapi
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: pengraven
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Private Cloud
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Product Management
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Reset
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: sys admins linux
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: sys admins storage
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: sys admins windows
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: traiana-connectivity-dev
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: traiana-credit-dev
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: Traiana CSM
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: traiana-fx-dev
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: triBalance
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: triCalculate
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: triQA
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: triReduce
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: triResolve-core
+    permissions:
+    - role: Viewer
+      permission: View
+
+  - title: triResolve-margin
+    permissions:
+    - role: Viewer
+      permission: View

@@ -1,0 +1,12 @@
+name: triBalance
+preset: observability_viewer
+syncGroups:
+- a5a73041-945a-4cb7-a5ec-080bf595f9c4
+folderPermissions:
+- folder: tribalance
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="trioptima", product_name="tribalance" }'

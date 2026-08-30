@@ -1,0 +1,12 @@
+name: operation-automation
+preset: observability_viewer
+syncGroups:
+- d6a12ee2-a270-4f11-9fa5-025531fa4a2a
+folderPermissions:
+- folder: operation-automation
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="osttra", product_name="operation-automation" }'

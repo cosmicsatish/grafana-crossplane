@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: grafana-admin
+  namespace: argocd
+spec:
+  description: Grafana GitOps control plane managed by Helm and Crossplane
+  sourceRepos:
+    - "https://github.com/cosmicsatish/grafana-gitops-control-plane.git"
+  destinations:
+    - namespace: crossplane-system
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: grafana.m.crossplane.io
+      kind: ProviderConfig
+  namespaceResourceWhitelist:
+    - group: oss.grafana.m.crossplane.io
+      kind: "*"
+    - group: enterprise.grafana.m.crossplane.io
+      kind: "*"
+    - group: alerting.grafana.m.crossplane.io
+      kind: "*"
+    - group: slo.grafana.m.crossplane.io
+      kind: "*"
+    - group: sm.grafana.m.crossplane.io
+      kind: "*"
+    - group: cloud.grafana.m.crossplane.io
+      kind: "*"

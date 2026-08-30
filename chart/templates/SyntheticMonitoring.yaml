@@ -1,0 +1,28 @@
+{{- if and .Values.syntheticMonitoring (default true .Values.syntheticMonitoring.enabled) }}
+{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "synthetic-monitoring") | fromYaml).items | default list }}
+{{- range $f := $files }}
+  {{- range $item := ($f.parsed.checks | default list) }}
+---
+apiVersion: sm.grafana.m.crossplane.io/v1alpha1
+kind: Check
+metadata:
+  name: {{ include "grafana-admin-platform.slugify" ($item.job | default $item.name) | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- with $item.owner }}owner: {{ . | quote }}{{ end }}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    job: {{ $item.job | quote }}
+    target: {{ $item.target | quote }}
+    frequency: {{ $item.frequency | default 60000 }}
+    timeout: {{ $item.timeout | default 5000 }}
+    enabled: {{ if hasKey $item "enabled" }}{{ $item.enabled }}{{ else }}true{{ end }}
+    probes:
+      {{- toYaml ($item.probes | default list) | nindent 6 }}
+    {{- with $item.settings }}settings: {{- toYaml . | nindent 6 }}{{ end }}
+{{- end }}
+{{- end }}
+{{- end }}

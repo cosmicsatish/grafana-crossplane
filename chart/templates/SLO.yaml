@@ -1,0 +1,33 @@
+{{- if and .Values.slos (default true .Values.slos.enabled) }}
+{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "slos") | fromYaml).items | default list }}
+{{- range $f := $files }}
+  {{- range $item := ($f.parsed.slos | default list) }}
+---
+apiVersion: slo.grafana.m.crossplane.io/v1alpha1
+kind: SLO
+metadata:
+  name: {{ include "grafana-admin-platform.slugify" $item.name | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- with $item.owner }}owner: {{ . | quote }}{{ end }}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    name: {{ $item.name | quote }}
+    {{- with $item.description }}description: {{ . | quote }}{{ end }}
+    {{- with $item.destinationDatasource }}destinationDatasource: {{- toYaml . | nindent 6 }}{{ end }}
+    objectives:
+      {{- toYaml ($item.objectives | default list) | nindent 6 }}
+    {{- if $item.query }}
+    query:
+      {{- toYaml $item.query | nindent 6 }}
+    {{- else if $item.queries }}
+    query:
+      {{- toYaml $item.queries | nindent 6 }}
+    {{- end }}
+    {{- with $item.alertings }}alertings: {{- toYaml . | nindent 6 }}{{ end }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,50 @@
+{{- if and .Values.dashboards (default true .Values.dashboards.enabled) }}
+{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "dashboards") | fromYaml).items | default list }}
+{{- range $f := $files }}
+  {{- $raw := $f.parsed }}
+  {{- $data := $raw.dashboard | default $raw }}
+  {{- $base := base $f.path | trimSuffix ".json" | trimSuffix ".yaml" | trimSuffix ".yml" }}
+  {{- $meta := $raw.meta | default dict }}
+  {{- $folderName := $data.folderTitle | default $data.folderName | default $raw.folderTitle | default $raw.folderName | default $meta.folderName }}
+  {{- $folderPath := include "grafana-admin-platform.folderPath" (dict "path" $f.path) }}
+  {{- $folderRequested := $data.folderUid | default $raw.folderUid | default ($folderName | default $folderPath) | default "" }}
+  {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "root" $) }}
+  {{- $slug := include "grafana-admin-platform.slugify" ($data.uid | default $raw.uid | default (get ($data.metadata | default dict) "name") | default $base) }}
+  {{- if and $data.apiVersion (hasPrefix "dashboard.grafana.app/" $data.apiVersion) }}
+---
+apiVersion: oss.grafana.m.crossplane.io/v1alpha1
+kind: DashboardV2
+metadata:
+  name: {{ $slug | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    metadata:
+      name: {{ get ($data.metadata | default dict) "name" | default $slug | quote }}
+    {{- if $folder }}folderUid: {{ $folder | quote }}{{ end }}
+    spec:
+      {{- toYaml ($data.spec | default dict) | nindent 6 }}
+  {{- else }}
+---
+apiVersion: oss.grafana.m.crossplane.io/v1alpha1
+kind: Dashboard
+metadata:
+  name: {{ $slug | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    configJson: {{ ($data | toJson) | quote }}
+    overwrite: true
+    {{- if $folder }}folderRef:
+      name: {{ $folder | quote }}{{ end }}
+  {{- end }}
+{{- end }}
+{{- end }}

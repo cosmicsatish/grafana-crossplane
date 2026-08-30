@@ -1,0 +1,145 @@
+{
+    "expr": "",
+    "for": "5m",
+    "keep_firing_for": "0s",
+    "labels": {
+        "__converted_prometheus_rule__": "true",
+        "os": "linux",
+        "severity": "critical"
+    },
+    "annotations": {
+        "summary": "Linux CPU Critical >90% on {{ $labels.instance }}"
+    },
+    "grafana_alert": {
+        "title": "LinuxCPUHighUsage_Critical",
+        "condition": "threshold",
+        "data": [
+            {
+                "refId": "query",
+                "queryType": "prometheus",
+                "relativeTimeRange": {
+                    "from": 660,
+                    "to": 60
+                },
+                "datasourceUid": "grafanacloud-prom",
+                "model": {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "grafanacloud-prom"
+                    },
+                    "expr": "sum without (mode) (avg without (cpu) (rate(node_cpu_seconds_total{mode!~\"idle|iowait\"}[5m]))) * 100 > 90",
+                    "instant": true,
+                    "intervalMs": 1000,
+                    "maxDataPoints": 43200,
+                    "range": false,
+                    "refId": "query"
+                }
+            },
+            {
+                "refId": "prometheus_math",
+                "queryType": "math",
+                "relativeTimeRange": {
+                    "from": 0,
+                    "to": 0
+                },
+                "datasourceUid": "__expr__",
+                "model": {
+                    "datasource": {
+                        "IsPrunable": false,
+                        "access": "",
+                        "apiVersion": "",
+                        "basicAuth": false,
+                        "basicAuthUser": "",
+                        "created": "0001-01-01T00:00:00Z",
+                        "database": "",
+                        "id": -100,
+                        "isDefault": false,
+                        "jsonData": {},
+                        "name": "__expr__",
+                        "readOnly": false,
+                        "secureJsonData": {},
+                        "type": "__expr__",
+                        "uid": "__expr__",
+                        "updated": "0001-01-01T00:00:00Z",
+                        "url": "",
+                        "user": "",
+                        "withCredentials": false
+                    },
+                    "expression": "is_number($query) || is_nan($query) || is_inf($query)",
+                    "intervalMs": 1000,
+                    "maxDataPoints": 43200,
+                    "refId": "prometheus_math",
+                    "type": "math"
+                }
+            },
+            {
+                "refId": "threshold",
+                "queryType": "threshold",
+                "relativeTimeRange": {
+                    "from": 0,
+                    "to": 0
+                },
+                "datasourceUid": "__expr__",
+                "model": {
+                    "conditions": [
+                        {
+                            "evaluator": {
+                                "params": [
+                                    0
+                                ],
+                                "type": "gt"
+                            }
+                        }
+                    ],
+                    "datasource": {
+                        "IsPrunable": false,
+                        "access": "",
+                        "apiVersion": "",
+                        "basicAuth": false,
+                        "basicAuthUser": "",
+                        "created": "0001-01-01T00:00:00Z",
+                        "database": "",
+                        "id": -100,
+                        "isDefault": false,
+                        "jsonData": {},
+                        "name": "__expr__",
+                        "readOnly": false,
+                        "secureJsonData": {},
+                        "type": "__expr__",
+                        "uid": "__expr__",
+                        "updated": "0001-01-01T00:00:00Z",
+                        "url": "",
+                        "user": "",
+                        "withCredentials": false
+                    },
+                    "expression": "prometheus_math",
+                    "intervalMs": 1000,
+                    "maxDataPoints": 43200,
+                    "refId": "threshold",
+                    "type": "threshold"
+                }
+            }
+        ],
+        "updated": "2026-08-27T14:51:41Z",
+        "updated_by": {
+            "uid": "df1wos5dnaarkb",
+            "name": "satish kumar"
+        },
+        "intervalSeconds": 60,
+        "version": 1,
+        "uid": "",
+        "namespace_uid": "alerting-16kzusz0y3mob",
+        "rule_group": "integrations-linux-node-custom",
+        "no_data_state": "OK",
+        "exec_err_state": "OK",
+        "is_paused": true,
+        "metadata": {
+            "editor_settings": {
+                "simplified_query_and_expressions_section": false,
+                "simplified_notifications_section": false
+            }
+        },
+        "guid": "2b4f0206-45ba-4aae-ae52-476c7fec4b6d",
+        "missing_series_evals_to_resolve": 1
+    }
+}

@@ -1,0 +1,12 @@
+name: triResolve-core
+preset: observability_viewer
+syncGroups:
+- dbca9d54-1502-475c-8973-bf0f24237dc9
+folderPermissions:
+- folder: triresolve-core
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit="trioptima", product_name="triresolve-core" }'

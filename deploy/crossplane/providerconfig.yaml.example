@@ -1,0 +1,14 @@
+# Create the credentials Secret separately. Never commit the real token.
+# The provider expects a JSON document in the `credentials` key:
+# {"url":"https://<stack>.grafana.net","auth":"<service-account-token>"}
+apiVersion: grafana.m.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: grafana-provider-credentials
+      key: credentials

@@ -1,0 +1,10 @@
+.env
+*.secret.yaml
+*.secret.yml
+*.token
+.DS_Store
+dist/
+
+# Local Grafana Cloud credentials/context
+gcx.yaml
+.gcx.yaml

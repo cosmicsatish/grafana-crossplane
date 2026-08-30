@@ -1,0 +1,12 @@
+name: SRE
+preset: sre
+syncGroups:
+- a77663ba-4475-4750-84a1-030a5f8ee0aa
+folderPermissions:
+- folder: sre
+  permission: Admin
+datasourcePermissions:
+- datasource: logs
+  permission: Query
+lbacSelectors:
+- '{ business_unit!="reset", business_unit!="trioptima", business_unit!="osttra" }'

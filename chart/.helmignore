@@ -1,0 +1,10 @@
+# Patterns to ignore when packaging a Helm chart.
+# See https://helm.sh/docs/chart_template_guide/helm_ignore_file/
+
+# Standard editor & OS files
+.DS_Store
+*.swp
+*.bak
+*.tmp
+.git/
+.gitignore

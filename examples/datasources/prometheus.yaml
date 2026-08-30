@@ -1,0 +1,23 @@
+# Example: Production Prometheus Datasource with Permissions & Custom Labels
+name: Production Prometheus
+type: prometheus
+uid: prod-prometheus
+url: http://prometheus-server.monitoring.svc.cluster.local:9090
+isDefault: false
+owner: platform
+labels:
+  environment: production
+  domain: observability
+  tier: metrics
+jsonData:
+  httpMethod: POST
+  timeInterval: 15s
+permissions:
+  - permission: Admin
+    team: admins
+  - permission: Query
+    team: sre
+  - permission: Query
+    serviceAccount: ci-bot
+  - permission: Query
+    builtInRole: Viewer

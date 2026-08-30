@@ -1,0 +1,114 @@
+{{- if and .Values.alerting (default true .Values.alerting.enabled) }}
+{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "alert-rules") | fromYaml).items | default list }}
+{{- range $f := $files }}
+  {{- $raw := $f.parsed }}
+  {{- $folderFromPath := include "grafana-admin-platform.inferFolder" (dict "path" $f.path) }}
+  {{- $groups := $raw.groups | default list }}
+  {{- if not $groups }}{{ $groups = $raw.ruleGroups | default list }}{{ end }}
+  {{- range $rg := $groups }}
+    {{- $folderRequested := $rg.folderUid | default ($rg.folder | default $folderFromPath) }}
+    {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "root" $) }}
+    {{- $interval := $rg.intervalSeconds | default (include "grafana-admin-platform.parseDurationSeconds" ($rg.interval | default "60s")) }}
+---
+apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
+kind: RuleGroup
+{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $rg.name) "wave" "2" "owner" $rg.owner "root" $) -}}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    name: {{ $rg.name | quote }}
+    {{- if $folder }}folderUid: {{ $folder | quote }}{{ end }}
+    intervalSeconds: {{ $interval }}
+    disableProvenance: {{ if hasKey $rg "disableProvenance" }}{{ $rg.disableProvenance }}{{ else }}{{ $.Values.alerting.disableProvenance | default false }}{{ end }}
+    rule:
+      {{- range $rule := ($rg.rules | default $rg.rule | default list) }}
+      - {{- with $rule.uid }}uid: {{ . | quote }}{{ end }}
+        name: {{ $rule.name | default $rule.title | required "alert rule title/name is required" | quote }}
+        {{- with $rule.condition }}condition: {{ . | quote }}{{ end }}
+        {{- with $rule.data }}{{ include "grafana-admin-platform.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}{{ end }}
+        {{- with $rule.for }}for: {{ . | quote }}{{ end }}
+        {{- with ($rule.keepFiringFor | default $rule.keep_firing_for) }}keepFiringFor: {{ . | quote }}{{ end }}
+        {{- with $rule.labels }}labels:
+          {{- toYaml . | nindent 10 }}{{ end }}
+        {{- with $rule.annotations }}annotations:
+          {{- toYaml . | nindent 10 }}{{ end }}
+        {{- with ($rule.noDataState | default $rule.no_data_state) }}noDataState: {{ . | quote }}{{ end }}
+        {{- with ($rule.execErrState | default $rule.exec_err_state) }}execErrState: {{ . | quote }}{{ end }}
+        isPaused: {{ if hasKey $rule "isPaused" }}{{ $rule.isPaused }}{{ else }}{{ $rule.is_paused | default false }}{{ end }}
+        {{- with ($rule.missingSeriesEvalsToResolve | default $rule.missing_series_evals_to_resolve) }}missingSeriesEvalsToResolve: {{ . }}{{ end }}
+        {{- $ns := $rule.notificationSettings | default $rule.notification_settings }}
+        {{- with $ns }}
+        notificationSettings:
+          {{- with ($ns.contactPoint | default $ns.contact_point | default $ns.receiver) }}contactPoint: {{ . | quote }}{{ end }}
+          {{- with ($ns.groupBy | default $ns.group_by) }}groupBy:
+            {{- toYaml . | nindent 12 }}{{ end }}
+          {{- with ($ns.muteTimings | default $ns.mute_time_intervals) }}muteTimings:
+            {{- toYaml . | nindent 12 }}{{ end }}
+          {{- with ($ns.activeTimings | default $ns.active_time_intervals) }}activeTimings:
+            {{- toYaml . | nindent 12 }}{{ end }}
+          {{- with $ns.resendDelay }}resendDelay: {{ . | quote }}{{ end }}
+        {{- end }}
+        {{- with ($rule.panelRef | default $rule.panel_ref) }}panelRef:
+          {{- toYaml . | nindent 10 }}{{ end }}
+      {{- end }}
+  {{- end }}
+  {{- if $raw.grafana_alert }}
+    {{- $ga := $raw.grafana_alert }}
+    {{- $fileName := base $f.path | trimSuffix ".json" | trimSuffix ".yaml" | trimSuffix ".yml" }}
+    {{- $folderRequested := $ga.namespace_uid | default ($ga.folder | default $folderFromPath) }}
+    {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "root" $) }}
+---
+apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
+kind: RuleGroup
+{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" ($ga.rule_group | default $fileName)) "wave" "2" "owner" $raw.owner "root" $) -}}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    name: {{ ($ga.rule_group | default $fileName) | quote }}
+    {{- if $folder }}folderUid: {{ $folder | quote }}{{ end }}
+    intervalSeconds: {{ $ga.intervalSeconds | default (include "grafana-admin-platform.parseDurationSeconds" ($ga.interval | default "60s")) }}
+    disableProvenance: {{ $.Values.alerting.disableProvenance | default false }}
+    rule:
+      - {{- with $ga.uid }}uid: {{ . | quote }}{{ end }}
+        name: {{ ($ga.title | default $fileName) | quote }}
+        condition: {{ ($ga.condition | default "threshold") | quote }}
+        {{- with $ga.data }}{{ include "grafana-admin-platform.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}{{ end }}
+        for: {{ ($raw.for | default "5m") | quote }}
+        keepFiringFor: {{ ($raw.keep_firing_for | default "0s") | quote }}
+        {{- with $raw.labels }}labels:
+          {{- toYaml . | nindent 10 }}{{ end }}
+        {{- with $raw.annotations }}annotations:
+          {{- toYaml . | nindent 10 }}{{ end }}
+        noDataState: {{ ($ga.no_data_state | default "OK") | title | quote }}
+        execErrState: {{ ($ga.exec_err_state | default "OK") | title | quote }}
+        isPaused: {{ $ga.is_paused | default false }}
+{{- end }}
+  {{- if and (not $raw.groups) (not $raw.ruleGroups) (not $raw.grafana_alert) $raw.title }}
+---
+apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
+kind: RuleGroup
+{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" (default (base $f.path) $raw.rule_group)) "wave" "2" "owner" $raw.owner "root" $) -}}
+spec:
+  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    name: {{ default (base $f.path) $raw.rule_group | trimSuffix ".json" | trimSuffix ".yaml" | quote }}
+    {{- if $folderFromPath }}folderUid: {{ $folderFromPath | quote }}{{ end }}
+    intervalSeconds: {{ $raw.intervalSeconds | default 60 }}
+    disableProvenance: {{ $.Values.alerting.disableProvenance | default false }}
+    rule:
+      - {{- with $raw.uid }}uid: {{ . | quote }}{{ end }}
+        name: {{ $raw.title | quote }}
+        condition: {{ $raw.condition | default "threshold" | quote }}
+        {{- with $raw.data }}{{ include "grafana-admin-platform.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}{{ end }}
+        {{- with $raw.for }}for: {{ . | quote }}{{ end }}
+        {{- with $raw.keep_firing_for }}keepFiringFor: {{ . | quote }}{{ end }}
+        {{- with $raw.labels }}labels:
+          {{- toYaml . | nindent 10 }}{{ end }}
+        {{- with $raw.annotations }}annotations:
+          {{- toYaml . | nindent 10 }}{{ end }}
+        {{- with $raw.no_data_state }}noDataState: {{ . | title | quote }}{{ end }}
+        {{- with $raw.exec_err_state }}execErrState: {{ . | title | quote }}{{ end }}
+        isPaused: {{ $raw.is_paused | default false }}
+{{- end }}
+{{- end }}
+{{- end }}
