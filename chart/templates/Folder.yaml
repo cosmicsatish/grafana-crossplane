@@ -1,17 +1,17 @@
 {{- if and .Values.folders (default true .Values.folders.enabled) }}
-{{- $folders := (include "grafana-admin-platform.foldersList" . | fromYaml).folders | default list }}
-{{- $teams := (include "grafana-admin-platform.teamsList" . | fromYaml).teams | default list }}
-{{- $verbMap := include "grafana-admin-platform.verbMap" . | fromYaml }}
+{{- $folders := (include "grafana-crossplane.foldersList" . | fromYaml).folders | default list }}
+{{- $teams := (include "grafana-crossplane.teamsList" . | fromYaml).teams | default list }}
+{{- $verbMap := include "grafana-crossplane.verbMap" . | fromYaml }}
 {{- $explicit := dict }}
 {{- $permissions := dict }}
 {{- range $f := $folders }}
-  {{- $uid := $f.uid | default (include "grafana-admin-platform.slugify" $f.title) }}
+  {{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) }}
   {{- $_ := set $explicit $uid true }}
   {{- $items := list }}
   {{- range ($f.permissions | default list) }}
     {{- $level := get $verbMap (.permission | default "View" | toString | lower) | default "View" }}
     {{- if .role }}{{ $items = append $items (dict "role" (.role | toString | title) "permission" $level) }}
-    {{- else if .team }}{{ $items = append $items (dict "teamRef" (dict "name" (include "grafana-admin-platform.slugify" .team)) "permission" $level) }}
+    {{- else if .team }}{{ $items = append $items (dict "teamRef" (dict "name" (include "grafana-crossplane.slugify" .team)) "permission" $level) }}
     {{- else if .teamRef }}{{ $items = append $items (dict "teamRef" .teamRef "permission" $level) }}
     {{- else if .userRef }}{{ $items = append $items (dict "userRef" .userRef "permission" $level) }}
     {{- else if .user }}{{ $items = append $items (dict "userId" (toString .user) "permission" $level) }}
@@ -20,9 +20,9 @@
   {{- $_ := set $permissions $uid $items }}
 {{- end }}
 {{- range $team := $teams }}
-  {{- $teamSlug := $team.slug | default (include "grafana-admin-platform.slugify" $team.name) }}
+  {{- $teamSlug := $team.slug | default (include "grafana-crossplane.slugify" $team.name) }}
   {{- range ($team.folderPermissions | default list) }}
-    {{- $uid := include "grafana-admin-platform.slugify" .folder }}
+    {{- $uid := include "grafana-crossplane.slugify" .folder }}
     {{- $level := get $verbMap (.permission | default "View" | toString | lower) | default "View" }}
     {{- $items := get $permissions $uid | default list }}
     {{- $items = append $items (dict "teamRef" (dict "name" $teamSlug) "permission" $level) }}
@@ -37,20 +37,20 @@
     {{- range $ext := list "json" "yaml" "yml" }}
       {{- range $path, $_ := $.Files.Glob (printf "%s%s.%s" $root $depth $ext) }}
         {{- $doc := $.Files.Get $path | fromYaml }}
-        {{- $rel := include "grafana-admin-platform.folderPath" (dict "path" $path) }}
+        {{- $rel := include "grafana-crossplane.folderPath" (dict "path" $path) }}
         {{- if and $rel (eq $root "alert-rules") }}
           {{- range $g := ($doc.groups | default list) }}
-            {{- $folder := $g.folderUid | default (include "grafana-admin-platform.slugify" ($g.folder | default $rel)) }}
+            {{- $folder := $g.folderUid | default (include "grafana-crossplane.slugify" ($g.folder | default $rel)) }}
             {{- if not (hasKey $explicit $folder) }}{{ $_ := set $auto $folder (dict "title" ($g.folder | default $rel) "parentUid" "") }}{{ end }}
           {{- end }}
           {{- if or $doc.grafana_alert $doc.title }}
-            {{- $fUid := include "grafana-admin-platform.slugify" $rel }}
+            {{- $fUid := include "grafana-crossplane.slugify" $rel }}
             {{- if not (hasKey $explicit $fUid) }}{{ if not (hasKey $auto $fUid) }}{{ $_ := set $auto $fUid (dict "title" $rel "parentUid" "") }}{{ end }}{{ end }}
           {{- end }}
         {{- else if $rel }}
           {{- $parent := "" }}
           {{- range $part := (splitList "/" $rel) }}
-            {{- $uid := include "grafana-admin-platform.slugify" (ternary (printf "%s/%s" $parent $part) $part (ne $parent "")) }}
+            {{- $uid := include "grafana-crossplane.slugify" (ternary (printf "%s/%s" $parent $part) $part (ne $parent "")) }}
             {{- if not (hasKey $explicit $uid) }}{{ if not (hasKey $auto $uid) }}{{ $_ := set $auto $uid (dict "title" $part "parentUid" $parent) }}{{ end }}{{ end }}
             {{- $parent = $uid }}
           {{- end }}
@@ -61,7 +61,7 @@
 {{- end }}
 
 {{- range $f := $folders }}
-  {{- $uid := $f.uid | default (include "grafana-admin-platform.slugify" $f.title) }}
+  {{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) }}
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: Folder
@@ -70,15 +70,15 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
   labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     title: {{ $f.title | quote }}
     uid: {{ $uid | quote }}
     {{- $parent := $f.parentUid | default ($f.parentTitle | default "" | toString | trim) }}
     {{- if and $parent (ne $parent "nil") }}
-    parentFolderUid: {{ include "grafana-admin-platform.slugify" $parent | quote }}
+    parentFolderUid: {{ include "grafana-crossplane.slugify" $parent | quote }}
     {{- end }}
   {{- $fp := get $permissions $uid | default list }}
   {{- if $fp }}
@@ -90,9 +90,9 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     folderUid: {{ $uid | quote }}
     permissions:
@@ -110,9 +110,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
     grafana.gitops/auto-discovered: "true"
   labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     title: {{ $meta.title | quote }}
     uid: {{ $uid | quote }}

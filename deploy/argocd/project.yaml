@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: grafana-admin
+  name: grafana-crossplane
   namespace: argocd
 spec:
   description: Grafana GitOps control plane managed by Helm and Crossplane

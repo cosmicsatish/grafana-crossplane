@@ -1,7 +1,7 @@
 PATH := /opt/homebrew/bin:/usr/local/bin:$(PATH)
 SHELL := /bin/bash
 CHART := chart
-RELEASE := grafana-admin
+RELEASE := grafana-crossplane
 HELM ?= $(shell command -v helm 2>/dev/null || which /opt/homebrew/bin/helm /usr/local/bin/helm 2>/dev/null | head -n 1 || echo helm)
 
 .PHONY: lint render validate

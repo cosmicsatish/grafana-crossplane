@@ -1,5 +1,5 @@
 {{- if and .Values.datasources (default true .Values.datasources.enabled) }}
-{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "datasources") | fromYaml).items | default list }}
+{{- $files := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "datasources") | fromYaml).items | default list }}
 {{- $list := list }}
 {{- range $f := $files }}
   {{- $d := $f.parsed }}
@@ -12,7 +12,7 @@
 {{- with .Values.datasourcesList }}{{- if kindIs "slice" . }}{{ $list = concat $list . }}{{ end }}{{- end }}
 {{- range $d := $list }}
   {{- $name := $d.name | required "datasource.name is required" }}
-  {{- $slug := $d.resourceName | default (include "grafana-admin-platform.slugify" $name) }}
+  {{- $slug := $d.resourceName | default (include "grafana-crossplane.slugify" $name) }}
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: DataSource
@@ -21,9 +21,15 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
   labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
+    {{- with $d.owner }}
+    owner: {{ . | quote }}
+    {{- end }}
+    {{- with $d.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ $name | quote }}
     uid: {{ $d.uid | default $slug | quote }}

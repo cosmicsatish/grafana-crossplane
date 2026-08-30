@@ -1,20 +1,20 @@
 {{- if and .Values.alerting (default true .Values.alerting.enabled) }}
-{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "alert-rules") | fromYaml).items | default list }}
+{{- $files := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "alert-rules") | fromYaml).items | default list }}
 {{- range $f := $files }}
   {{- $raw := $f.parsed }}
-  {{- $folderFromPath := include "grafana-admin-platform.inferFolder" (dict "path" $f.path) }}
+  {{- $folderFromPath := include "grafana-crossplane.inferFolder" (dict "path" $f.path) }}
   {{- $groups := $raw.groups | default list }}
   {{- if not $groups }}{{ $groups = $raw.ruleGroups | default list }}{{ end }}
   {{- range $rg := $groups }}
     {{- $folderRequested := $rg.folderUid | default ($rg.folder | default $folderFromPath) }}
-    {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderFromPath "root" $) }}
-    {{- $interval := $rg.intervalSeconds | default (include "grafana-admin-platform.parseDurationSeconds" ($rg.interval | default "60s")) }}
+    {{- $folder := include "grafana-crossplane.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderFromPath "root" $) }}
+    {{- $interval := $rg.intervalSeconds | default (include "grafana-crossplane.parseDurationSeconds" ($rg.interval | default "60s")) }}
 ---
 apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
 kind: RuleGroup
-{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $rg.name) "wave" "2" "owner" $rg.owner "root" $) }}
+{{ include "grafana-crossplane.alertMeta" (dict "name" (include "grafana-crossplane.slugify" $rg.name) "wave" "2" "owner" $rg.owner "root" $) }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ $rg.name | quote }}
     {{- if $folder }}
@@ -32,7 +32,7 @@ spec:
         condition: {{ . | quote }}
         {{- end }}
         {{- with $rule.data }}
-        {{- include "grafana-admin-platform.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}
+        {{- include "grafana-crossplane.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}
         {{- end }}
         {{- with $rule.for }}
         for: {{ . | quote }}
@@ -90,19 +90,19 @@ spec:
     {{- $ga := $raw.grafana_alert }}
     {{- $fileName := base $f.path | trimSuffix ".json" | trimSuffix ".yaml" | trimSuffix ".yml" }}
     {{- $folderRequested := $ga.namespace_uid | default ($ga.folder | default $folderFromPath) }}
-    {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderFromPath "root" $) }}
+    {{- $folder := include "grafana-crossplane.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderFromPath "root" $) }}
 ---
 apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
 kind: RuleGroup
-{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" ($ga.rule_group | default $fileName)) "wave" "2" "owner" $raw.owner "root" $) }}
+{{ include "grafana-crossplane.alertMeta" (dict "name" (include "grafana-crossplane.slugify" ($ga.rule_group | default $fileName)) "wave" "2" "owner" $raw.owner "root" $) }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ ($ga.rule_group | default $fileName) | quote }}
     {{- if $folder }}
     folderUid: {{ $folder | quote }}
     {{- end }}
-    intervalSeconds: {{ $ga.intervalSeconds | default (include "grafana-admin-platform.parseDurationSeconds" ($ga.interval | default "60s")) }}
+    intervalSeconds: {{ $ga.intervalSeconds | default (include "grafana-crossplane.parseDurationSeconds" ($ga.interval | default "60s")) }}
     disableProvenance: {{ $.Values.alerting.disableProvenance | default false }}
     rule:
       - name: {{ ($ga.title | default $fileName) | quote }}
@@ -111,7 +111,7 @@ spec:
         {{- end }}
         condition: {{ ($ga.condition | default "threshold") | quote }}
         {{- with $ga.data }}
-        {{- include "grafana-admin-platform.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}
+        {{- include "grafana-crossplane.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}
         {{- end }}
         for: {{ ($raw.for | default "5m") | quote }}
         keepFiringFor: {{ ($raw.keep_firing_for | default "0s") | quote }}
@@ -131,9 +131,9 @@ spec:
 ---
 apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
 kind: RuleGroup
-{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" (default (base $f.path) $raw.rule_group)) "wave" "2" "owner" $raw.owner "root" $) }}
+{{ include "grafana-crossplane.alertMeta" (dict "name" (include "grafana-crossplane.slugify" (default (base $f.path) $raw.rule_group)) "wave" "2" "owner" $raw.owner "root" $) }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ default (base $f.path) $raw.rule_group | trimSuffix ".json" | trimSuffix ".yaml" | quote }}
     {{- if $folderFromPath }}
@@ -148,7 +148,7 @@ spec:
         {{- end }}
         condition: {{ $raw.condition | default "threshold" | quote }}
         {{- with $raw.data }}
-        {{- include "grafana-admin-platform.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}
+        {{- include "grafana-crossplane.renderRuleData" (dict "data" . "aliases" $.Values.datasourceAliases) | nindent 8 }}
         {{- end }}
         for: {{ ($raw.for | default "5m") | quote }}
         keepFiringFor: {{ ($raw.keep_firing_for | default "0s") | quote }}

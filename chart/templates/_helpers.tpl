@@ -1,21 +1,21 @@
 {{/* Common helpers. Templates intentionally stay small: Helm is the only transform layer. */}}
-{{- define "grafana-admin-platform.name" -}}
+{{- define "grafana-crossplane.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.labels" -}}
+{{- define "grafana-crossplane.labels" -}}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/part-of: grafana-crossplane
 {{- end -}}
 
-{{- define "grafana-admin-platform.providerConfigRef" -}}
+{{- define "grafana-crossplane.providerConfigRef" -}}
 providerConfigRef:
   name: {{ .Values.providerConfig.name | default "default" | quote }}
   kind: "ProviderConfig"
 {{- end -}}
 
-{{- define "grafana-admin-platform.verbMap" -}}
+{{- define "grafana-crossplane.verbMap" -}}
 view: View
 viewer: View
 read: View
@@ -35,7 +35,7 @@ administrator: Admin
 query: Query
 {{- end -}}
 
-{{- define "grafana-admin-platform.collectFiles" -}}
+{{- define "grafana-crossplane.collectFiles" -}}
 {{- $ctx := .ctx -}}
 {{- $dirs := .dir -}}
 {{- if not (kindIs "slice" $dirs) }}{{ $dirs = list $dirs }}{{ end -}}
@@ -61,12 +61,12 @@ items:
 {{- end }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.loadFiles" -}}
-{{ include "grafana-admin-platform.collectFiles" . }}
+{{- define "grafana-crossplane.loadFiles" -}}
+{{ include "grafana-crossplane.collectFiles" . }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.teamsList" -}}
-{{- $raw := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "teams") | fromYaml).items | default list -}}
+{{- define "grafana-crossplane.teamsList" -}}
+{{- $raw := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "teams") | fromYaml).items | default list -}}
 {{- $list := list -}}
 {{- range $f := $raw }}{{- if $f.parsed.name }}{{ $list = append $list $f.parsed }}{{ end }}{{- end }}
 {{- with .Values.teams }}
@@ -79,8 +79,8 @@ teams:
 {{- toYaml $list | nindent 2 }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.saList" -}}
-{{- $raw := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "serviceaccounts") | fromYaml).items | default list -}}
+{{- define "grafana-crossplane.saList" -}}
+{{- $raw := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "serviceaccounts") | fromYaml).items | default list -}}
 {{- $list := list -}}
 {{- range $f := $raw }}
   {{- if $f.parsed.serviceAccounts }}{{ $list = concat $list $f.parsed.serviceAccounts }}
@@ -97,8 +97,8 @@ serviceAccounts:
 {{- toYaml $list | nindent 2 }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.foldersList" -}}
-{{- $raw := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "folders") | fromYaml).items | default list -}}
+{{- define "grafana-crossplane.foldersList" -}}
+{{- $raw := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "folders") | fromYaml).items | default list -}}
 {{- $list := list -}}
 {{- range $f := $raw }}
   {{- if $f.parsed.folders }}{{ $list = concat $list $f.parsed.folders }}
@@ -115,14 +115,14 @@ folders:
 {{- toYaml $list | nindent 2 }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.roleRef" -}}
+{{- define "grafana-crossplane.roleRef" -}}
 {{- $name := .name -}}
 {{- $map := .map -}}
 {{- $uids := .uids | default dict -}}
 {{- if hasKey $uids $name }}{{- $uid := get $uids $name | toString | trim -}}{{- if not $uid }}{{ fail (printf "RBAC role UID override for %q is empty" $name) }}{{ end }}{{- $uid -}}{{- else if hasKey $map $name }}{{- $r := get $map $name -}}{{- $uid := "" -}}{{- if kindIs "map" $r }}{{ $uid = get $r "uid" | default "" | toString | trim }}{{ else }}{{ $uid = $r | toString | trim }}{{ end }}{{- if not $uid }}{{ fail (printf "Grafana RBAC role %q resolved to an empty UID" $name) }}{{ end }}{{- $uid -}}{{- else }}{{ fail (printf "Grafana RBAC role %q was not found in the catalog and has no rbac.roleUids override" $name) }}{{ end -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.parseTtlSeconds" -}}
+{{- define "grafana-crossplane.parseTtlSeconds" -}}
 {{- $raw := (.secondsToLive | default .tokenExpires | default .expiresIn | default .ttl | default "" | toString | lower | trim) -}}
 {{- $ttl := 31536000 -}}
 {{- if $raw -}}
@@ -138,7 +138,7 @@ folders:
 {{- $ttl -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.parseDurationSeconds" -}}
+{{- define "grafana-crossplane.parseDurationSeconds" -}}
 {{- $raw := . | toString | lower | trim -}}
 {{- if regexMatch "^[0-9]+$" $raw }}{{ int $raw
 }}{{- else if regexMatch "^[0-9]+s$" $raw }}{{ div (regexFind "^[0-9]+" $raw | int) 1
@@ -148,7 +148,7 @@ folders:
 }}{{- else }}60{{ end -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.slugify" -}}
+{{- define "grafana-crossplane.slugify" -}}
 {{- $s := . | toString | lower | trim -}}
 {{- $s = regexReplaceAll "[ _./\\\\]+" $s "-" -}}
 {{- $s = regexReplaceAll "[^a-z0-9-]" $s "" -}}
@@ -157,7 +157,7 @@ folders:
 {{- $s -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.folderPath" -}}
+{{- define "grafana-crossplane.folderPath" -}}
 {{- $path := .path | toString -}}
 {{- $segments := splitList "/" $path -}}
 {{- $clean := list -}}
@@ -167,21 +167,21 @@ folders:
 {{- join "/" $clean -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.inferFolder" -}}
-{{- $raw := include "grafana-admin-platform.folderPath" . -}}
-{{- if $raw }}{{ include "grafana-admin-platform.slugify" $raw }}{{ end -}}
+{{- define "grafana-crossplane.inferFolder" -}}
+{{- $raw := include "grafana-crossplane.folderPath" . -}}
+{{- if $raw }}{{ include "grafana-crossplane.slugify" $raw }}{{ end -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.resolveFolderUid" -}}
+{{- define "grafana-crossplane.resolveFolderUid" -}}
 {{- $requested := .folder | default "" | toString | trim -}}
 {{- $fallback := .fallback | default "" | toString | trim -}}
 {{- if not $requested -}}
-  {{- if $fallback }}{{ include "grafana-admin-platform.slugify" $fallback }}{{ else }}{{ "" }}{{ end -}}
+  {{- if $fallback }}{{ include "grafana-crossplane.slugify" $fallback }}{{ else }}{{ "" }}{{ end -}}
 {{- else -}}
   {{- $found := "" -}}
-  {{- $folders := (include "grafana-admin-platform.foldersList" .root | fromYaml).folders | default list -}}
+  {{- $folders := (include "grafana-crossplane.foldersList" .root | fromYaml).folders | default list -}}
   {{- range $f := $folders -}}
-    {{- $uid := $f.uid | default (include "grafana-admin-platform.slugify" $f.title) -}}
+    {{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) -}}
     {{- if or (eq $requested $uid) (eq (lower ($f.title | default "")) (lower $requested)) -}}
       {{- $found = $uid -}}
     {{- end -}}
@@ -189,26 +189,26 @@ folders:
   {{- if $found -}}
     {{- $found -}}
   {{- else if $fallback -}}
-    {{- include "grafana-admin-platform.resolveFolderUid" (dict "folder" $fallback "root" .root) -}}
+    {{- include "grafana-crossplane.resolveFolderUid" (dict "folder" $fallback "root" .root) -}}
   {{- else -}}
-    {{- include "grafana-admin-platform.slugify" $requested -}}
+    {{- include "grafana-crossplane.slugify" $requested -}}
   {{- end -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.alertMeta" -}}
+{{- define "grafana-crossplane.alertMeta" -}}
 metadata:
   name: {{ .name | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: {{ .wave | default "2" | quote }}
   labels:
-    {{- include "grafana-admin-platform.labels" .root | nindent 4 }}
+    {{- include "grafana-crossplane.labels" .root | nindent 4 }}
     {{- if .owner }}
     owner: {{ .owner | quote }}
     {{- end }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.renderRelativeTimeRange" -}}
+{{- define "grafana-crossplane.renderRelativeTimeRange" -}}
 relativeTimeRange:
 {{- if kindIs "slice" . }}
   {{- toYaml . | nindent 2 }}
@@ -218,7 +218,7 @@ relativeTimeRange:
 {{- end }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.renderRuleData" -}}
+{{- define "grafana-crossplane.renderRuleData" -}}
 {{- $ctx := . -}}
 {{- $data := $ctx.data | default list -}}
 {{- $aliases := $ctx.aliases | default dict -}}
@@ -228,9 +228,9 @@ data:
     {{- with ($d.queryType | default $d.query_type) }}
     queryType: {{ . | quote }}
     {{- end }}
-    datasourceUid: {{ include "grafana-admin-platform.resolveDatasource" (dict "ref" ($d.datasourceUid | default $d.datasource_uid | default "") "aliases" $aliases) }}
+    datasourceUid: {{ include "grafana-crossplane.resolveDatasource" (dict "ref" ($d.datasourceUid | default $d.datasource_uid | default "") "aliases" $aliases) }}
     {{- with ($d.relativeTimeRange | default $d.relative_time_range) }}
-    {{- include "grafana-admin-platform.renderRelativeTimeRange" . | nindent 4 }}
+    {{- include "grafana-crossplane.renderRelativeTimeRange" . | nindent 4 }}
     {{- end }}
     {{- with $d.model }}
     model: {{ if kindIs "string" . }}{{ . | quote }}{{ else }}{{ . | toJson | quote }}{{ end }}
@@ -238,7 +238,7 @@ data:
 {{- end -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.renderMatchers" -}}
+{{- define "grafana-crossplane.renderMatchers" -}}
 {{- range $m := . }}
   {{- if kindIs "slice" $m }}
 - label: {{ index $m 0 | default "" | quote }}
@@ -252,7 +252,7 @@ data:
 {{- end -}}
 {{- end -}}
 
-{{- define "grafana-admin-platform.renderRoutes" -}}
+{{- define "grafana-crossplane.renderRoutes" -}}
 {{- range $r := .routes }}
 - contactPoint: {{ $r.contactPoint | default $r.contact_point | default $r.receiver | quote }}
   {{- if hasKey $r "continue" }}
@@ -284,17 +284,17 @@ data:
   {{- if not $matchers }}{{ $matchers = $r.object_matchers | default list }}{{ end }}
   {{- if $matchers }}
   matcher:
-    {{- include "grafana-admin-platform.renderMatchers" $matchers | nindent 4 }}
+    {{- include "grafana-crossplane.renderMatchers" $matchers | nindent 4 }}
   {{- end }}
   {{- $sub := $r.policy | default $r.routes }}
   {{- if $sub }}
   policy:
-    {{- include "grafana-admin-platform.renderRoutes" (dict "routes" $sub) | nindent 4 }}
+    {{- include "grafana-crossplane.renderRoutes" (dict "routes" $sub) | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.renderContactIntegrations" -}}
+{{- define "grafana-crossplane.renderContactIntegrations" -}}
 {{- $cp := . -}}
 {{- $native := hasKey $cp "receivers" -}}
 {{- $emails := $cp.email | default list -}}{{- $slacks := $cp.slack | default list -}}{{- $pds := $cp.pagerduty | default list -}}{{- $hooks := $cp.webhook | default list -}}{{- $ops := $cp.opsgenie | default list -}}{{- $victors := $cp.victorops | default list -}}{{- $teams := $cp.teams | default list -}}{{- $discord := $cp.discord | default list -}}{{- $googlechat := $cp.googlechat | default list -}}{{- $telegram := $cp.telegram | default list -}}{{- $sns := $cp.sns | default list -}}{{- $jira := $cp.jira | default list -}}{{- $alertmanager := $cp.alertmanager | default list -}}{{- $oncall := $cp.oncall | default list -}}{{- $webex := $cp.webex | default list -}}{{- $dingding := $cp.dingding | default list -}}
@@ -354,13 +354,40 @@ data:
 {{ toYaml . | nindent 2 }}{{ end }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.renderMuteIntervals" -}}
+{{- define "grafana-crossplane.renderMuteIntervals" -}}
 intervals:
   {{- toYaml (.intervals | default .time_intervals | default list) | nindent 2 }}
 {{- end -}}
 
-{{- define "grafana-admin-platform.resolveDatasource" -}}
+{{- define "grafana-crossplane.resolveDatasource" -}}
 {{- $ref := .ref | default "" -}}
 {{- $aliases := .aliases | default dict -}}
 {{- if hasKey $aliases $ref }}{{ get (get $aliases $ref) "uid" | quote }}{{ else }}{{ $ref | quote }}{{ end -}}
 {{- end -}}
+
+
+{{/* Backward-compatibility aliases for grafana-admin-platform */}}
+{{- define "grafana-admin-platform.name" -}}{{ include "grafana-crossplane.name" . }}{{- end -}}
+{{- define "grafana-admin-platform.labels" -}}{{ include "grafana-crossplane.labels" . }}{{- end -}}
+{{- define "grafana-admin-platform.providerConfigRef" -}}{{ include "grafana-crossplane.providerConfigRef" . }}{{- end -}}
+{{- define "grafana-admin-platform.verbMap" -}}{{ include "grafana-crossplane.verbMap" . }}{{- end -}}
+{{- define "grafana-admin-platform.collectFiles" -}}{{ include "grafana-crossplane.collectFiles" . }}{{- end -}}
+{{- define "grafana-admin-platform.loadFiles" -}}{{ include "grafana-crossplane.loadFiles" . }}{{- end -}}
+{{- define "grafana-admin-platform.teamsList" -}}{{ include "grafana-crossplane.teamsList" . }}{{- end -}}
+{{- define "grafana-admin-platform.saList" -}}{{ include "grafana-crossplane.saList" . }}{{- end -}}
+{{- define "grafana-admin-platform.foldersList" -}}{{ include "grafana-crossplane.foldersList" . }}{{- end -}}
+{{- define "grafana-admin-platform.roleRef" -}}{{ include "grafana-crossplane.roleRef" . }}{{- end -}}
+{{- define "grafana-admin-platform.parseTtlSeconds" -}}{{ include "grafana-crossplane.parseTtlSeconds" . }}{{- end -}}
+{{- define "grafana-admin-platform.parseDurationSeconds" -}}{{ include "grafana-crossplane.parseDurationSeconds" . }}{{- end -}}
+{{- define "grafana-admin-platform.slugify" -}}{{ include "grafana-crossplane.slugify" . }}{{- end -}}
+{{- define "grafana-admin-platform.folderPath" -}}{{ include "grafana-crossplane.folderPath" . }}{{- end -}}
+{{- define "grafana-admin-platform.inferFolder" -}}{{ include "grafana-crossplane.inferFolder" . }}{{- end -}}
+{{- define "grafana-admin-platform.resolveFolderUid" -}}{{ include "grafana-crossplane.resolveFolderUid" . }}{{- end -}}
+{{- define "grafana-admin-platform.alertMeta" -}}{{ include "grafana-crossplane.alertMeta" . }}{{- end -}}
+{{- define "grafana-admin-platform.renderRelativeTimeRange" -}}{{ include "grafana-crossplane.renderRelativeTimeRange" . }}{{- end -}}
+{{- define "grafana-admin-platform.renderRuleData" -}}{{ include "grafana-crossplane.renderRuleData" . }}{{- end -}}
+{{- define "grafana-admin-platform.renderMatchers" -}}{{ include "grafana-crossplane.renderMatchers" . }}{{- end -}}
+{{- define "grafana-admin-platform.renderRoutes" -}}{{ include "grafana-crossplane.renderRoutes" . }}{{- end -}}
+{{- define "grafana-admin-platform.renderContactIntegrations" -}}{{ include "grafana-crossplane.renderContactIntegrations" . }}{{- end -}}
+{{- define "grafana-admin-platform.renderMuteIntervals" -}}{{ include "grafana-crossplane.renderMuteIntervals" . }}{{- end -}}
+{{- define "grafana-admin-platform.resolveDatasource" -}}{{ include "grafana-crossplane.resolveDatasource" . }}{{- end -}}

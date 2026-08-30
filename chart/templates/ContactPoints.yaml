@@ -1,17 +1,17 @@
 {{- if and .Values.alerting (default true .Values.alerting.enabled) }}
-{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "contact-points") | fromYaml).items | default list }}
+{{- $files := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "contact-points") | fromYaml).items | default list }}
 {{- range $f := $files }}
   {{- range $cp := ($f.parsed.contactPoints | default list) }}
 ---
 apiVersion: alerting.grafana.m.crossplane.io/v1alpha1
 kind: ContactPoint
-{{ include "grafana-admin-platform.alertMeta" (dict "name" (include "grafana-admin-platform.slugify" $cp.name) "wave" "2" "owner" $cp.owner "root" $) }}
+{{ include "grafana-crossplane.alertMeta" (dict "name" (include "grafana-crossplane.slugify" $cp.name) "wave" "2" "owner" $cp.owner "root" $) }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     name: {{ $cp.name | quote }}
     disableProvenance: {{ if hasKey $cp "disableProvenance" }}{{ $cp.disableProvenance }}{{ else }}true{{ end }}
-    {{- include "grafana-admin-platform.renderContactIntegrations" $cp | nindent 4 }}
+    {{- include "grafana-crossplane.renderContactIntegrations" $cp | nindent 4 }}
   {{- end }}
 {{- end }}
 {{- end }}

@@ -1,5 +1,5 @@
 apiVersion: v2
-name: grafana-admin-platform
+name: grafana-crossplane
 description: Declarative Grafana Cloud GitOps control plane built on Helm and Crossplane provider-grafana.
 type: application
 version: 4.0.0

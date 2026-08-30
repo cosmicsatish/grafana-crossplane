@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grafana-admin-platform
+  name: grafana-crossplane
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: grafana-admin
+  project: grafana-crossplane
   source:
     repoURL: https://github.com/cosmicsatish/grafana-crossplane.git
     targetRevision: main
     path: chart
     helm:
-      releaseName: grafana-admin
+      releaseName: grafana-crossplane
       valueFiles:
         - values-osttra.yaml
       ignoreMissingValueFiles: true

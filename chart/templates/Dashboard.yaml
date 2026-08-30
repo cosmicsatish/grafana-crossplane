@@ -1,15 +1,15 @@
 {{- if and .Values.dashboards (default true .Values.dashboards.enabled) }}
-{{- $files := (include "grafana-admin-platform.collectFiles" (dict "ctx" . "dir" "dashboards") | fromYaml).items | default list }}
+{{- $files := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "dashboards") | fromYaml).items | default list }}
 {{- range $f := $files }}
   {{- $raw := $f.parsed }}
   {{- $data := $raw.dashboard | default $raw }}
   {{- $base := base $f.path | trimSuffix ".json" | trimSuffix ".yaml" | trimSuffix ".yml" }}
   {{- $meta := $raw.meta | default dict }}
   {{- $folderName := $data.folderTitle | default $data.folderName | default $raw.folderTitle | default $raw.folderName | default $meta.folderName }}
-  {{- $folderPath := include "grafana-admin-platform.folderPath" (dict "path" $f.path) }}
+  {{- $folderPath := include "grafana-crossplane.folderPath" (dict "path" $f.path) }}
   {{- $folderRequested := $data.folderUid | default $raw.folderUid | default ($folderName | default $folderPath) | default "" }}
-  {{- $folder := include "grafana-admin-platform.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderPath "root" $) }}
-  {{- $slug := include "grafana-admin-platform.slugify" ($data.uid | default $raw.uid | default $base) }}
+  {{- $folder := include "grafana-crossplane.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderPath "root" $) }}
+  {{- $slug := include "grafana-crossplane.slugify" ($data.uid | default $raw.uid | default $base) }}
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: Dashboard
@@ -18,9 +18,9 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
   labels:
-    {{- include "grafana-admin-platform.labels" $ | nindent 4 }}
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
-  {{- include "grafana-admin-platform.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
   forProvider:
     configJson: {{ ($data | toJson) | quote }}
     overwrite: true
