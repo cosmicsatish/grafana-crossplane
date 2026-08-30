@@ -34,3 +34,13 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+  ignoreDifferences:
+    - group: oss.grafana.m.crossplane.io
+      kind: FolderPermission
+      jsonPointers:
+        - /spec/forProvider/permissions
+        - /spec/forProvider/orgId
+    - group: enterprise.grafana.m.crossplane.io
+      kind: DataSourcePermission
+      jsonPointers:
+        - /spec/forProvider/permissions
