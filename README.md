@@ -187,69 +187,71 @@ kubectl describe gfolder platform -n crossplane-system
 kubectl get gsa,secret -n crossplane-system
 ```
 
----
+## Unified Resource Configuration (All-in-One Definitions)
 
-## Resource Configuration & Available Options
+All identity, access control, RBAC roles, presets, and folder permissions are defined **directly on the resource itself**. You do not need to manage disconnected RBAC binding files.
 
 ### 1. Folders
 Defined in `chart/folders/folders.yaml`:
 ```yaml
 folders:
-  # Root folder example
-  - uid: platform                      # (Optional) Alphanumeric UID. Slugified from title if omitted.
-    title: Platform                    # (Required) Display title in Grafana.
-    permissions:                       # (Optional) Baseline folder permissions for roles.
+  # Root folder (UID is automatically slugified from title -> "platform")
+  - title: Platform                    # (Required) Display title in Grafana.
+    permissions:                       # (Optional) Baseline folder permissions.
       - role: Viewer                   # Viewer | Editor | Admin
         permission: View               # View | Edit | Admin
 
-  # Nested folder example
-  - uid: observability
-    title: Observability
-    parentFolderUid: platform          # (Optional) Parent folder UID for folder hierarchies.
+  # Nested folder
+  - title: Observability               # UID automatically becomes "observability"
+    parentFolderUid: platform          # (Optional) Parent folder UID or parentTitle for nesting.
+
+  # (Optional) Existing Brownfield Folder:
+  # If linking to an existing Grafana folder that already has a random UID, provide uid:
+  # - uid: cde12345
+  #   title: Legacy Reports
 ```
 
-### 2. Teams & IdP Sync
-Each team is defined in its own file under `chart/teams/<team-name>.yaml`:
+### 2. Teams (All-in-One Team Manifest)
+Each team is defined in its own file under `chart/teams/<team-name>.yaml`. All memberships, presets, roles, and folder permissions live together:
 ```yaml
 name: SRE                              # (Required) Team display name.
-slug: sre                              # (Optional) Kubernetes resource name slug.
 email: sre-team@example.com            # (Optional) Team email.
 
-# IdP Group Sync (e.g. Azure AD, Okta, SAML Group UUIDs)
+# IdP Group Sync (Azure AD, Okta, SAML Group UUIDs)
 syncGroups:
   - "c8f2fca2-8db2-4876-bce7-d9ea24d1e2e9"
 
-# Role Presets (from chart/catalog/role-presets.yaml)
+# Role Preset (from chart/catalog/role-presets.yaml)
 preset: sre                            # or 'presets: [sre, alert-manager]'
 
-# Direct Fixed / Plugin Roles (from chart/catalog/fixed-roles.yaml)
+# Direct Fixed / Plugin RBAC Roles (from chart/catalog/)
 roles:
   - fixed:alerting:admin
   - plugins:grafana-kowalski-app:frontend-observability-viewer
 
-# Team-specific Folder Permissions
+# Folder Permissions granted to this team
 folderPermissions:
-  - folder: observability              # Target folder UID
+  - folder: observability              # Matches folder UID or title
     permission: Admin                  # View | Edit | Admin
 ```
 
-
-### 3. Service Accounts & API Tokens
-Defined in `chart/serviceaccounts/serviceaccounts.yaml`:
+### 3. Service Accounts & API Tokens (All-in-One Definition)
+Defined in `chart/serviceaccounts/serviceaccounts.yaml`. All tokens, roles, and presets live together:
 ```yaml
 serviceAccounts:
-  - name: ci-deployer                  # (Required) Service account name.
+  - name: ci-deployer                  # (Required) Service account name. (resourceName is NOT needed)
     role: Editor                       # (Required) Basic role: None | Viewer | Editor | Admin.
+                                       # Set to "None" or "Viewer" if using fine-grained roles below.
     isDisabled: false                  # (Optional, default: false) Disable without deleting.
-    owner: devops                      # (Optional) Accountability / owner label.
+    owner: devops                      # (Optional) Team or owner accountability label.
     
     # API Tokens
     tokens:
       - name: ci-deployer-token        # Token display name
         secretName: ci-deployer-token  # Kubernetes Secret where token is saved
-        secondsToLive: "90d"           # Lifetime duration: e.g. "30d", "90d", "1y", or seconds
+        secondsToLive: "90d"           # Lifetime duration: "30d", "90d", "1y", or seconds
     
-    # RBAC Roles
+    # Fine-grained RBAC Roles (optional, preset or direct)
     roles:
       - fixed:dashboards:writer
       - fixed:folders:writer
@@ -261,10 +263,6 @@ Dashboards are stored as JSON files under `chart/dashboards/<Folder>/<dashboard>
 - **Title & UID**: Extracted directly from the dashboard JSON.
 - **Overwrites**: Automatically enabled (`overwrite: true`) for GitOps consistency.
 
-### 5. RBAC Roles & Presets
-- **Role Presets** (`chart/catalog/role-presets.yaml`): Group common roles into reusable bundles (e.g. `sre`, `dashboard-editor`, `alert-manager`).
-- **Fixed Roles** (`chart/catalog/fixed-roles.yaml`): Built-in Grafana Cloud roles.
-- **Plugin Roles** (`chart/catalog/stacks/<stack>/plugin-roles.yaml`): Stack-specific plugin roles.
 
 ---
 

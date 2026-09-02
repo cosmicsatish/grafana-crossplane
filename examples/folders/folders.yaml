@@ -1,35 +1,31 @@
 # ==============================================================================
 # Starter Folders Manifest
 # ==============================================================================
-# Available Options:
-#   uid: (Required/Recommended) Unique identifier for the folder (alphanumeric + hyphen).
-#        If omitted, Helm automatically slugifies the title.
+# Schema Options:
 #   title: (Required) Display title of the folder in Grafana.
-#   parentFolderUid: (Optional) UID of the parent folder for nested hierarchies.
-#   permissions: (Optional) Baseline permissions granted to global roles.
-#                - role: Viewer | Editor | Admin
-#                  permission: View | Edit | Admin
+#          The folder UID is AUTOMATICALLY generated from this title (e.g. "Platform" -> "platform").
+#   uid: (Optional) Only specify this if linking to an EXISTING Grafana folder that already
+#        has a random or custom UID (e.g. "cde12345"). Otherwise, leave omitted.
+#   parentFolderUid / parentTitle: (Optional) Parent folder for nested hierarchies.
+#   permissions: (Optional) Baseline permissions for global roles (Viewer, Editor, Admin).
 # ==============================================================================
 
 folders:
-  # Root Platform Folder
-  - uid: platform
-    title: Platform
+  # Root Platform Folder (UID automatically becomes "platform")
+  - title: Platform
     permissions:
       - role: Viewer
         permission: View
 
-  # Nested Observability Folder under Platform
-  - uid: observability
-    title: Observability
+  # Nested Observability Folder under Platform (UID automatically becomes "observability")
+  - title: Observability
     parentFolderUid: platform
     permissions:
       - role: Viewer
         permission: View
 
-  # Standalone Applications Folder
-  - uid: applications
-    title: Applications
+  # Standalone Applications Folder (UID automatically becomes "applications")
+  - title: Applications
     permissions:
       - role: Viewer
         permission: View
