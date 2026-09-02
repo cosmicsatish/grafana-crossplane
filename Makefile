@@ -4,7 +4,7 @@ CHART := chart
 RELEASE := grafana-crossplane
 HELM ?= $(shell command -v helm 2>/dev/null || which /opt/homebrew/bin/helm /usr/local/bin/helm 2>/dev/null | head -n 1 || echo helm)
 
-.PHONY: lint render validate bootstrap sync-roles
+.PHONY: lint render validate bootstrap sync-roles import-lbac
 
 bootstrap:
 	./bootstrap.sh
@@ -21,5 +21,9 @@ validate: lint render
 
 sync-roles:
 	python3 scripts/sync-roles.py
+
+import-lbac:
+	python3 scripts/import-lbac.py
+
 
 

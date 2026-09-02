@@ -1,0 +1,12 @@
+# ==============================================================================
+# Baseline LBAC Rules Catalog
+# ==============================================================================
+# Holds pre-existing Label-Based Access Control (LBAC) rules on data sources.
+# Rules defined in chart/teams/*.yaml will automatically merge with and override
+# entries defined here for the same team.
+#
+# To re-import live existing rules from Grafana on Day 0:
+#   make import-lbac
+# ==============================================================================
+
+{}

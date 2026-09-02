@@ -1,0 +1,47 @@
+{{- $summary := (include "grafana-crossplane.lbacSummary" . | fromYaml) | default dict -}}
+{{- $permissions := $summary.permissions | default list -}}
+{{- $datasources := $summary.datasources | default dict -}}
+
+{{/* ========================================================================
+   Step 1: DataSource Permission Items (Grant Query permission to teams)
+   ======================================================================== */}}
+{{- range $p := $permissions }}
+
+---
+apiVersion: enterprise.grafana.m.crossplane.io/v1alpha1
+kind: DataSourcePermissionItem
+metadata:
+  name: {{ include "grafana-crossplane.resourceName" (printf "%s-%s-%s" $p.teamSlug $p.datasourceUid (lower $p.permission)) | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
+spec:
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    datasourceUid: {{ $p.datasourceUid | quote }}
+    permission: {{ $p.permission | default "Query" | quote }}
+    teamRef:
+      name: {{ $p.teamSlug | quote }}
+{{- end }}
+
+{{/* ========================================================================
+   Step 2: DataSource Config LBAC Rules (Aggregated & Merged rules per datasource)
+   ======================================================================== */}}
+{{- range $dsUid, $dsData := $datasources }}
+
+---
+apiVersion: enterprise.grafana.m.crossplane.io/v1alpha1
+kind: DataSourceConfigLbacRules
+metadata:
+  name: {{ include "grafana-crossplane.resourceName" (printf "lbac-%s" $dsUid) | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
+spec:
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  forProvider:
+    datasourceUid: {{ $dsUid | quote }}
+    rules: {{ $dsData.rulesMap | toJson | quote }}
+{{- end }}

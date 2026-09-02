@@ -25,3 +25,12 @@ folderPermissions:
     permission: Admin
   - folder: platform
     permission: Editor
+
+# Label-Based Access Control (LBAC) on dedicated datasources
+lbac:
+  - datasourceUid: efwdhsqoszbb4f      # Target dedicated LBAC datasource UID
+    permission: Query                  # (Optional, default: Query) Grants datasource query access
+    rules:                             # LogQL or PromQL label matchers
+      - '{cluster="prod", namespace="sre"}'
+      - '{env="prod", job="node-exporter"}'
+

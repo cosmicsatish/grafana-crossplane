@@ -290,3 +290,75 @@ presets: {{ toJson $presets }}
 {{- toYaml $fMap -}}
 {{- end -}}
 
+{{- define "grafana-crossplane.lbacSummary" -}}
+{{- $root := . -}}
+{{- $dsMap := dict -}}
+{{- $permList := list -}}
+
+{{/* 1. Load baseline LBAC file if present */}}
+{{- $baselineRaw := $root.Files.Get "catalog/baseline-lbac.yaml" -}}
+{{- $baseline := ($baselineRaw | fromYaml) | default dict -}}
+{{- range $dsUid, $dsData := $baseline -}}
+  {{- $teamsDict := dict -}}
+  {{- range $tKey, $tVal := ($dsData.teams | default dict) -}}
+    {{- $tUid := $tVal.teamUid | default $tKey | toString -}}
+    {{- $rules := $tVal.rules | default list -}}
+    {{- $_ := set $teamsDict $tKey (dict "teamUid" $tUid "rules" $rules) -}}
+  {{- end -}}
+  {{- $_ := set $dsMap $dsUid $teamsDict -}}
+{{- end -}}
+
+{{/* 2. Load teams from chart/teams/*.yaml and merge/override */}}
+{{- $teams := (include "grafana-crossplane.teamsList" $root | fromYaml).teams | default list -}}
+{{- range $t := $teams -}}
+  {{- $tName := $t.name -}}
+  {{- $tSlug := include "grafana-crossplane.resourceName" ($t.resourceName | default $t.slug | default $tName) -}}
+  {{- $explicitTeamUid := $t.teamUid | default "" | toString -}}
+  {{- range $entry := ($t.lbac | default list) -}}
+    {{- $dsUid := $entry.datasourceUid | default $entry.datasource | default $entry.dsUid | toString -}}
+    {{- if $dsUid -}}
+      {{- $perm := $entry.permission | default "Query" | toString | title -}}
+      {{- $rules := $entry.rules | default list -}}
+
+      {{/* Step 1: Permission Item */}}
+      {{- $permList = append $permList (dict "teamSlug" $tSlug "datasourceUid" $dsUid "permission" $perm) -}}
+
+      {{/* Step 2: Merge/Override LBAC Rules */}}
+      {{- if not (hasKey $dsMap $dsUid) -}}
+        {{- $_ := set $dsMap $dsUid dict -}}
+      {{- end -}}
+      {{- $curDsTeams := get $dsMap $dsUid -}}
+
+      {{/* Check if team already exists in baseline under slug or name */}}
+      {{- $existingUid := "" -}}
+      {{- if hasKey $curDsTeams $tSlug -}}
+        {{- $existingUid = (get $curDsTeams $tSlug).teamUid -}}
+      {{- else if hasKey $curDsTeams $tName -}}
+        {{- $existingUid = (get $curDsTeams $tName).teamUid -}}
+        {{- $_ := unset $curDsTeams $tName -}}
+      {{- end -}}
+
+      {{- $finalTeamUid := $explicitTeamUid | default $existingUid | default $tSlug -}}
+      {{- $_ := set $curDsTeams $tSlug (dict "teamUid" $finalTeamUid "rules" $rules) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* 3. Convert each datasource's teams into rulesMap for JSON encoding */}}
+{{- $finalDsMap := dict -}}
+{{- range $dsUid, $teamsDict := $dsMap -}}
+  {{- $rulesMap := dict -}}
+  {{- range $tSlug, $tData := $teamsDict -}}
+    {{- if $tData.rules -}}
+      {{- $_ := set $rulesMap $tData.teamUid $tData.rules -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $rulesMap -}}
+    {{- $_ := set $finalDsMap $dsUid (dict "rulesMap" $rulesMap) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- dict "datasources" $finalDsMap "permissions" $permList | toYaml -}}
+{{- end -}}
+
+

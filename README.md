@@ -233,7 +233,16 @@ roles:
 folderPermissions:
   - folder: observability              # Matches folder UID or title
     permission: Admin                  # View | Edit | Admin
+
+# Label-Based Access Control (LBAC) on dedicated datasources
+lbac:
+  - datasourceUid: efwdhsqoszbb4f      # Dedicated LBAC datasource (e.g. logs-lbac)
+    permission: Query                  # (Optional, default: Query) Grants query access
+    rules:                             # LogQL or PromQL label matchers
+      - '{cluster="prod", namespace="sre"}'
+      - '{env="prod", job="node-exporter"}'
 ```
+
 
 ### 3. Service Accounts & API Tokens (All-in-One Definition)
 Defined in `chart/serviceaccounts/serviceaccounts.yaml`. All tokens, roles, and presets live together:
@@ -264,7 +273,31 @@ Dashboards are stored as JSON files under `chart/dashboards/<Folder>/<dashboard>
 - **Overwrites**: Automatically enabled (`overwrite: true`) for GitOps consistency.
 
 
+### 5. Label-Based Access Control (LBAC)
+For teams searching logs or metrics in the Grafana UI on a dedicated LBAC data source (e.g. `grafanacloud-logs-lbac`), providing access requires two steps:
+1. **Query Permission**: Allowing the team to query the data source.
+2. **Label Filtering**: Attaching LogQL or PromQL label filters to that team on that data source.
+
+Both steps are declared together directly inside the team manifest (`chart/teams/<team>.yaml`):
+```yaml
+lbac:
+  - datasourceUid: efwdhsqoszbb4f      # Target dedicated LBAC datasource UID
+    permission: Query                  # (Optional, default: Query)
+    rules:
+      - '{cluster="prod", namespace="sre"}'
+```
+
+#### Safe Merge & Override Architecture:
+- **`chart/catalog/baseline-lbac.yaml`**: Stores pre-existing rules for teams on live data sources so they are not wiped out by whole-set `PUT` updates.
+- **Merge / Override**: If a team exists in `baseline-lbac.yaml` and is also declared in `chart/teams/<team>.yaml`, the team manifest in Git **merges and overrides** the baseline rules.
+- **Preservation**: Any teams defined in `baseline-lbac.yaml` that are not yet in `chart/teams/` are **automatically preserved**.
+- **Day 0 Import**: To snapshot pre-existing LBAC rules from live Grafana into the baseline catalog:
+  ```bash
+  make import-lbac
+  ```
+
 ---
+
 
 ## Multi-Stack & Blank Canvas Architecture
 
