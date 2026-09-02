@@ -27,9 +27,15 @@ spec:
     - FailOnSharedResource=true
     - PruneLast=true
     - SkipDryRunOnMissingResource=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
+  ignoreDifferences:
+  - group: oss.grafana.m.crossplane.io
+    kind: FolderPermission
+    jqPathExpressions:
+    - .spec.forProvider.permissions[].teamId
+    - .spec.forProvider.permissions[].userId
+  - group: enterprise.grafana.m.crossplane.io
+    kind: RoleAssignment
+    jsonPointers:
+    - /spec/forProvider/teams
+    - /spec/forProvider/serviceAccounts
+
