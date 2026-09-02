@@ -1,9 +1,0 @@
-name: InfoSec
-presets:
-- observability_viewer
-- security_auditor
-syncGroups:
-- 6bc65ff0-e14b-4861-ad77-3ee8b4eb1583
-folderPermissions:
-- folder: infosec
-  permission: Admin

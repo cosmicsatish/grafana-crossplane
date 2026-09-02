@@ -1,7 +1,0 @@
-name: Application Support
-preset: observability_viewer
-syncGroups:
-- 111c1d8c-5290-4820-b4df-834c89a74cbb
-folderPermissions:
-- folder: application-support
-  permission: Admin

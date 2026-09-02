@@ -1,7 +1,0 @@
-name: triResolve-margin
-preset: observability_viewer
-syncGroups:
-- c32c86f7-5bb8-4228-a400-b6f120e3b6e8
-folderPermissions:
-- folder: triresolve-margin
-  permission: Admin

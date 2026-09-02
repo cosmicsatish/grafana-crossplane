@@ -1,7 +1,0 @@
-name: Product Management
-preset: observability_viewer
-syncGroups:
-- 025e1bb3-057d-419b-a0ca-c87ff9e47fb6
-folderPermissions:
-- folder: product-management
-  permission: Admin

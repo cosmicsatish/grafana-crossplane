@@ -1,7 +1,0 @@
-name: traiana-credit-dev
-preset: observability_viewer
-syncGroups:
-- 9553f191-4468-450f-a39c-851ba6d7296b
-folderPermissions:
-- folder: traiana-credit-dev
-  permission: Admin

@@ -1,7 +1,0 @@
-name: Traiana CSM
-preset: observability_viewer
-syncGroups:
-- e39f88c8-7fba-4b47-ab8c-dd75c2e17627
-folderPermissions:
-- folder: traiana-csm
-  permission: Admin

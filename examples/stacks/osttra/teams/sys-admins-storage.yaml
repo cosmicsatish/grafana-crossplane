@@ -1,7 +1,0 @@
-name: sys admins storage
-preset: observability_viewer
-syncGroups:
-- ed9b867c-65bc-4467-937b-99c55b119b91
-folderPermissions:
-- folder: sys-admins-storage
-  permission: Admin

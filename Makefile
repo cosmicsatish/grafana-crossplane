@@ -4,7 +4,7 @@ CHART := chart
 RELEASE := grafana-crossplane
 HELM ?= $(shell command -v helm 2>/dev/null || which /opt/homebrew/bin/helm /usr/local/bin/helm 2>/dev/null | head -n 1 || echo helm)
 
-.PHONY: lint render validate validate-osttra bootstrap sync-roles
+.PHONY: lint render validate bootstrap sync-roles
 
 bootstrap:
 	./bootstrap.sh
@@ -19,19 +19,8 @@ render:
 
 validate: lint render
 
-validate-osttra:
-	@echo "=> Validating Osttra reference stack..."
-	@TMPDIR=$$(mktemp -d); \
-	cp -r $(CHART)/* $$TMPDIR/; \
-	cp examples/stacks/osttra/folders/folders.yaml $$TMPDIR/folders/; \
-	rm -f $$TMPDIR/teams/*.yaml && cp examples/stacks/osttra/teams/*.yaml $$TMPDIR/teams/; \
-	cp examples/stacks/osttra/serviceaccounts/serviceaccounts.yaml $$TMPDIR/serviceaccounts/; \
-	rm -rf $$TMPDIR/dashboards/* && cp -r examples/stacks/osttra/dashboards/* $$TMPDIR/dashboards/; \
-	$(HELM) lint $$TMPDIR && $(HELM) template $(RELEASE) $$TMPDIR > /dev/null; \
-	rm -rf $$TMPDIR; \
-	echo "=> Osttra reference stack validation passed!"
-
 sync-roles:
+
 	@python3 - << 'EOF'
 	import urllib.request, json, ssl, yaml, os, sys
 	url = os.environ.get("GRAFANA_URL")

@@ -1,7 +1,0 @@
-name: Reset
-preset: observability_viewer
-syncGroups:
-- a876b5d9-db3f-426c-9dd6-928cc53eec08
-folderPermissions:
-- folder: reset
-  permission: Admin

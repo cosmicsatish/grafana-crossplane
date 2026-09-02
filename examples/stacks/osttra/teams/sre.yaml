@@ -1,7 +1,0 @@
-name: SRE
-preset: sre
-syncGroups:
-- a77663ba-4475-4750-84a1-030a5f8ee0aa
-folderPermissions:
-- folder: sre
-  permission: Admin

@@ -1,7 +1,0 @@
-name: triQA
-preset: observability_viewer
-syncGroups:
-- aa00b61f-bd87-49b3-854f-140e8ac322de
-folderPermissions:
-- folder: triqa
-  permission: Admin

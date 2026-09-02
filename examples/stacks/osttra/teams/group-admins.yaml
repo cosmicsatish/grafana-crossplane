@@ -1,7 +1,0 @@
-name: group admins
-preset: admin
-syncGroups:
-- 5e638c4b-c743-469b-980b-22db9c6d4ba4
-folderPermissions:
-- folder: group-admins
-  permission: Admin

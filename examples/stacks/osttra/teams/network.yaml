@@ -1,7 +1,0 @@
-name: Network
-preset: observability_viewer
-syncGroups:
-- d0b3b4aa-7132-4752-9442-70b13cf106b0
-folderPermissions:
-- folder: network
-  permission: Admin

@@ -1,7 +1,0 @@
-name: traiana-connectivity-dev
-preset: observability_viewer
-syncGroups:
-- cc8684ad-d538-4e89-9430-80be4061e895
-folderPermissions:
-- folder: traiana-connectivity-dev
-  permission: Admin

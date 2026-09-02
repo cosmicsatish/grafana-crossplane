@@ -1,7 +1,0 @@
-name: GrafanaAdmin
-preset: admin
-syncGroups:
-- d79a6136-1e64-42f8-b36e-d06900dd8c34
-folderPermissions:
-- folder: grafanaadmin
-  permission: Admin

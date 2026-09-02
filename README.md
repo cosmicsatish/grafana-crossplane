@@ -254,45 +254,63 @@ Dashboards are stored as JSON files under `chart/dashboards/<Folder>/<dashboard>
 
 ---
 
-## Multi-Stack Management
+## Multi-Stack & Blank Canvas Architecture
 
-This repository is designed to be completely decoupled from any single Grafana tenant.
+This repository is intentionally designed to start from a **completely blank slate** for any new Grafana stack:
 
-- **Starter Templates (`chart/`)**: Contains minimal, clean starter manifests ready for a new stack.
-- **Reference Production Stack (`examples/stacks/osttra/`)**: Contains a full 224-resource production stack (42 folders, 39 teams, 19 service accounts, dashboards).
-  
-To load the reference Osttra stack into `chart/`:
-```bash
-cp examples/stacks/osttra/folders/folders.yaml chart/folders/
-cp examples/stacks/osttra/teams/*.yaml chart/teams/
-cp examples/stacks/osttra/serviceaccounts/serviceaccounts.yaml chart/serviceaccounts/
-cp -r examples/stacks/osttra/dashboards/* chart/dashboards/
-```
-To validate the Osttra reference stack without modifying `chart/`:
-```bash
-make validate-osttra
-```
+- **Empty `chart/` Resources**: By default, `chart/folders/folders.yaml` and `chart/serviceaccounts/serviceaccounts.yaml` contain empty lists (`[]`), and `chart/teams/` and `chart/dashboards/` contain only `.gitkeep`.
+- **Rich Examples in `examples/`**: Full, production-ready examples are provided in `examples/folders/`, `examples/teams/`, `examples/serviceaccounts/`, and `examples/dashboards/`.
+
+### Will an Empty Chart Delete Anything from an Existing Grafana Stack?
+
+> [!IMPORTANT]
+> **NO. It is 100% safe.**
+> 
+> If you deploy this repository with a blank `chart/` against a new or existing Grafana stack:
+> 1. **Zero CRs Rendered**: Helm emits 0 Custom Resources to Kubernetes.
+> 2. **No Discovery Sweepers**: Crossplane controllers only reconcile Kubernetes CRs that actively exist in the cluster. Crossplane has **no discovery sweeps** or global garbage collection.
+> 3. **Partial Ownership Preserved**: Any folders, dashboards, teams, users, or permissions that already exist in the target Grafana instance are completely invisible to Crossplane and remain **100% untouched**.
+> 4. **Parent Orphan Protection**: Even when resources *were* previously managed by Git and are subsequently removed, parent resources (`Folder`, `Team`, `ServiceAccount`) default to strict orphan-on-delete (`[Observe, Create, Update]`), guaranteeing they are never deleted from Grafana.
+
+### Starting a New Stack
+To start managing resources on a new stack:
+1. Copy example manifests from `examples/` into `chart/`:
+   ```bash
+   # Copy folder examples
+   cp examples/folders/folders.yaml chart/folders/
+   
+   # Copy team examples
+   cp examples/teams/admins.yaml chart/teams/
+   cp examples/teams/sre.yaml chart/teams/
+   
+   # Copy service account examples
+   cp examples/serviceaccounts/serviceaccounts.yaml chart/serviceaccounts/
+   
+   # Copy sample dashboard
+   mkdir -p chart/dashboards/Observability
+   cp examples/dashboards/sample-dashboard.json chart/dashboards/Observability/
+   ```
+2. Customize the values for your stack.
+3. Validate locally:
+   ```bash
+   make validate
+   ```
+4. Commit and push to Git.
 
 ---
 
 ## Repository Layout
 
 ```text
-├── chart/                               # Helm GitOps Chart
+├── chart/                               # Helm GitOps Chart (Blank canvas by default)
 │   ├── catalog/                         # RBAC Role Catalogs
 │   │   ├── fixed-roles.yaml             # 152 live fixed:* roles
 │   │   ├── role-presets.yaml            # Role preset definitions
 │   │   └── stacks/default/plugin-roles.yaml # 129 live plugins:* roles
-│   ├── dashboards/                      # Dashboards grouped by Folder
-│   │   └── Observability/               # Auto-discovered folder
-│   │       └── sample-dashboard.json
-│   ├── folders/                         # Folder definitions
-│   │   └── folders.yaml
-│   ├── serviceaccounts/                 # Service accounts & tokens
-│   │   └── serviceaccounts.yaml
-│   ├── teams/                           # Team definitions (one per team)
-│   │   ├── admins.yaml
-│   │   └── sre.yaml
+│   ├── dashboards/                      # Dashboards grouped by Folder (.gitkeep)
+│   ├── folders/                         # Folder definitions (folders.yaml: [])
+│   ├── serviceaccounts/                 # Service accounts & tokens (serviceaccounts.yaml: [])
+│   ├── teams/                           # Team definitions (.gitkeep)
 │   ├── templates/                       # Crossplane v2 manifests
 │   │   ├── _helpers.tpl                 # RBAC, folder & permission aggregation
 │   │   ├── Folder.yaml                  # Folder (Wave 0) & FolderPermission (Wave 1)
@@ -310,10 +328,13 @@ make validate-osttra
 │       ├── provider.yaml                # provider-grafana:v2.14.0
 │       ├── providerconfig.yaml          # ProviderConfig referencing secret
 │       └── runtime-config.yaml          # DeploymentRuntimeConfig (rate limits)
-├── examples/
-│   ├── stacks/
-│   │   └── osttra/                      # Full reference production dataset
-│   └── ...
+├── examples/                            # Comprehensive reference examples
+│   ├── dashboards/                      # Example dashboards
+│   ├── folders/                         # Example folder configurations
+│   ├── rbac/                            # Example RBAC role bindings
+│   ├── serviceaccounts/                 # Example service accounts & tokens
+│   └── teams/                           # Example teams & IdP sync groups
 ├── bootstrap.sh                         # Automated end-to-end setup script
 └── Makefile                             # Helper targets (validate, sync-roles, etc.)
 ```
+

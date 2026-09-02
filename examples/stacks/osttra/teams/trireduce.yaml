@@ -1,7 +1,0 @@
-name: triReduce
-preset: observability_viewer
-syncGroups:
-- e9c5b616-e555-4682-9657-3f3503cbca13
-folderPermissions:
-- folder: trireduce
-  permission: Admin

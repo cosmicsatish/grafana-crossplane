@@ -1,7 +1,0 @@
-name: fortimail
-preset: observability_viewer
-syncGroups:
-- 8917ff7a-fb8f-459f-9902-80bd1307b55c
-folderPermissions:
-- folder: fortimail
-  permission: Admin

@@ -1,7 +1,0 @@
-name: triCalculate
-preset: observability_viewer
-syncGroups:
-- d59d4350-13f5-460d-a36c-947b0e8c7c94
-folderPermissions:
-- folder: tricalculate
-  permission: Admin

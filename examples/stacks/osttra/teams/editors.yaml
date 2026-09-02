@@ -1,7 +1,0 @@
-name: Editors
-preset: editor
-syncGroups:
-- af19ce77-fc29-4113-827c-3f4fa7fa3f99
-folderPermissions:
-- folder: editors
-  permission: Edit

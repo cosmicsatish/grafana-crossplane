@@ -1,7 +1,0 @@
-name: optapi
-preset: observability_viewer
-syncGroups:
-- 0d803051-8320-4aae-935f-286db952d40f
-folderPermissions:
-- folder: optapi
-  permission: Admin
