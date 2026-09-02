@@ -1,4 +1,5 @@
 {{- $folders := (include "grafana-crossplane.foldersList" . | fromYaml).folders | default list -}}
+{{- $fPermMap := (include "grafana-crossplane.folderPermissionsMap" . | fromYaml) | default dict -}}
 {{- range $f := $folders }}
 {{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) }}
 {{- $delete := $f.allowDelete | default false }}
@@ -35,21 +36,16 @@ spec:
     {{- else with $f.parentTitle }}
     parentFolderUid: {{ include "grafana-crossplane.slugify" (. | toString | trim) | quote }}
     {{- end }}
-{{ range $p := ($f.permissions | default list) }}
-{{- $permission := $p.permission | default "View" | toString | lower -}}
-{{- if eq $permission "view" }}{{ $permission = "View" }}{{ else if eq $permission "query" }}{{ $permission = "View" }}{{ else if eq $permission "edit" }}{{ $permission = "Edit" }}{{ else if eq $permission "write" }}{{ $permission = "Edit" }}{{ else if eq $permission "admin" }}{{ $permission = "Admin" }}{{ else }}{{ fail (printf "Unsupported folder permission %q for %s" $permission $f.title) }}{{ end -}}
-{{- $actor := "permission" -}}
-{{- if $p.role }}{{ $actor = printf "role-%s" (include "grafana-crossplane.slugify" $p.role) }}{{ end -}}
-{{- if $p.team }}{{ $actor = printf "team-%s" (include "grafana-crossplane.slugify" $p.team) }}{{ end -}}
-{{- if $p.teamRef }}{{ $actor = printf "team-ref-%s" (include "grafana-crossplane.resourceName" $p.teamRef.name) }}{{ end -}}
-{{- if $p.user }}{{ $actor = printf "user-%s" (include "grafana-crossplane.slugify" $p.user) }}{{ end -}}
-{{- if $p.userRef }}{{ $actor = printf "user-ref-%s" (include "grafana-crossplane.resourceName" $p.userRef.name) }}{{ end }}
+
+{{- if hasKey $fPermMap $uid }}
+{{- $perms := get $fPermMap $uid }}
+{{- if $perms }}
 
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
-kind: FolderPermissionItem
+kind: FolderPermission
 metadata:
-  name: {{ include "grafana-crossplane.resourceName" (printf "%s-%s-%s" $uid $actor (lower $permission)) | quote }}
+  name: {{ include "grafana-crossplane.resourceName" $uid | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   labels:
@@ -63,20 +59,21 @@ spec:
     - Delete
   forProvider:
     folderUid: {{ $uid | quote }}
-    permission: {{ $permission | quote }}
-    {{- with $p.role }}
-    role: {{ . | toString | title | quote }}
-    {{- else with $p.team }}
-    teamRef:
-      name: {{ include "grafana-crossplane.slugify" . | quote }}
-    {{- else with $p.teamRef }}
-    teamRef:
-      {{- toYaml . | nindent 6 }}
-    {{- else with $p.user }}
-    userId: {{ . | toString | quote }}
-    {{- else with $p.userRef }}
-    userRef:
-      {{- toYaml . | nindent 6 }}
-    {{- end }}
+    permissions:
+      {{- range $p := $perms }}
+      - permission: {{ $p.permission | quote }}
+        {{- if $p.role }}
+        role: {{ $p.role | quote }}
+        {{- end }}
+        {{- if $p.teamRef }}
+        teamRef:
+          name: {{ $p.teamRef.name | quote }}
+        {{- end }}
+        {{- if $p.userRef }}
+        userRef:
+          name: {{ $p.userRef.name | quote }}
+        {{- end }}
+      {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}

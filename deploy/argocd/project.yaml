@@ -21,6 +21,8 @@ spec:
   - group: oss.grafana.m.crossplane.io
     kind: FolderPermissionItem
   - group: oss.grafana.m.crossplane.io
+    kind: FolderPermission
+  - group: oss.grafana.m.crossplane.io
     kind: ServiceAccount
   - group: oss.grafana.m.crossplane.io
     kind: ServiceAccountToken
@@ -32,3 +34,6 @@ spec:
     kind: TeamExternalGroup
   - group: enterprise.grafana.m.crossplane.io
     kind: RoleAssignmentItem
+  - group: enterprise.grafana.m.crossplane.io
+    kind: RoleAssignment
+

@@ -225,3 +225,76 @@ presets: {{ toJson $presets }}
 {{- range ($.fixedRoles | default list) }}{{ $items = append $items (. | toString) }}{{- end -}}
 {{- uniq $items | toYaml -}}
 {{- end -}}
+
+{{- define "grafana-crossplane.roleAssignmentsMap" -}}
+{{- $root := . -}}
+{{- $roleMap := dict -}}
+{{- $teams := (include "grafana-crossplane.teamsList" $root | fromYaml).teams | default list -}}
+{{- $sas := (include "grafana-crossplane.saList" $root | fromYaml).serviceAccounts | default list -}}
+{{- $presetMap := ((include "grafana-crossplane.roleMaps" $root | fromYaml).presets | default dict) -}}
+{{- range $t := $teams -}}
+  {{- $tSlug := include "grafana-crossplane.resourceName" ($t.resourceName | default $t.slug | default $t.name) -}}
+  {{- $roles := list -}}
+  {{- with $t.preset }}{{ range (get $presetMap . | default list) }}{{ $roles = append $roles . }}{{ end }}{{ end -}}
+  {{- range ($t.presets | default list) }}{{ range (get $presetMap . | default list) }}{{ $roles = append $roles . }}{{ end }}{{ end -}}
+  {{- range ($t.roles | default list) }}{{ $roles = append $roles . }}{{ end -}}
+  {{- range ($t.fixedRoles | default list) }}{{ $roles = append $roles . }}{{ end -}}
+  {{- range $r := (uniq $roles) -}}
+    {{- if not (hasKey $roleMap $r) -}}
+      {{- $_ := set $roleMap $r (dict "teams" list "serviceAccounts" list) -}}
+    {{- end -}}
+    {{- $entry := get $roleMap $r -}}
+    {{- $_ := set $entry "teams" (append $entry.teams $tSlug) -}}
+  {{- end -}}
+{{- end -}}
+{{- range $sa := $sas -}}
+  {{- $saSlug := include "grafana-crossplane.resourceName" ($sa.resourceName | default $sa.name) -}}
+  {{- $roles := list -}}
+  {{- with $sa.preset }}{{ range (get $presetMap . | default list) }}{{ $roles = append $roles . }}{{ end }}{{ end -}}
+  {{- range ($sa.presets | default list) }}{{ range (get $presetMap . | default list) }}{{ $roles = append $roles . }}{{ end }}{{ end -}}
+  {{- range ($sa.roles | default list) }}{{ $roles = append $roles . }}{{ end -}}
+  {{- range ($sa.fixedRoles | default list) }}{{ $roles = append $roles . }}{{ end -}}
+  {{- range $r := (uniq $roles) -}}
+    {{- if not (hasKey $roleMap $r) -}}
+      {{- $_ := set $roleMap $r (dict "teams" list "serviceAccounts" list) -}}
+    {{- end -}}
+    {{- $entry := get $roleMap $r -}}
+    {{- $_ := set $entry "serviceAccounts" (append $entry.serviceAccounts $saSlug) -}}
+  {{- end -}}
+{{- end -}}
+{{- toYaml $roleMap -}}
+{{- end -}}
+
+{{- define "grafana-crossplane.folderPermissionsMap" -}}
+{{- $root := . -}}
+{{- $fMap := dict -}}
+{{- $folders := (include "grafana-crossplane.foldersList" $root | fromYaml).folders | default list -}}
+{{- range $f := $folders -}}
+  {{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) -}}
+  {{- $perms := list -}}
+  {{- range $p := ($f.permissions | default list) -}}
+    {{- if $p.role -}}
+      {{- $perm := $p.permission | default "View" | toString | title -}}
+      {{- $perms = append $perms (dict "role" ($p.role | toString | title) "permission" $perm) -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $perms -}}
+    {{- $_ := set $fMap $uid $perms -}}
+  {{- end -}}
+{{- end -}}
+{{- $teams := (include "grafana-crossplane.teamsList" $root | fromYaml).teams | default list -}}
+{{- range $t := $teams -}}
+  {{- $tSlug := include "grafana-crossplane.resourceName" ($t.resourceName | default $t.slug | default $t.name) -}}
+  {{- range $fp := ($t.folderPermissions | default list) -}}
+    {{- $fUid := include "grafana-crossplane.resolveFolderUid" (dict "folder" $fp.folder "root" $root) -}}
+    {{- $perm := $fp.permission | default "View" | toString | title -}}
+    {{- if not (hasKey $fMap $fUid) -}}
+      {{- $_ := set $fMap $fUid list -}}
+    {{- end -}}
+    {{- $cur := get $fMap $fUid -}}
+    {{- $_ := set $fMap $fUid (append $cur (dict "teamRef" (dict "name" $tSlug) "permission" $perm)) -}}
+  {{- end -}}
+{{- end -}}
+{{- toYaml $fMap -}}
+{{- end -}}
+

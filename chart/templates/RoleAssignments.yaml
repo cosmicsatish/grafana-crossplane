@@ -1,0 +1,39 @@
+{{- if .Values.rbac.enabled | default true -}}
+{{- $roleMap := (include "grafana-crossplane.roleAssignmentsMap" . | fromYaml) | default dict -}}
+{{- range $roleName, $data := $roleMap }}
+{{- $roleSlug := include "grafana-crossplane.slugify" $roleName }}
+{{- $teams := $data.teams | default list }}
+{{- $sas := $data.serviceAccounts | default list }}
+
+---
+apiVersion: enterprise.grafana.m.crossplane.io/v1alpha1
+kind: RoleAssignment
+metadata:
+  name: {{ include "grafana-crossplane.resourceName" (printf "role-%s" $roleSlug) | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
+spec:
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
+    - Delete
+  forProvider:
+    roleUid: {{ include "grafana-crossplane.resolveRoleUid" (dict "root" $ "name" $roleName) | quote }}
+    {{- if $teams }}
+    teamRefs:
+      {{- range $t := $teams }}
+      - name: {{ $t | quote }}
+      {{- end }}
+    {{- end }}
+    {{- if $sas }}
+    serviceAccountRefs:
+      {{- range $s := $sas }}
+      - name: {{ $s | quote }}
+      {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}
