@@ -16,11 +16,6 @@ metadata:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
-  managementPolicies:
-    - Observe
-    - Create
-    - Update
-    - Delete
   forProvider:
     roleUid: {{ include "grafana-crossplane.resolveRoleUid" (dict "root" $ "name" $roleName) | quote }}
     {{- if $teams }}

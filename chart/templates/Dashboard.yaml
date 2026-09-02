@@ -23,7 +23,6 @@ metadata:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
-  {{- include "grafana-crossplane.managedSpec" $ | nindent 2 }}
   forProvider:
     {{- if $isV2 }}
     metadata:

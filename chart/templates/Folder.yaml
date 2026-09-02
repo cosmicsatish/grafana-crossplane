@@ -45,11 +45,6 @@ metadata:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
-  managementPolicies:
-    - Observe
-    - Create
-    - Update
-    - Delete
   forProvider:
     folderUid: {{ $uid | quote }}
     permissions:

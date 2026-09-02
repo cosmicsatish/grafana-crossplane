@@ -1,13 +1,5 @@
 {{/* Shared helpers for the small official-resource surface. */}}
 
-{{- define "grafana-crossplane.managedSpec" -}}
-managementPolicies:
-  - Observe
-  - Create
-  - Update
-  - Delete
-{{- end -}}
-
 {{- define "grafana-crossplane.labels" -}}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/instance: {{ .Release.Name }}
