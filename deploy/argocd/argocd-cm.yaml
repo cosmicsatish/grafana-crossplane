@@ -7,244 +7,26 @@ metadata:
     app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/part-of: argocd
 data:
-  resource.customizations.health.oss.grafana.m.crossplane.io_Folder: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
+  # Wildcard custom health check for all Crossplane Grafana managed resources (*.grafana.m.crossplane.io)
+  # Automatically handles Folders, Teams, Dashboards, ServiceAccounts, LBAC Rules, and Permissions.
+  resource.customizations: |
+    "*.grafana.m.crossplane.io/*":
+      health.lua: |
+        hs = {}
+        if obj.status ~= nil and obj.status.conditions ~= nil then
+          for i, condition in ipairs(obj.status.conditions) do
+            if condition.type == "Ready" and condition.status == "True" then
+              hs.status = "Healthy"
+              hs.message = condition.message or "Ready"
+              return hs
+            end
+            if condition.type == "Synced" and condition.status == "False" then
+              hs.status = "Degraded"
+              hs.message = condition.message or "Sync failed"
+              return hs
+            end
+          end
         end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.oss.grafana.m.crossplane.io_FolderPermissionItem: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.oss.grafana.m.crossplane.io_FolderPermission: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-
-  resource.customizations.health.oss.grafana.m.crossplane.io_Team: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.enterprise.grafana.m.crossplane.io_TeamExternalGroup: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.oss.grafana.m.crossplane.io_ServiceAccount: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.oss.grafana.m.crossplane.io_ServiceAccountToken: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.oss.grafana.m.crossplane.io_ServiceAccountPermissionItem: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.enterprise.grafana.m.crossplane.io_RoleAssignmentItem: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.enterprise.grafana.m.crossplane.io_RoleAssignment: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-
-  resource.customizations.health.oss.grafana.m.crossplane.io_Dashboard: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
-
-  resource.customizations.health.oss.grafana.m.crossplane.io_DashboardV2: |
-    hs = {}
-    if obj.status ~= nil and obj.status.conditions ~= nil then
-      for i, condition in ipairs(obj.status.conditions) do
-        if condition.type == "Ready" and condition.status == "True" then
-          hs.status = "Healthy"
-          hs.message = condition.message or "Ready"
-          return hs
-        end
-        if condition.type == "Synced" and condition.status == "False" then
-          hs.status = "Degraded"
-          hs.message = condition.message or "Sync failed"
-          return hs
-        end
-      end
-    end
-    hs.status = "Progressing"
-    hs.message = "Waiting for resource to become Ready"
-    return hs
+        hs.status = "Progressing"
+        hs.message = "Waiting for resource to become Ready"
+        return hs
