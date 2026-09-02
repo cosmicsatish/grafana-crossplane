@@ -1,0 +1,11 @@
+name: Admins
+preset: admin
+syncGroups:
+- 343133ba-f28b-4fab-95a0-55fc56391429
+folderPermissions:
+- folder: osttra
+  permission: Admin
+- folder: admins
+  permission: Admin
+- folder: editors
+  permission: Admin

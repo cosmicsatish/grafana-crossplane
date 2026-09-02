@@ -7,9 +7,11 @@
   {{- $folderRequested := $data.folderUid | default $raw.folderUid | default $data.folderTitle | default $raw.folderTitle | default $folderPath -}}
   {{- $folder := include "grafana-crossplane.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderPath "root" $) -}}
   {{- $isV2 := hasPrefix (toString ($data.apiVersion | default "")) "dashboard.grafana.app/" -}}
-  {{- $uid := $data.uid | default ($data.metadata.uid | default (ternary ($data.metadata.name | default "") "" $isV2)) | toString -}}
-  {{- $title := $data.title | default $data.metadata.name | default $base | toString -}}
+  {{- $meta := $data.metadata | default dict -}}
+  {{- $uid := $data.uid | default ($meta.uid | default (ternary ($meta.name | default "") "" $isV2)) | toString -}}
+  {{- $title := $data.title | default ($meta.name | default $base) | toString -}}
   {{- $resourceKey := $uid | default (printf "%s-%s" $folder $title) -}}
+
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: {{ if $isV2 }}DashboardV2{{ else }}Dashboard{{ end }}
@@ -33,9 +35,12 @@ spec:
       {{- end }}
     spec:
       json: {{ ($data.spec | default dict | toJson) | quote }}
-      {{- with $data.spec.title }}
+      {{- with $data.spec }}
+      {{- with .title }}
       title: {{ . | quote }}
       {{- end }}
+      {{- end }}
+
       options:
         overwrite: true
     {{- else }}

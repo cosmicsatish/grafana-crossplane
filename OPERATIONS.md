@@ -1,49 +1,157 @@
-# Operations and safety
+# Operations & Safety Guide
 
-## Prerequisites
+This operational manual describes daily operations, safety boundaries, troubleshooting procedures, and recovery workflows for the Grafana Crossplane GitOps platform.
 
-Install Kubernetes, Crossplane, Argo CD and Helm 3+. Install the pinned official Grafana provider `xpkg.upbound.io/grafana/provider-grafana:v2.14.0`. Create the provider credential Secret outside Git.
+---
 
-## Daily workflow
+## 1. Daily GitOps Workflow
 
-1. Add or modify one managed resource file under `chart/`.
-2. For RBAC, use role names or presets; never hard-code plugin-role UIDs in Team/Service Account manifests.
-3. Commit and let Argo CD render the chart.
-4. Crossplane reconciles only the rendered managed resources.
+1. **Add or Modify Manifests**:
+   - Folders: Edit `chart/folders/folders.yaml`.
+   - Teams: Add or edit `chart/teams/<team-name>.yaml`.
+   - Service Accounts & Tokens: Edit `chart/serviceaccounts/serviceaccounts.yaml`.
+   - Dashboards: Drop exported JSON into `chart/dashboards/<Folder>/<dashboard>.json`.
+2. **Local Validation**:
+   ```bash
+   make validate
+   ```
+   *Always run `make validate` before pushing to verify template expansion, role name references, and YAML schemas.*
+3. **Commit & Push**:
+   ```bash
+   git add -A
+   git commit -m "feat(observability): add alerting team and platform dashboards"
+   git push origin main
+   ```
+4. **Automated Reconciliation**:
+   - Argo CD detects the Git commit.
+   - Evaluates sync-waves in sequence:
+     - **Wave 0**: Folders, Teams, Service Accounts
+     - **Wave 1**: Team External Groups, Folder Permissions, Role Assignments, Tokens
+     - **Wave 2**: Dashboards & DashboardsV2
+   - Crossplane reconciles with Grafana Cloud under enforced rate limits.
 
-## Safe ownership boundaries
+---
 
-`Dashboard`/`DashboardV2` manage one dashboard. `FolderPermissionItem`, `ServiceAccountPermissionItem`, and `RoleAssignmentItem` each represent one independent relationship. Removing one item removes only that relationship.
+## 2. Safe Ownership & Deletion Boundaries
 
-Folders, Teams and Service Accounts are Orphan-on-delete by default because deleting them can have secondary effects. `TeamExternalGroup` is set-valued for one Team; deletion is Orphan by default. Only opt into external-group deletion when Git is the authoritative source for that Team's entire external-group mapping.
+### Parent Resource Safety (Strict Orphan-on-Delete)
+- **`Folder`**, **`Team`**, and **`ServiceAccount`** resources are configured with:
+  ```yaml
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
+  ```
+- **Operational Effect**: Removing a folder, team, or service account manifest from Git deletes the Kubernetes CR but **orphans** the external object in Grafana Cloud.
+- **Why**: Deleting a parent resource in Grafana cascades destructively (deleting all dashboards in a folder, breaking team alert routing, or invalidating active API tokens).
 
-Do not add whole-set resources for permissions, alerting trees or role assignment collections. Those APIs can replace relationships that are not represented in Git.
+### Granular Leaf Deletion
+- **`Dashboard`** and **`ServiceAccountToken`** resources are configured with `Delete` in `managementPolicies`.
+- **Operational Effect**: Removing an individual dashboard or token manifest from Git safely deletes that specific object from Grafana Cloud without affecting surrounding resources.
 
-## RBAC catalog
+### Folder Empty-Check Protection
+- Even if a folder is marked with `allowDelete: true`, `preventDestroyIfNotEmpty: true` is hardcoded. Grafana Cloud will reject deletion if any unmanaged dashboard, alert, or subfolder exists within it.
 
-Built-in fixed roles are centralized in `chart/catalog/fixed-roles.yaml`. Plugin role UIDs are stack-local and belong in `chart/catalog/stacks/<stack>/plugin-roles.yaml`. Set the selected catalog with `rbac.roleCatalog.pluginPath`. Team and Service Account files use role names/presets only. Grafana documents fixed-role UUIDs for provisioning and notes that older Grafana instances may not expose them. citeturn970918search0
+---
 
-`RoleAssignmentItem` is deliberately used instead of the provider's whole-set `RoleAssignment`; the provider documents `RoleAssignmentItem` as managing a single assignment and conflicting with the whole-set resource. citeturn982509search0turn982509search2
+## 3. CLI Management with Short Names
 
-## Multi-stack
-
-Use the same chart and resource files for all stacks. Only change the ProviderConfig and the plugin-role catalog path. Fixed role names remain stable logical inputs; plugin roles are resolved from the selected per-stack catalog. Grafana's RBAC API returns the current role names and UIDs, but provider-grafana has no native list data source for wiring that discovery into a managed resource, so this repository keeps discovery out of the runtime and makes the stack catalog explicit. citeturn970918search4turn575153search0
-
-## Troubleshooting
+Use the configured short names to inspect and operate on your stack quickly:
 
 ```bash
-argocd app get grafana-crossplane
-kubectl -n crossplane-system get dashboard,dashboardv2,folder,folderpermissionitem,team,teamexternalgroup,serviceaccount,serviceaccounttoken,serviceaccountpermissionitem,roleassignmentitem
-kubectl -n crossplane-system describe <kind> <name>
+# Check all resources across your stack
+kubectl get gdash,gfolders,gteams,gsa,gfp,gra,gteg -n crossplane-system
+
+# Check status of folders
+kubectl get gfolders -n crossplane-system
+
+# Check status of teams
+kubectl get gteams -n crossplane-system
+
+# Inspect a specific role assignment
+kubectl describe gra role-fixedalertingadmin -n crossplane-system
+
+# Check generated Service Account secrets
+kubectl get secrets -n crossplane-system -l app.kubernetes.io/part-of=grafana-crossplane
 ```
 
+---
 
-### Crossplane v2 lifecycle policy
+## 4. Runbooks for Common Tasks
 
-The chart emits only `spec.managementPolicies` for namespaced Grafana managed resources. Do not add `deletionPolicy`; it is not part of the Crossplane v2 namespaced managed-resource API.
+### Runbook A: Rotating an API Token
+1. In `chart/serviceaccounts/serviceaccounts.yaml`, add a new token entry to `tokens:` with a new name and Secret name:
+   ```yaml
+   tokens:
+     - name: deployer-token-v2
+       secretName: deployer-grafana-token-v2
+       secondsToLive: "90d"
+   ```
+2. Run `make validate`, commit, and push.
+3. Once the new Kubernetes Secret is generated, update your consuming application (e.g. CI pipeline) with the new token.
+4. Remove the old token entry from `tokens:`. Commit and push. Crossplane will delete the old token from Grafana Cloud.
 
-- `Observe, Create, Update, Delete`: full lifecycle ownership of that individual external object.
-- `Observe, Create, Update`: manage and observe the external object, but orphan it when the Kubernetes managed resource is removed.
-- `Observe`: import/observe only; Crossplane does not create, update, or delete the external object.
+### Runbook B: Re-syncing Role Catalogs after a Grafana Upgrade
+When Grafana Cloud upgrades or new plugins are installed, new `fixed:*` and `plugins:*` roles may become available:
+1. Export credentials:
+   ```bash
+   export GRAFANA_URL="https://<your-org>.grafana.net"
+   export GRAFANA_TOKEN="glsa_..."
+   ```
+2. Run the sync target:
+   ```bash
+   make sync-roles
+   ```
+3. Commit and push the updated `chart/catalog/` files to Git.
 
-Keep parent resources such as folders, teams, service accounts, and TeamExternalGroup mappings non-deleting by default. Use deletion only when Git is explicitly authoritative for the complete parent object or set.
+### Runbook C: Recovering an Orphaned Resource into Git
+If a resource was removed from Git, orphaned in Grafana, and you now want to bring it back under GitOps control:
+1. Re-add the YAML definition in `chart/` using the original `uid` (for folders/dashboards) or `name` (for teams/service accounts).
+2. Commit and push.
+3. Crossplane will observe the existing Grafana object and adopt it seamlessly without recreating or modifying its internal ID.
+
+---
+
+## 5. Troubleshooting & Diagnostics
+
+### Issue 1: Argo CD App is OutOfSync on FolderPermissions or RoleAssignments
+- **Cause**: Crossplane reference resolution dynamically injects resolved numeric IDs (e.g. `teamId: 1:3096`) into `spec.forProvider`.
+- **Fix**: Verify that `deploy/argocd/application.yaml` contains the `ignoreDifferences` configuration:
+  ```yaml
+  ignoreDifferences:
+  - group: oss.grafana.m.crossplane.io
+    kind: FolderPermission
+    jqPathExpressions:
+    - .spec.forProvider.permissions[].teamId
+    - .spec.forProvider.permissions[].userId
+  - group: enterprise.grafana.m.crossplane.io
+    kind: RoleAssignment
+    jsonPointers:
+    - /spec/forProvider/teams
+    - /spec/forProvider/serviceAccounts
+  ```
+
+### Issue 2: HTTP 429 Too Many Requests (Rate Limiting)
+- **Cause**: Crossplane reconciling too many resources concurrently against Grafana Cloud.
+- **Fix**: Ensure `deploy/crossplane/runtime-config.yaml` is applied with:
+  ```yaml
+  spec:
+    deploymentTemplate:
+      spec:
+        template:
+          spec:
+            containers:
+            - name: package-runtime
+              args:
+              - --max-reconcile-rate=10
+              - --poll=10m
+  ```
+
+### Issue 3: Dashboards Stuck in Wave 2 (Not Syncing)
+- **Cause**: A Wave 0 (Folder) or Wave 1 (Permission) dependency failed to reach `Ready=True`.
+- **Diagnostic**:
+  ```bash
+  # Check which resources are not Healthy or Synced
+  kubectl get gfolders,gfp -n crossplane-system -o jsonpath='{range .items[?(@.status.conditions[0].status!="True")]}{.kind}{"/"}{.metadata.name}{": "}{.status.conditions[0].message}{"\n"}{end}'
+  ```
+- **Fix**: Inspect the referenced folder UID in the dashboard JSON. Ensure the folder exists in `chart/folders/folders.yaml` or under `chart/dashboards/<FolderName>/`.

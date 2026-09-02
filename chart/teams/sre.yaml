@@ -1,7 +1,27 @@
+# ==============================================================================
+# Starter Team Manifest: Site Reliability Engineering (SRE)
+# ==============================================================================
+# Demonstrates role presets, plugin-role references, and folder permissions.
+# ==============================================================================
+
 name: SRE
-preset: sre
+email: sre-team@example.com
+
+# IdP Group Sync (e.g. Azure AD / Okta group UUID)
 syncGroups:
-- a77663ba-4475-4750-84a1-030a5f8ee0aa
+  - "c8f2fca2-8db2-4876-bce7-d9ea24d1e2e9"
+
+# Uses role presets expanded by Helm from chart/catalog/role-presets.yaml
+preset: sre
+
+# Additional direct roles (e.g. Stack-specific plugin roles)
+roles:
+  - fixed:alerting:admin
+  - plugins:grafana-kowalski-app:frontend-observability-viewer
+
+# Folder-level permissions
 folderPermissions:
-- folder: sre
-  permission: Admin
+  - folder: observability
+    permission: Admin
+  - folder: platform
+    permission: Editor

@@ -8,9 +8,11 @@ metadata:
 spec:
   project: grafana-crossplane
   source:
+    # Update repoURL and targetRevision to point to your GitOps repository
     repoURL: https://github.com/cosmicsatish/grafana-crossplane.git
     targetRevision: main
     path: chart
+
     helm:
       releaseName: grafana-crossplane
       ignoreMissingValueFiles: true

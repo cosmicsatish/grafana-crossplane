@@ -59,7 +59,12 @@ echo "=> Crossplane installed and ready!"
 echo "=> Checking for Grafana Provider Credentials..."
 if ! $KUBECTL_BIN get secret grafana-provider-creds -n crossplane-system > /dev/null 2>&1; then
     echo "Secret grafana-provider-creds not found."
-    GRAFANA_URL="${GRAFANA_URL:-https://cosmicsatish.grafana.net}"
+
+    if [ -z "${GRAFANA_URL}" ]; then
+        read -rp "Enter your Grafana URL (e.g. https://<your-org>.grafana.net): " GRAFANA_URL
+    else
+        echo "=> Using GRAFANA_URL from environment: ${GRAFANA_URL}"
+    fi
 
     if [ -z "${GRAFANA_TOKEN}" ]; then
         read -rsp "Enter your Grafana Cloud Admin Service Account Token: " GRAFANA_TOKEN
@@ -118,6 +123,8 @@ fi
 
 # 6. Configure ArgoCD Repository Access
 echo "=> Configuring ArgoCD repository credentials..."
+REPO_URL="${GIT_REPO_URL:-$(git remote get-url origin 2>/dev/null || echo 'https://github.com/cosmicsatish/grafana-crossplane.git')}"
+REPO_USER="${GIT_USER:-$(git config user.name 2>/dev/null || echo 'git')}"
 if ! $KUBECTL_BIN get secret argocd-repo-github -n argocd > /dev/null 2>&1; then
     _GH_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-${GITHUB_TOKEN}}"
     if [ -n "${_GH_TOKEN}" ]; then
@@ -125,18 +132,19 @@ if ! $KUBECTL_BIN get secret argocd-repo-github -n argocd > /dev/null 2>&1; then
         $KUBECTL_BIN create secret generic argocd-repo-github \
             -n argocd \
             --from-literal=type=git \
-            --from-literal=url=https://github.com/cosmicsatish/grafana-crossplane.git \
-            --from-literal=username=cosmicsatish \
+            --from-literal=url="${REPO_URL}" \
+            --from-literal=username="${REPO_USER}" \
             --from-literal=password="${_GH_TOKEN}"
         $KUBECTL_BIN label secret argocd-repo-github -n argocd \
             argocd.argoproj.io/secret-type=repository
         echo "=> ArgoCD repository secret created."
     else
-        echo "=> Public repository: proceeding with unauthenticated repository access."
+        echo "=> Public repository (${REPO_URL}): proceeding with unauthenticated repository access."
     fi
 else
     echo "=> ArgoCD repository secret already exists."
 fi
+
 
 # 7. Deploy ArgoCD Application
 echo "=> Deploying ArgoCD Application to continuously sync resources..."

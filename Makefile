@@ -4,7 +4,7 @@ CHART := chart
 RELEASE := grafana-crossplane
 HELM ?= $(shell command -v helm 2>/dev/null || which /opt/homebrew/bin/helm /usr/local/bin/helm 2>/dev/null | head -n 1 || echo helm)
 
-.PHONY: lint render validate bootstrap sync-roles
+.PHONY: lint render validate validate-osttra bootstrap sync-roles
 
 bootstrap:
 	./bootstrap.sh
@@ -12,19 +12,33 @@ bootstrap:
 lint:
 	command -v $(HELM) >/dev/null || (echo "helm is required" >&2; exit 1)
 	$(HELM) lint $(CHART)
-	@if [ -f $(CHART)/values-osttra.yaml ]; then $(HELM) lint $(CHART) -f $(CHART)/values-osttra.yaml; fi
 
 render:
 	command -v $(HELM) >/dev/null || (echo "helm is required" >&2; exit 1)
 	$(HELM) template $(RELEASE) $(CHART)
-	@if [ -f $(CHART)/values-osttra.yaml ]; then $(HELM) template $(RELEASE) $(CHART) -f $(CHART)/values-osttra.yaml; fi
 
 validate: lint render
+
+validate-osttra:
+	@echo "=> Validating Osttra reference stack..."
+	@TMPDIR=$$(mktemp -d); \
+	cp -r $(CHART)/* $$TMPDIR/; \
+	cp examples/stacks/osttra/folders/folders.yaml $$TMPDIR/folders/; \
+	rm -f $$TMPDIR/teams/*.yaml && cp examples/stacks/osttra/teams/*.yaml $$TMPDIR/teams/; \
+	cp examples/stacks/osttra/serviceaccounts/serviceaccounts.yaml $$TMPDIR/serviceaccounts/; \
+	rm -rf $$TMPDIR/dashboards/* && cp -r examples/stacks/osttra/dashboards/* $$TMPDIR/dashboards/; \
+	$(HELM) lint $$TMPDIR && $(HELM) template $(RELEASE) $$TMPDIR > /dev/null; \
+	rm -rf $$TMPDIR; \
+	echo "=> Osttra reference stack validation passed!"
 
 sync-roles:
 	@python3 - << 'EOF'
 	import urllib.request, json, ssl, yaml, os, sys
-	url = os.environ.get("GRAFANA_URL", "https://cosmicsatish.grafana.net").rstrip("/")
+	url = os.environ.get("GRAFANA_URL")
+	if not url:
+	    print("ERROR: GRAFANA_URL environment variable is required (e.g. export GRAFANA_URL=https://<your-org>.grafana.net).", file=sys.stderr)
+	    sys.exit(1)
+	url = url.rstrip("/")
 	token = os.environ.get("GRAFANA_TOKEN")
 	if not token:
 	    print("ERROR: GRAFANA_TOKEN environment variable is required to sync roles.", file=sys.stderr)
@@ -39,3 +53,4 @@ sync-roles:
 	yaml.dump(plugins, open("chart/catalog/stacks/default/plugin-roles.yaml", "w"), sort_keys=False, default_flow_style=False, allow_unicode=True, indent=2)
 	print(f"Successfully synced {len(fixed)} fixed roles and {len(plugins)} plugin roles from {url}.")
 	EOF
+
