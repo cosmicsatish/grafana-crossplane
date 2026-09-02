@@ -39,67 +39,8 @@ jobs:
         env:
           GRAFANA_URL: ${{ github.event.inputs.grafana_url || vars.GRAFANA_URL || secrets.GRAFANA_URL || 'https://cosmicsatish.grafana.net' }}
           GRAFANA_TOKEN: ${{ secrets.GRAFANA_TOKEN || secrets.GRAFANA_SERVICE_ACCOUNT_TOKEN }}
-        run: |
-          python3 - << 'EOF'
-          import os, sys, json, ssl, urllib.request, yaml
+        run: python3 scripts/sync-roles.py
 
-          url = os.environ.get("GRAFANA_URL", "").rstrip("/")
-          token = os.environ.get("GRAFANA_TOKEN", "")
-
-          if not token:
-              print("ERROR: Neither GRAFANA_TOKEN nor GRAFANA_SERVICE_ACCOUNT_TOKEN secret is set.", file=sys.stderr)
-              sys.exit(1)
-
-          headers = {
-              "Authorization": f"Bearer {token}",
-              "Content-Type": "application/json",
-              "User-Agent": "grafana-crossplane-sync/1.0"
-          }
-          ctx = ssl._create_unverified_context()
-
-          req = urllib.request.Request(f"{url}/api/access-control/roles", headers=headers)
-          try:
-              with urllib.request.urlopen(req, context=ctx) as resp:
-                  if resp.status != 200:
-                      print(f"ERROR: HTTP {resp.status} fetching roles", file=sys.stderr)
-                      sys.exit(1)
-                  roles = json.loads(resp.read().decode("utf-8"))
-          except Exception as e:
-              print(f"ERROR: Failed to fetch roles: {e}", file=sys.stderr)
-              sys.exit(1)
-
-          if not isinstance(roles, list):
-              print(f"ERROR: Expected list of roles, got {type(roles)}", file=sys.stderr)
-              sys.exit(1)
-
-          fixed_roles = sorted([
-              {"name": r["name"], "uid": r["uid"]}
-              for r in roles
-              if r.get("name", "").startswith("fixed:") and r.get("uid")
-          ], key=lambda r: r["name"])
-
-          plugin_roles = sorted([
-              {"name": r["name"], "uid": r["uid"]}
-              for r in roles
-              if r.get("name", "").startswith("plugins:") and r.get("uid")
-          ], key=lambda r: r["name"])
-
-          print(f"Fetched {len(fixed_roles)} fixed roles and {len(plugin_roles)} plugin roles.")
-
-          fixed_path = os.path.join("chart", "catalog", "fixed-roles.yaml")
-          plugin_path = os.path.join("chart", "catalog", "stacks", "default", "plugin-roles.yaml")
-
-          os.makedirs(os.path.dirname(fixed_path), exist_ok=True)
-          os.makedirs(os.path.dirname(plugin_path), exist_ok=True)
-
-          with open(fixed_path, "w", encoding="utf-8") as f:
-              yaml.dump(fixed_roles, f, sort_keys=False, default_flow_style=False, allow_unicode=True, indent=2)
-
-          with open(plugin_path, "w", encoding="utf-8") as f:
-              yaml.dump(plugin_roles, f, sort_keys=False, default_flow_style=False, allow_unicode=True, indent=2)
-
-          print("Successfully updated fixed-roles.yaml and default plugin-roles.yaml.")
-          EOF
 
       - name: Commit and push changes
         run: |
