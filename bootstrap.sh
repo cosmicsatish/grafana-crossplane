@@ -103,7 +103,9 @@ for pair in "dashboards.oss.grafana.m.crossplane.io:[\"gdash\",\"gdashboard\",\"
             "serviceaccounts.oss.grafana.m.crossplane.io:[\"gsa\",\"gserviceaccounts\"]" \
             "folderpermissions.oss.grafana.m.crossplane.io:[\"gfp\",\"gfolderpermissions\"]" \
             "roleassignments.enterprise.grafana.m.crossplane.io:[\"gra\",\"groleassignments\"]" \
-            "teamexternalgroups.enterprise.grafana.m.crossplane.io:[\"gteg\"]"; do
+            "teamexternalgroups.enterprise.grafana.m.crossplane.io:[\"gteg\"]" \
+            "datasourcepermissionitems.enterprise.grafana.m.crossplane.io:[\"gdspi\"]" \
+            "datasourceconfiglbacrules.enterprise.grafana.m.crossplane.io:[\"glbac\"]"; do
     crd="${pair%%:*}"
     shorts="${pair#*:}"
     $KUBECTL_BIN patch crd "$crd" --type=json -p="[{\"op\":\"replace\",\"path\":\"/spec/names/shortNames\",\"value\":$shorts}]" 2>/dev/null || \

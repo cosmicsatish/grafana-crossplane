@@ -40,4 +40,9 @@ spec:
     jsonPointers:
     - /spec/forProvider/teams
     - /spec/forProvider/serviceAccounts
+  - group: enterprise.grafana.m.crossplane.io
+    kind: DataSourcePermissionItem
+    jsonPointers:
+    - /spec/forProvider/team
+
 

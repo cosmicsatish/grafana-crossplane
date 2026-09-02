@@ -174,11 +174,13 @@ We have configured collision-free **short names** on all namespaced CRDs:
 | **Folder Permissions** | `gfp`, `gfolderpermissions` | `kubectl get gfp -n crossplane-system` |
 | **Role Assignments** | `gra`, `groleassignments` | `kubectl get gra -n crossplane-system` |
 | **Team External Groups** | `gteg` | `kubectl get gteg -n crossplane-system` |
+| **DataSource Permissions** | `gdspi` | `kubectl get gdspi -n crossplane-system` |
+| **LBAC Rules** | `glbac` | `kubectl get glbac -n crossplane-system` |
 
 ### CLI Cheat Sheet
 ```bash
 # Query all managed resources in crossplane-system
-kubectl get gdash,gfolders,gteams,gsa,gfp,gra,gteg -n crossplane-system
+kubectl get gdash,gfolders,gteams,gsa,gfp,gra,gteg,gdspi,glbac -n crossplane-system
 
 # Inspect a specific folder and its sync status
 kubectl describe gfolder platform -n crossplane-system

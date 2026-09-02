@@ -50,7 +50,7 @@ This operational manual describes daily operations, safety boundaries, troublesh
 - **Operational Effect**: Removing an individual dashboard or token manifest from Git safely deletes that specific object from Grafana Cloud without affecting surrounding resources.
 
 ### Folder Empty-Check Protection
-- Even if a folder is marked with `allowDelete: true`, `preventDestroyIfNotEmpty: true` is hardcoded. Grafana Cloud will reject deletion if any unmanaged dashboard, alert, or subfolder exists within it.
+- Folders are strictly protected by default (`preventDestroyIfNotEmpty: true` hardcoded). Grafana Cloud will reject deletion if any unmanaged dashboard, alert, or subfolder exists within it.
 
 ---
 
@@ -60,7 +60,17 @@ Use the configured short names to inspect and operate on your stack quickly:
 
 ```bash
 # Check all resources across your stack
-kubectl get gdash,gfolders,gteams,gsa,gfp,gra,gteg -n crossplane-system
+kubectl get gdash,gfolders,gteams,gsa,gfp,gra,gteg,gdspi,glbac -n crossplane-system
+
+# Check status of folders
+kubectl get gfolders -n crossplane-system
+
+# Check status of teams
+kubectl get gteams -n crossplane-system
+
+# Check LBAC rules and datasource permissions
+kubectl get glbac,gdspi -n crossplane-system
+
 
 # Check status of folders
 kubectl get gfolders -n crossplane-system
@@ -110,11 +120,20 @@ If a resource was removed from Git, orphaned in Grafana, and you now want to bri
 2. Commit and push.
 3. Crossplane will observe the existing Grafana object and adopt it seamlessly without recreating or modifying its internal ID.
 
+### Runbook D: Onboarding Existing LBAC Rules on Day 0
+When bringing an existing Grafana stack under GitOps without wiping out pre-existing LBAC rules:
+1. Run the one-time import command:
+   ```bash
+   make import-lbac
+   ```
+2. Inspect `chart/catalog/baseline-lbac.yaml` to confirm captured rules.
+3. Commit and push. Pre-existing teams are now safely preserved and will merge with any new teams defined in `chart/teams/*.yaml`.
+
 ---
 
 ## 5. Troubleshooting & Diagnostics
 
-### Issue 1: Argo CD App is OutOfSync on FolderPermissions or RoleAssignments
+### Issue 1: Argo CD App is OutOfSync on FolderPermissions, RoleAssignments, or DataSourcePermissionItems
 - **Cause**: Crossplane reference resolution dynamically injects resolved numeric IDs (e.g. `teamId: 1:3096`) into `spec.forProvider`.
 - **Fix**: Verify that `deploy/argocd/application.yaml` contains the `ignoreDifferences` configuration:
   ```yaml
@@ -129,6 +148,10 @@ If a resource was removed from Git, orphaned in Grafana, and you now want to bri
     jsonPointers:
     - /spec/forProvider/teams
     - /spec/forProvider/serviceAccounts
+  - group: enterprise.grafana.m.crossplane.io
+    kind: DataSourcePermissionItem
+    jsonPointers:
+    - /spec/forProvider/team
   ```
 
 ### Issue 2: HTTP 429 Too Many Requests (Rate Limiting)
