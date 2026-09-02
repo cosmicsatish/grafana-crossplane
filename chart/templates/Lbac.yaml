@@ -18,6 +18,10 @@ metadata:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
   forProvider:
     datasourceUid: {{ $p.datasourceUid | quote }}
     permission: {{ $p.permission | default "Query" | quote }}
@@ -41,7 +45,12 @@ metadata:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
   forProvider:
     datasourceUid: {{ $dsUid | quote }}
     rules: {{ $dsData.rulesMap | toJson | quote }}
 {{- end }}
+

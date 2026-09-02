@@ -34,16 +34,17 @@ This operational manual describes daily operations, safety boundaries, troublesh
 
 ## 2. Safe Ownership & Deletion Boundaries
 
-### Parent Resource Safety (Strict Orphan-on-Delete)
-- **`Folder`**, **`Team`**, and **`ServiceAccount`** resources are configured with:
+### Parent & Critical Security Resource Safety (Strict Orphan-on-Delete)
+- **`Folder`**, **`Team`**, **`ServiceAccount`**, **`DataSourceConfigLbacRules`**, and **`DataSourcePermissionItem`** resources are configured with:
   ```yaml
   managementPolicies:
     - Observe
     - Create
     - Update
   ```
-- **Operational Effect**: Removing a folder, team, or service account manifest from Git deletes the Kubernetes CR but **orphans** the external object in Grafana Cloud.
-- **Why**: Deleting a parent resource in Grafana cascades destructively (deleting all dashboards in a folder, breaking team alert routing, or invalidating active API tokens).
+- **Operational Effect**: Removing a manifest from Git deletes the Kubernetes CR but **orphans** the external object in Grafana Cloud.
+- **Why**: Deleting these resources in Grafana cascades destructively (deleting all dashboards in a folder, breaking team alert routing, invalidating API tokens, or locking users out of telemetry logs by wiping LBAC rules).
+
 
 ### Granular Leaf Deletion
 - **`Dashboard`** and **`ServiceAccountToken`** resources are configured with `Delete` in `managementPolicies`.

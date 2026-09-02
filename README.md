@@ -317,7 +317,7 @@ This repository is intentionally designed to start from a **completely blank sla
 > 1. **Zero CRs Rendered**: Helm emits 0 Custom Resources to Kubernetes.
 > 2. **No Discovery Sweepers**: Crossplane controllers only reconcile Kubernetes CRs that actively exist in the cluster. Crossplane has **no discovery sweeps** or global garbage collection.
 > 3. **Partial Ownership Preserved**: Any folders, dashboards, teams, users, or permissions that already exist in the target Grafana instance are completely invisible to Crossplane and remain **100% untouched**.
-> 4. **Parent Orphan Protection**: Even when resources *were* previously managed by Git and are subsequently removed, parent resources (`Folder`, `Team`, `ServiceAccount`) default to strict orphan-on-delete (`[Observe, Create, Update]`), guaranteeing they are never deleted from Grafana.
+> 4. **Parent & Security Resource Orphan Protection**: Even when resources *were* previously managed by Git and are subsequently removed, critical resources (`Folder`, `Team`, `ServiceAccount`, `DataSourceConfigLbacRules`, and `DataSourcePermissionItem`) default to strict orphan-on-delete (`[Observe, Create, Update]`), guaranteeing they are never deleted or wiped from Grafana.
 
 ### Starting a New Stack
 To start managing resources on a new stack:
