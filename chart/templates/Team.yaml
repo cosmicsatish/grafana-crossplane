@@ -20,11 +20,11 @@ spec:
     - Update
   forProvider:
     name: {{ $name | quote }}
+    ignoreExternallySyncedMembers: true
 {{- with $team.email }}
     email: {{ . | quote }}
 {{- end }}
 {{- if hasKey $team "syncGroups" }}
-{{- $externalGroupDelete := $team.allowExternalGroupDelete | default false }}
 
 ---
 apiVersion: enterprise.grafana.m.crossplane.io/v1alpha1
@@ -37,14 +37,14 @@ metadata:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
-  {{- if $externalGroupDelete }}
-  managementPolicies: [Observe, Create, Update, Delete]
-  {{- else }}
-  managementPolicies: [Observe, Create, Update]
-  {{- end }}
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
   forProvider:
     teamRef:
       name: {{ $slug | quote }}
+
     groups:
       {{- toYaml ($team.syncGroups | default list) | nindent 6 }}
 {{- end }}

@@ -2,9 +2,9 @@
 {{- $fPermMap := (include "grafana-crossplane.folderPermissionsMap" . | fromYaml) | default dict -}}
 {{- range $f := $folders }}
 {{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) }}
-{{- $delete := $f.allowDelete | default false }}
 
 ---
+
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: Folder
 metadata:
@@ -15,18 +15,11 @@ metadata:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
-  {{- if $delete }}
   managementPolicies:
     - Observe
     - Create
     - Update
-    - Delete
-  {{- else }}
-  managementPolicies:
-    - Observe
-    - Create
-    - Update
-  {{- end }}
+
   forProvider:
     title: {{ $f.title | quote }}
     uid: {{ $uid | quote }}

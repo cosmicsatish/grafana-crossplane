@@ -128,16 +128,34 @@ kubectl get gdash,gfolders,gteams,gsa,gfp,gra,gteg -n crossplane-system
 
 ## Hierarchy & Deletion Policy Matrix
 
-| Resource Kind | Level | Sync Wave | Default `managementPolicies` | Deletion Semantics (When removed from Git) | Partial Ownership Protection | Available Overrides |
-| :--- | :--- | :---: | :--- | :--- | :--- | :--- |
-| **`Folder`** | Parent | `0` | `[Observe, Create, Update]` | **Orphan** (Folder remains intact in Grafana) | `preventDestroyIfNotEmpty: true` hardcoded. Grafana rejects deletion if child objects exist. | `allowDelete: true` |
-| **`Team`** | Parent | `0` | `[Observe, Create, Update]` | **Orphan** (Team remains intact in Grafana) | `ignoreExternallySyncedMembers: true` ensures SSO/IdP members are never purged. | N/A (Strict orphan) |
-| **`ServiceAccount`** | Parent | `0` | `[Observe, Create, Update]` | **Orphan** (Account remains intact in Grafana) | Active external tokens and integrations using this account remain functional. | N/A (Strict orphan) |
-| **`TeamExternalGroup`** | Child | `1` | `[Observe, Create, Update]` | **Orphan** (IdP group links remain in Grafana) | Non-Git IdP groups and manual group links are untouched. | `allowExternalGroupDelete: true` |
-| **`FolderPermission`** | Child | `1` | `[Observe, Create, Update, Delete]` | **Delete** (Removes managed permission set) | Folders with no declared permissions emit **no** resource and remain completely untouched. | N/A |
-| **`ServiceAccountToken`**| Child | `1` | `[Observe, Create, Update, Delete]` | **Delete** (Token revoked in Grafana) | Unmanaged tokens created in the Grafana UI on the same account are not touched. | N/A |
-| **`RoleAssignment`** | Child | `1` | `[Observe, Create, Update, Delete]` | **Update / Delete** (Removes assigned actor) | Only active roles managed (e.g. 41); remaining ~240 native roles are untouched. | N/A |
-| **`Dashboard`** | Leaf | `2` | `[Observe, Create, Update, Delete]` | **Delete** (Dashboard deleted from Grafana) | Other dashboards in the same folder are completely unaffected. | N/A |
+## Built-in Safety Model (Zero Boilerplate)
+
+To keep your production resources completely safe without requiring confusing boilerplate flags in every YAML file, safety is built directly into the templates:
+
+1. **Parent Resources are Always Safe (Orphan on Delete)**:
+   - **`Folder`**, **`Team`**, and **`ServiceAccount`** resources are parents. They **never delete** the external Grafana object when removed from Git. Crossplane simply deletes the Kubernetes CR and leaves the Grafana asset intact.
+   - You **do not** need to write `allowDelete: false` or `allowExternalGroupDelete: false`.
+2. **Team Members are Never Touched (`ignoreExternallySyncedMembers: true`)**:
+   - `ignoreExternallySyncedMembers: true` is hardcoded into `Team.yaml`. Users added via Okta, Azure AD, SAML, or the Grafana UI will **never** be purged by Crossplane.
+3. **Folders are Protected from Accidental Destruction (`preventDestroyIfNotEmpty: true`)**:
+   - `preventDestroyIfNotEmpty: true` is hardcoded into `Folder.yaml`, ensuring that folders containing dashboards, alerts, or subfolders can never be accidentally destroyed.
+4. **Leaf Resources are Safely Pruned**:
+   - **`Dashboard`** and **`ServiceAccountToken`** are leaf resources. When you remove a dashboard JSON file or a token entry from Git, only that specific asset or token is deleted/revoked in Grafana.
+
+---
+
+## Resource Lifecycle Matrix
+
+| Resource Kind | Resource Type | Sync Wave | Deletion Behavior (When removed from Git) | Built-in Safety Protection |
+| :--- | :--- | :---: | :--- | :--- |
+| **`Folder`** | Parent | `0` | **Orphan** (Folder remains intact in Grafana) | `preventDestroyIfNotEmpty: true` built-in. Grafana blocks deletion if contents exist. |
+| **`Team`** | Parent | `0` | **Orphan** (Team remains intact in Grafana) | `ignoreExternallySyncedMembers: true` built-in. IdP/SSO members are never touched. |
+| **`ServiceAccount`** | Parent | `0` | **Orphan** (Account remains intact in Grafana) | Active external tokens and integrations remain operational. |
+| **`TeamExternalGroup`** | Child | `1` | **Orphan** (IdP group links remain in Grafana) | Non-Git IdP groups and manual group links are untouched. |
+| **`FolderPermission`** | Child | `1` | **Delete** (Removes managed permission set) | Folders with no declared permissions emit **no** resource and remain completely untouched. |
+| **`ServiceAccountToken`**| Child | `1` | **Delete** (Token revoked in Grafana) | Unmanaged tokens created in the Grafana UI on the same account are not touched. |
+| **`RoleAssignment`** | Child | `1` | **Update / Delete** (Removes assigned actor) | Only active roles managed (e.g. 41); remaining ~240 native roles are untouched. |
+| **`Dashboard`** | Leaf | `2` | **Delete** (Dashboard deleted from Grafana) | Other dashboards in the same folder are completely unaffected. |
 
 ---
 
@@ -180,7 +198,6 @@ folders:
   # Root folder example
   - uid: platform                      # (Optional) Alphanumeric UID. Slugified from title if omitted.
     title: Platform                    # (Required) Display title in Grafana.
-    allowDelete: false                 # (Optional, default: false) Set true to allow deletion when removed from Git.
     permissions:                       # (Optional) Baseline folder permissions for roles.
       - role: Viewer                   # Viewer | Editor | Admin
         permission: View               # View | Edit | Admin
@@ -189,8 +206,6 @@ folders:
   - uid: observability
     title: Observability
     parentFolderUid: platform          # (Optional) Parent folder UID for folder hierarchies.
-    # parentTitle: Platform            # (Optional) Alternative: parent folder title.
-    allowDelete: false
 ```
 
 ### 2. Teams & IdP Sync
@@ -203,8 +218,6 @@ email: sre-team@example.com            # (Optional) Team email.
 # IdP Group Sync (e.g. Azure AD, Okta, SAML Group UUIDs)
 syncGroups:
   - "c8f2fca2-8db2-4876-bce7-d9ea24d1e2e9"
-
-allowExternalGroupDelete: false        # (Optional, default: false) Set true to allow deleting mappings.
 
 # Role Presets (from chart/catalog/role-presets.yaml)
 preset: sre                            # or 'presets: [sre, alert-manager]'
@@ -219,6 +232,7 @@ folderPermissions:
   - folder: observability              # Target folder UID
     permission: Admin                  # View | Edit | Admin
 ```
+
 
 ### 3. Service Accounts & API Tokens
 Defined in `chart/serviceaccounts/serviceaccounts.yaml`:

@@ -6,8 +6,6 @@
 #   slug: (Optional) Explicit slug/resourceName for Kubernetes CR. Defaults to slugified name.
 #   email: (Optional) Team email address.
 #   syncGroups: (Optional) List of IdP/SAML/AzureAD/Okta group UUIDs or names to map to this team.
-#   allowExternalGroupDelete: (Optional, default: false) When false, removing syncGroups from Git
-#                             leaves mappings in Grafana. Set true to allow GitOps deletion of mappings.
 #   preset / presets: (Optional) Reference to role presets defined in chart/catalog/role-presets.yaml.
 #                     E.g.: 'sre', 'dashboard-editor', 'alert-manager'
 #   roles: (Optional) Direct list of fixed:* or plugins:* role names from chart/catalog/
@@ -23,15 +21,11 @@ email: grafana-admins@example.com
 syncGroups:
   - "343133ba-f28b-4fab-95a0-55fc56391429"
 
-# Retain mappings on delete by default (safe orphan semantics)
-allowExternalGroupDelete: false
-
 # Direct RBAC role assignments (from chart/catalog/fixed-roles.yaml)
 roles:
   - fixed:alerting:admin
   - fixed:dashboards:writer
   - fixed:folders:writer
-
 
 # Folder-level access
 folderPermissions:

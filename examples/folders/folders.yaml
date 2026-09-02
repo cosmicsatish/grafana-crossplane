@@ -6,14 +6,7 @@
 #        If omitted, Helm automatically slugifies the title.
 #   title: (Required) Display title of the folder in Grafana.
 #   parentFolderUid: (Optional) UID of the parent folder for nested hierarchies.
-#   parentTitle: (Optional) Title of the parent folder (slugified automatically).
-#   allowDelete: (Optional, default: false) Controls deletion behavior when the folder
-#                is removed from Git.
-#                - false (Default): Crossplane orphans the folder in Grafana (safe).
-#                - true: Crossplane deletes the folder in Grafana if empty.
-#   preventDestroyIfNotEmpty: (Hardcoded: true) Even with allowDelete: true, Grafana API
-#                             rejects deletion if dashboards or alerts reside inside.
-#   permissions: (Optional) Baseline permissions granted to global roles or actors.
+#   permissions: (Optional) Baseline permissions granted to global roles.
 #                - role: Viewer | Editor | Admin
 #                  permission: View | Edit | Admin
 # ==============================================================================
@@ -22,7 +15,6 @@ folders:
   # Root Platform Folder
   - uid: platform
     title: Platform
-    allowDelete: false
     permissions:
       - role: Viewer
         permission: View
@@ -31,7 +23,6 @@ folders:
   - uid: observability
     title: Observability
     parentFolderUid: platform
-    allowDelete: false
     permissions:
       - role: Viewer
         permission: View
@@ -39,7 +30,6 @@ folders:
   # Standalone Applications Folder
   - uid: applications
     title: Applications
-    allowDelete: false
     permissions:
       - role: Viewer
         permission: View
