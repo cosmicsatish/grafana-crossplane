@@ -90,6 +90,21 @@ sleep 5 # wait a moment for the provider to be created
 $KUBECTL_BIN wait --for=condition=Installed provider/provider-grafana --timeout=300s
 $KUBECTL_BIN wait --for=condition=Healthy provider/provider-grafana --timeout=300s
 
+# Configure convenient shortNames for namespaced Crossplane CRDs
+echo "=> Adding CLI shortNames (gfolders, gdashboards, gteams, gsa, gfp, gra, gteg)..."
+for pair in "dashboards.oss.grafana.m.crossplane.io:[\"gdash\",\"gdashboard\",\"gdashboards\"]" \
+            "folders.oss.grafana.m.crossplane.io:[\"gfolder\",\"gfolders\"]" \
+            "teams.oss.grafana.m.crossplane.io:[\"gteam\",\"gteams\"]" \
+            "serviceaccounts.oss.grafana.m.crossplane.io:[\"gsa\",\"gserviceaccounts\"]" \
+            "folderpermissions.oss.grafana.m.crossplane.io:[\"gfp\",\"gfolderpermissions\"]" \
+            "roleassignments.enterprise.grafana.m.crossplane.io:[\"gra\",\"groleassignments\"]" \
+            "teamexternalgroups.enterprise.grafana.m.crossplane.io:[\"gteg\"]"; do
+    crd="${pair%%:*}"
+    shorts="${pair#*:}"
+    $KUBECTL_BIN patch crd "$crd" --type=json -p="[{\"op\":\"replace\",\"path\":\"/spec/names/shortNames\",\"value\":$shorts}]" 2>/dev/null || \
+    $KUBECTL_BIN patch crd "$crd" --type=json -p="[{\"op\":\"add\",\"path\":\"/spec/names/shortNames\",\"value\":$shorts}]" 2>/dev/null || true
+done
+
 # Apply providerconfig (create from example if missing)
 if [ ! -f deploy/crossplane/providerconfig.yaml ] && [ -f deploy/crossplane/providerconfig.yaml.example ]; then
     echo "=> Copying providerconfig.yaml.example to providerconfig.yaml..."
