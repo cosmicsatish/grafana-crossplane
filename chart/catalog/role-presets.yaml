@@ -1,0 +1,80 @@
+observability_viewer:
+- fixed:dashboards:reader
+- fixed:datasources:explorer
+grafana_viewer:
+- fixed:dashboards:reader
+- fixed:folders:reader
+- fixed:datasources:explorer
+dashboard_editor:
+- fixed:dashboards:writer
+- fixed:datasources:explorer
+folder_editor:
+- fixed:folders:writer
+alerting_editor:
+- fixed:alerting:writer
+- fixed:alerting.provisioning:writer
+reports_editor:
+- fixed:reports:writer
+alerting_manager:
+- fixed:alerting:admin
+- fixed:alerting.provisioning:writer
+synthetic_monitoring:
+- plugins:grafana-synthetic-monitoring-app:reader
+- plugins:grafana-synthetic-monitoring-app:editor
+- plugins:k6-app:reader
+- plugins:grafana-irm-app:incident-access
+adaptive_telemetry:
+- plugins:grafana-adaptivelogs-app:plugin-access
+- plugins:grafana-adaptivelogs-app:patterns-editor
+- plugins:grafana-adaptive-metrics-app:plugin-access
+- plugins:grafana-adaptive-metrics-app:rules-editor
+- plugins:grafana-adaptive-metrics-app:exemptions-editor
+- plugins:grafana-adaptive-metrics-app:segments-reader
+ai_ml:
+- plugins:grafana-ml-app:ml-viewer
+- plugins:grafana-ml-app:sift-viewer
+security_auditor:
+- fixed:roles:reader
+- fixed:org.users:reader
+- fixed:teams:read
+- fixed:teams.permissions:reader
+- fixed:serviceaccounts:reader
+- fixed:serviceaccounts.permissions:reader
+sre:
+- fixed:alerting:admin
+- fixed:dashboards:reader
+- fixed:datasources:explorer
+- plugins:grafana-irm-app:incident-access
+- plugins:grafana-kowalski-app:frontend-observability-viewer
+- plugins:grafana-ml-app:ml-viewer
+- plugins:grafana-synthetic-monitoring-app:reader
+- plugins:grafana-synthetic-monitoring-app:alerts-reader
+- plugins:grafana-synthetic-monitoring-app:checks-writer
+- plugins:grafana-synthetic-monitoring-app:probes-reader
+- plugins:k6-app:editor
+editor:
+- fixed:dashboards:writer
+- fixed:folders:writer
+- fixed:datasources:explorer
+- fixed:alerting:writer
+admin:
+- fixed:dashboards:writer
+- fixed:dashboards.permissions:writer
+- fixed:folders:writer
+- fixed:folders.permissions:writer
+- fixed:datasources:writer
+- fixed:datasources:explorer
+- fixed:datasources.permissions:writer
+- fixed:alerting:admin
+- fixed:alerting.provisioning:writer
+- fixed:reports:writer
+- fixed:teams:writer
+- fixed:teams.permissions:writer
+- fixed:serviceaccounts:writer
+- fixed:serviceaccounts.permissions:writer
+- fixed:roles:writer
+- fixed:org.users:writer
+- fixed:organization:writer
+- fixed:plugins:maintainer
+- fixed:plugins:writer
+- fixed:plugins.app:reader

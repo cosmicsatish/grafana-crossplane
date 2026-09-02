@@ -1,0 +1,7 @@
+name: SRE
+preset: sre
+roles:
+  - fixed:dashboards:reader
+  - plugins:grafana-kowalski-app:frontend-observability-viewer
+syncGroups:
+  - 00000000-0000-0000-0000-000000000000

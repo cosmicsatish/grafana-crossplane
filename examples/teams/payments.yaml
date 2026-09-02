@@ -1,14 +1,3 @@
-# Example Team Definition
+# Official Grafana Team.
 name: Payments Team
 slug: payments-team
-preset: observability_viewer
-syncGroups:
-  - "11111111-2222-3333-4444-555555555555"
-folderPermissions:
-  - folder: payments
-    permission: Admin
-datasourcePermissions:
-  - datasource: logs
-    permission: Query
-lbacSelectors:
-  - '{ business_unit="osttra", product_name="payments" }'

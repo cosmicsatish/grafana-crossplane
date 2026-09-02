@@ -1,4 +1,5 @@
 name: TOC
+email: traiana-noc@osttra.com
 presets:
 - editor
 - alerting_manager
@@ -8,9 +9,3 @@ syncGroups:
 folderPermissions:
 - folder: toc
   permission: Admin
-datasourcePermissions:
-- datasource: logs
-  permission: Query
-lbacSelectors:
-- '{ business_unit!="reset", business_unit!="trioptima", business_unit!="osttra" }'
-email: traiana-noc@osttra.com

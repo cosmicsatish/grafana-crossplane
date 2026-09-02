@@ -4,7 +4,7 @@ metadata:
   name: grafana-crossplane
   namespace: argocd
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  - resources-finalizer.argocd.argoproj.io
 spec:
   project: grafana-crossplane
   source:
@@ -13,8 +13,6 @@ spec:
     path: chart
     helm:
       releaseName: grafana-crossplane
-      valueFiles:
-        - values-osttra.yaml
       ignoreMissingValueFiles: true
   destination:
     server: https://kubernetes.default.svc
@@ -24,38 +22,14 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - ServerSideApply=true
-      - ApplyOutOfSyncOnly=true
-      - PruneLast=true
-      - SkipDryRunOnMissingResource=true
+    - ServerSideApply=true
+    - ApplyOutOfSyncOnly=true
+    - FailOnSharedResource=true
+    - PruneLast=true
+    - SkipDryRunOnMissingResource=true
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m
-  ignoreDifferences:
-    - group: oss.grafana.m.crossplane.io
-      kind: FolderPermission
-      jsonPointers:
-        - /spec/forProvider/permissions
-    - group: enterprise.grafana.m.crossplane.io
-      kind: DataSourcePermission
-      jsonPointers:
-        - /spec/forProvider/permissions
-    - group: enterprise.grafana.m.crossplane.io
-      kind: RoleAssignment
-      jsonPointers:
-        - /spec/forProvider/teams
-        - /spec/forProvider/serviceAccounts
-        - /spec/forProvider/users
-        - /spec/forProvider/teamRefs
-        - /spec/forProvider/serviceAccountRefs
-    - group: enterprise.grafana.m.crossplane.io
-      kind: TeamExternalGroup
-      jsonPointers:
-        - /spec/forProvider/teamId
-    - group: oss.grafana.m.crossplane.io
-      kind: ServiceAccountToken
-      jsonPointers:
-        - /spec/forProvider/serviceAccountId

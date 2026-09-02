@@ -6,13 +6,29 @@ metadata:
 spec:
   description: Grafana GitOps control plane managed by Helm and Crossplane
   sourceRepos:
-    - "https://github.com/cosmicsatish/grafana-crossplane.git"
+  - https://github.com/cosmicsatish/grafana-crossplane.git
   destinations:
-    - namespace: crossplane-system
-      server: https://kubernetes.default.svc
-  clusterResourceWhitelist:
-    - group: "*"
-      kind: "*"
+  - namespace: crossplane-system
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist: []
   namespaceResourceWhitelist:
-    - group: "*"
-      kind: "*"
+  - group: oss.grafana.m.crossplane.io
+    kind: Dashboard
+  - group: oss.grafana.m.crossplane.io
+    kind: DashboardV2
+  - group: oss.grafana.m.crossplane.io
+    kind: Folder
+  - group: oss.grafana.m.crossplane.io
+    kind: FolderPermissionItem
+  - group: oss.grafana.m.crossplane.io
+    kind: ServiceAccount
+  - group: oss.grafana.m.crossplane.io
+    kind: ServiceAccountToken
+  - group: oss.grafana.m.crossplane.io
+    kind: ServiceAccountPermissionItem
+  - group: oss.grafana.m.crossplane.io
+    kind: Team
+  - group: enterprise.grafana.m.crossplane.io
+    kind: TeamExternalGroup
+  - group: enterprise.grafana.m.crossplane.io
+    kind: RoleAssignmentItem

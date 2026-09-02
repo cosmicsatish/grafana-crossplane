@@ -1,8 +1,8 @@
-{{- if and .Values.teams (default true .Values.teams.enabled) }}
-{{- $teams := (include "grafana-crossplane.teamsList" . | fromYaml).teams | default list }}
+{{- $teams := (include "grafana-crossplane.teamsList" . | fromYaml).teams | default list -}}
 {{- range $team := $teams }}
 {{- $name := $team.name | required "team.name is required" }}
-{{- $slug := $team.slug | default (include "grafana-crossplane.slugify" $name) }}
+{{- $slug := include "grafana-crossplane.resourceName" ($team.resourceName | default $team.slug | default $name) }}
+
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: Team
@@ -12,33 +12,70 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
   labels:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
-    {{- with $team.owner }}
-    owner: {{ . | quote }}
-    {{- end }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
   forProvider:
     name: {{ $name | quote }}
-    {{- with $team.email }}
+{{- with $team.email }}
     email: {{ . | quote }}
-    {{- end }}
-{{- if $team.syncGroups }}
+{{- end }}
+{{- if hasKey $team "syncGroups" }}
+{{- $externalGroupDelete := $team.allowExternalGroupDelete | default false }}
+
 ---
 apiVersion: enterprise.grafana.m.crossplane.io/v1alpha1
 kind: TeamExternalGroup
 metadata:
-  name: {{ printf "%s-external-groups" $slug | trunc 63 | trimSuffix "-" | quote }}
+  name: {{ include "grafana-crossplane.resourceName" (printf "%s-external-groups" $slug) | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   labels:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  {{- if $externalGroupDelete }}
+  managementPolicies: [Observe, Create, Update, Delete]
+  {{- else }}
+  managementPolicies: [Observe, Create, Update]
+  {{- end }}
   forProvider:
     teamRef:
       name: {{ $slug | quote }}
     groups:
-      {{- toYaml $team.syncGroups | nindent 6 }}
+      {{- toYaml ($team.syncGroups | default list) | nindent 6 }}
 {{- end }}
+{{- range $p := ($team.folderPermissions | default list) }}
+{{- $perm := $p.permission | default "View" | toString | title }}
+{{- if not (has $perm (list "View" "Edit" "Admin")) }}{{ fail (printf "Unsupported team folder permission %q for %s" $perm $name) }}{{ end }}
+{{- $actor := "" }}
+{{- if $p.role }}{{ $actor = printf "role-%s" (include "grafana-crossplane.resourceName" $p.role) }}{{ else if $p.user }}{{ $actor = printf "user-%s" (include "grafana-crossplane.resourceName" $p.user) }}{{ else }}{{ $actor = printf "team-%s" $slug }}{{ end }}
+
+---
+apiVersion: oss.grafana.m.crossplane.io/v1alpha1
+kind: FolderPermissionItem
+metadata:
+  name: {{ include "grafana-crossplane.resourceName" (printf "%s-%s-%s" (include "grafana-crossplane.resourceName" $p.folder) $actor (lower $perm)) | quote }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
+spec:
+  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  managementPolicies: [Observe, Create, Update, Delete]
+  forProvider:
+    folderUid: {{ include "grafana-crossplane.resolveFolderUid" (dict "folder" $p.folder "root" $) | quote }}
+    permission: {{ $perm | quote }}
+    {{- if $p.role }}
+    role: {{ $p.role | quote }}
+    {{- else if $p.user }}
+    userId: {{ $p.user | quote }}
+    {{- else }}
+    teamRef:
+      name: {{ $slug | quote }}
+    {{- end }}
 {{- end }}
 {{- end }}

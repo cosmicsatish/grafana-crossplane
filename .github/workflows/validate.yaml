@@ -24,6 +24,4 @@ jobs:
       - name: Lint and render
         run: |
           helm lint chart
-          helm lint chart -f chart/values-osttra.yaml
           helm template grafana-crossplane chart >/dev/null
-          helm template grafana-crossplane chart -f chart/values-osttra.yaml >/dev/null

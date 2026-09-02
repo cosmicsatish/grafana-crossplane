@@ -1,5 +1,5 @@
-# Create the credentials Secret separately. Never commit the real token.
-# The provider expects a JSON document in the `credentials` key:
+# Create this Secret outside Git.
+# The `credentials` key must contain:
 # {"url":"https://<stack>.grafana.net","auth":"<service-account-token>"}
 apiVersion: grafana.m.crossplane.io/v1beta1
 kind: ProviderConfig

@@ -5,8 +5,3 @@ syncGroups:
 folderPermissions:
 - folder: sys-admins-linux
   permission: Admin
-datasourcePermissions:
-- datasource: logs
-  permission: Query
-lbacSelectors:
-- '{ business_unit="osttra", product_name="sysadmin-linux" }'

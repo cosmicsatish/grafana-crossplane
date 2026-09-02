@@ -9,8 +9,3 @@ folderPermissions:
   permission: Admin
 - folder: editors
   permission: Admin
-datasourcePermissions:
-- datasource: logs
-  permission: Query
-lbacSelectors:
-- '{ business_unit=~".*" }'

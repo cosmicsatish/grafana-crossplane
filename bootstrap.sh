@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
 CLUSTER_NAME="grafana-admin-gitops"
 KIND_BIN=$(which kind || echo "/usr/local/bin/kind")
 KUBECTL_BIN=$(which kubectl || echo "/usr/local/bin/kubectl")
@@ -11,7 +13,7 @@ echo " Starting Bootstrap Process"
 echo "=========================================="
 
 # 1. Create Cluster
-if ! $KIND_BIN get clusters | grep -q "^${CLUSTER_NAME}$"; then
+if ! $KIND_BIN get clusters 2>/dev/null | grep -q "^${CLUSTER_NAME}$"; then
   echo "=> Creating Kind cluster: ${CLUSTER_NAME}"
   $KIND_BIN create cluster --name "${CLUSTER_NAME}"
 else
@@ -30,15 +32,19 @@ echo "=> Waiting for ArgoCD to be ready..."
 $KUBECTL_BIN wait --for=condition=Available deployment/argocd-server -n argocd --timeout=300s
 $KUBECTL_BIN wait --for=condition=Available deployment/argocd-repo-server -n argocd --timeout=300s
 $KUBECTL_BIN rollout status statefulset/argocd-application-controller -n argocd --timeout=300s
+
 if [ -f deploy/argocd/argocd-cm.yaml ]; then
     echo "=> Applying ArgoCD custom resource health checks..."
     $KUBECTL_BIN apply -f deploy/argocd/argocd-cm.yaml
+    echo "=> Reloading ArgoCD application-controller..."
+    $KUBECTL_BIN rollout restart statefulset/argocd-application-controller -n argocd
+    $KUBECTL_BIN rollout status statefulset/argocd-application-controller -n argocd --timeout=120s
 fi
 echo "=> ArgoCD installed and ready!"
 
 # 3. Install Crossplane
 echo "=> Installing Crossplane..."
-if ! $HELM_BIN repo list | grep -q "crossplane-stable"; then
+if ! $HELM_BIN repo list 2>/dev/null | grep -q "crossplane-stable"; then
     $HELM_BIN repo add crossplane-stable https://charts.crossplane.io/stable
 fi
 $HELM_BIN repo update
@@ -53,8 +59,8 @@ echo "=> Crossplane installed and ready!"
 echo "=> Checking for Grafana Provider Credentials..."
 if ! $KUBECTL_BIN get secret grafana-provider-creds -n crossplane-system > /dev/null 2>&1; then
     echo "Secret grafana-provider-creds not found."
-    GRAFANA_URL="https://cosmicsatish.grafana.net"
-    # Use GRAFANA_TOKEN env var if set (non-interactive), otherwise prompt
+    GRAFANA_URL="${GRAFANA_URL:-https://cosmicsatish.grafana.net}"
+
     if [ -z "${GRAFANA_TOKEN}" ]; then
         read -rsp "Enter your Grafana Cloud Admin Service Account Token: " GRAFANA_TOKEN
         echo "" # newline after prompt
@@ -72,12 +78,16 @@ fi
 
 # 5. Apply Crossplane Provider Configurations
 echo "=> Applying Crossplane Provider configurations..."
-$KUBECTL_BIN apply -f deploy/crossplane/runtime-config.yaml
+if [ -f deploy/crossplane/runtime-config.yaml ]; then
+    echo "=> Applying DeploymentRuntimeConfig for provider rate limits..."
+    $KUBECTL_BIN apply -f deploy/crossplane/runtime-config.yaml
+fi
+
 $KUBECTL_BIN apply -f deploy/crossplane/provider.yaml
 
-echo "=> Waiting for Grafana provider to be healthy..."
-# We wait for the Provider resource to have condition Healthy=True
+echo "=> Waiting for Grafana provider to be installed and healthy..."
 sleep 5 # wait a moment for the provider to be created
+$KUBECTL_BIN wait --for=condition=Installed provider/provider-grafana --timeout=300s
 $KUBECTL_BIN wait --for=condition=Healthy provider/provider-grafana --timeout=300s
 
 # Apply providerconfig (create from example if missing)
@@ -91,26 +101,24 @@ elif [ -f deploy/crossplane/providerconfig.yaml.example ]; then
     $KUBECTL_BIN apply -f deploy/crossplane/providerconfig.yaml.example
 fi
 
-# 6. Configure ArgoCD Repository Access (required for private repos)
+# 6. Configure ArgoCD Repository Access
 echo "=> Configuring ArgoCD repository credentials..."
 if ! $KUBECTL_BIN get secret argocd-repo-github -n argocd > /dev/null 2>&1; then
-    # Prefer GITHUB_PERSONAL_ACCESS_TOKEN (used by GitHub MCP server), fallback to GITHUB_TOKEN, then prompt
     _GH_TOKEN="${GITHUB_PERSONAL_ACCESS_TOKEN:-${GITHUB_TOKEN}}"
-    if [ -z "${_GH_TOKEN}" ]; then
-        read -rsp "Enter your GitHub Personal Access Token (for private repo access): " _GH_TOKEN
-        echo "" # newline after prompt
+    if [ -n "${_GH_TOKEN}" ]; then
+        echo "=> Using GitHub token for repository authentication."
+        $KUBECTL_BIN create secret generic argocd-repo-github \
+            -n argocd \
+            --from-literal=type=git \
+            --from-literal=url=https://github.com/cosmicsatish/grafana-crossplane.git \
+            --from-literal=username=cosmicsatish \
+            --from-literal=password="${_GH_TOKEN}"
+        $KUBECTL_BIN label secret argocd-repo-github -n argocd \
+            argocd.argoproj.io/secret-type=repository
+        echo "=> ArgoCD repository secret created."
     else
-        echo "=> Using GitHub token from environment (GITHUB_PERSONAL_ACCESS_TOKEN or GITHUB_TOKEN)."
+        echo "=> Public repository: proceeding with unauthenticated repository access."
     fi
-    $KUBECTL_BIN create secret generic argocd-repo-github \
-        -n argocd \
-        --from-literal=type=git \
-        --from-literal=url=https://github.com/cosmicsatish/grafana-crossplane.git \
-        --from-literal=username=cosmicsatish \
-        --from-literal=password="${_GH_TOKEN}"
-    $KUBECTL_BIN label secret argocd-repo-github -n argocd \
-        argocd.argoproj.io/secret-type=repository
-    echo "=> ArgoCD repository secret created."
 else
     echo "=> ArgoCD repository secret already exists."
 fi

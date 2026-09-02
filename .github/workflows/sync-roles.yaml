@@ -2,8 +2,8 @@ name: Sync Grafana Roles
 
 on:
   schedule:
-    # Runs every 6 hours
-    - cron: '0 */6 * * *'
+    # Runs daily at 02:00 UTC
+    - cron: '0 2 * * *'
   workflow_dispatch:
     inputs:
       grafana_url:
@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: sync-catalog-${{ github.ref }}
+  group: sync-roles-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -23,9 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -73,27 +72,44 @@ jobs:
               print(f"ERROR: Expected list of roles, got {type(roles)}", file=sys.stderr)
               sys.exit(1)
 
-          print(f"Fetched {len(roles)} roles from Grafana.")
-          sorted_roles = sorted(roles, key=lambda r: (r.get("name", ""), r.get("uid", "")))
+          fixed_roles = sorted([
+              {"name": r["name"], "uid": r["uid"]}
+              for r in roles
+              if r.get("name", "").startswith("fixed:") and r.get("uid")
+          ], key=lambda r: r["name"])
 
-          dest_path = os.path.join("chart", "catalog", "roles.yaml")
-          os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+          plugin_roles = sorted([
+              {"name": r["name"], "uid": r["uid"]}
+              for r in roles
+              if r.get("name", "").startswith("plugins:") and r.get("uid")
+          ], key=lambda r: r["name"])
 
-          with open(dest_path, "w", encoding="utf-8") as f:
-              yaml.dump(sorted_roles, f, sort_keys=False, default_flow_style=False, allow_unicode=True, indent=2)
+          print(f"Fetched {len(fixed_roles)} fixed roles and {len(plugin_roles)} plugin roles.")
 
-          print(f"Successfully updated {dest_path} with {len(sorted_roles)} roles.")
+          fixed_path = os.path.join("chart", "catalog", "fixed-roles.yaml")
+          plugin_path = os.path.join("chart", "catalog", "stacks", "default", "plugin-roles.yaml")
+
+          os.makedirs(os.path.dirname(fixed_path), exist_ok=True)
+          os.makedirs(os.path.dirname(plugin_path), exist_ok=True)
+
+          with open(fixed_path, "w", encoding="utf-8") as f:
+              yaml.dump(fixed_roles, f, sort_keys=False, default_flow_style=False, allow_unicode=True, indent=2)
+
+          with open(plugin_path, "w", encoding="utf-8") as f:
+              yaml.dump(plugin_roles, f, sort_keys=False, default_flow_style=False, allow_unicode=True, indent=2)
+
+          print("Successfully updated fixed-roles.yaml and default plugin-roles.yaml.")
           EOF
 
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [[ -n $(git status --porcelain chart/catalog/roles.yaml) ]]; then
-            git add chart/catalog/roles.yaml
-            git commit -m "chore(catalog): sync grafana rbac roles catalog [skip ci]"
+          if [[ -n $(git status --porcelain chart/catalog/) ]]; then
+            git add chart/catalog/
+            git commit -m "chore(catalog): sync fixed and plugin roles from live grafana [skip ci]"
             git push origin main
             echo "Changes committed and pushed successfully."
           else
-            echo "No changes detected in chart/catalog/roles.yaml."
+            echo "No changes detected in role catalogs."
           fi

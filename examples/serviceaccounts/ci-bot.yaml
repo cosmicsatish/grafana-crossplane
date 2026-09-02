@@ -1,10 +1,17 @@
-# Example Service Account Definition
+# ServiceAccount deletion is protected by default.
+# Tokens are explicit child resources; other tokens on the Grafana service account remain untouched.
 serviceAccounts:
   - name: payments-ci-bot
     resourceName: payments-ci-bot
     role: Viewer
-    secretName: payments-ci-token
-    tokenExpires: 1y # Human-readable duration: 30d, 90d, 6m, 1y, 2y
-    fixedRoles:
-      - fixed:folders:reader
-      - fixed:dashboards:reader
+    tokens:
+      - name: payments-ci-token
+        secretName: payments-ci-token
+        tokenExpires: 1y
+
+    # Optional: grant one specific Team permission on this Service Account.
+    # This is item-scoped and does not replace other service-account permissions.
+    # permissions:
+    #   - teamRef:
+    #       name: sre
+    #     permission: Edit

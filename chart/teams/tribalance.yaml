@@ -5,8 +5,3 @@ syncGroups:
 folderPermissions:
 - folder: tribalance
   permission: Admin
-datasourcePermissions:
-- datasource: logs
-  permission: Query
-lbacSelectors:
-- '{ business_unit="trioptima", product_name="tribalance" }'

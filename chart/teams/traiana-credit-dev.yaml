@@ -5,8 +5,3 @@ syncGroups:
 folderPermissions:
 - folder: traiana-credit-dev
   permission: Admin
-datasourcePermissions:
-- datasource: logs
-  permission: Query
-lbacSelectors:
-- '{ business_unit="traiana", product_name="credit" }'

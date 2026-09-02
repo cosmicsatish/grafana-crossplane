@@ -1,32 +1,48 @@
-{{- if and .Values.dashboards (default true .Values.dashboards.enabled) }}
-{{- $files := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "dashboards") | fromYaml).items | default list }}
-{{- range $f := $files }}
-  {{- $raw := $f.parsed }}
-  {{- $data := $raw.dashboard | default $raw }}
-  {{- $base := base $f.path | trimSuffix ".json" | trimSuffix ".yaml" | trimSuffix ".yml" }}
-  {{- $meta := $raw.meta | default dict }}
-  {{- $folderName := $data.folderTitle | default $data.folderName | default $raw.folderTitle | default $raw.folderName | default $meta.folderName }}
-  {{- $folderPath := include "grafana-crossplane.folderPath" (dict "path" $f.path) }}
-  {{- $folderRequested := $data.folderUid | default $raw.folderUid | default ($folderName | default $folderPath) | default "" }}
-  {{- $folder := include "grafana-crossplane.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderPath "root" $) }}
-  {{- $slug := include "grafana-crossplane.slugify" ($data.uid | default $raw.uid | default $base) }}
+{{- $files := (include "grafana-crossplane.collectFiles" (dict "ctx" . "dir" "dashboards") | fromYaml).items | default list -}}
+{{- range $f := $files -}}
+  {{- $raw := $f.parsed -}}
+  {{- $data := $raw.dashboard | default $raw -}}
+  {{- $base := base $f.path | trimSuffix ".json" | trimSuffix ".yaml" | trimSuffix ".yml" -}}
+  {{- $folderPath := include "grafana-crossplane.folderPath" (dict "path" $f.path) -}}
+  {{- $folderRequested := $data.folderUid | default $raw.folderUid | default $data.folderTitle | default $raw.folderTitle | default $folderPath -}}
+  {{- $folder := include "grafana-crossplane.resolveFolderUid" (dict "folder" $folderRequested "fallback" $folderPath "root" $) -}}
+  {{- $isV2 := hasPrefix (toString ($data.apiVersion | default "")) "dashboard.grafana.app/" -}}
+  {{- $uid := $data.uid | default ($data.metadata.uid | default (ternary ($data.metadata.name | default "") "" $isV2)) | toString -}}
+  {{- $title := $data.title | default $data.metadata.name | default $base | toString -}}
+  {{- $resourceKey := $uid | default (printf "%s-%s" $folder $title) -}}
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
-kind: Dashboard
+kind: {{ if $isV2 }}DashboardV2{{ else }}Dashboard{{ end }}
 metadata:
-  name: {{ $slug | quote }}
+  name: {{ include "grafana-crossplane.resourceName" $resourceKey | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "2"
   labels:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  {{- include "grafana-crossplane.managedSpec" $ | nindent 2 }}
   forProvider:
+    {{- if $isV2 }}
+    metadata:
+      {{- with $uid }}
+      uid: {{ . | quote }}
+      {{- end }}
+      {{- if $folder }}
+      folderUid: {{ $folder | quote }}
+      {{- end }}
+    spec:
+      json: {{ ($data.spec | default dict | toJson) | quote }}
+      {{- with $data.spec.title }}
+      title: {{ . | quote }}
+      {{- end }}
+      options:
+        overwrite: true
+    {{- else }}
     configJson: {{ ($data | toJson) | quote }}
     overwrite: true
     {{- if $folder }}
-    folderRef:
-      name: {{ $folder | quote }}
+    folder: {{ $folder | quote }}
     {{- end }}
-{{- end }}
-{{- end }}
+    {{- end }}
+{{- end -}}

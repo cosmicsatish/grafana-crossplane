@@ -5,8 +5,3 @@ syncGroups:
 folderPermissions:
 - folder: group-admins
   permission: Admin
-datasourcePermissions:
-- datasource: logs
-  permission: Query
-lbacSelectors:
-- '{ business_unit=~".*" }'

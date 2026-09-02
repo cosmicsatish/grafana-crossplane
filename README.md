@@ -1,114 +1,66 @@
-# Grafana GitOps Control Plane
+# Grafana Crossplane GitOps
 
-A declarative Grafana Cloud GitOps repository built with **Helm + Crossplane provider-grafana + Argo CD**.
+Declarative Grafana Cloud management with Git → Argo CD → Helm → Crossplane → provider-grafana. The repository intentionally uses only official provider-managed resources and no custom controllers, jobs, scripts, Terraform, or runtime role discovery.
 
-```text
-Git → Argo CD → Helm → Crossplane → provider-grafana → Grafana Cloud
+## Managed resources
+
+- `Dashboard`, `DashboardV2`: one dashboard per managed resource.
+- `Folder`: only explicitly declared folders; deletion is Orphan and non-empty deletion is protected.
+- `FolderPermissionItem`: one folder permission item at a time.
+- `Team`, `TeamExternalGroup`: team identity plus optional external-group set; team deletion is Orphan by default.
+- `ServiceAccount`, `ServiceAccountToken`: explicit accounts and tokens; account deletion is Orphan and tokens are independent resources.
+- `ServiceAccountPermissionItem`: one management permission at a time.
+- `RoleAssignmentItem`: one fixed/plugin RBAC assignment at a time for a Team or Service Account.
+
+The repository does not manage datasources, alerting resources, LBAC, SLO, Synthetic Monitoring, whole-set permission/RBAC resources, custom roles, or UID lookup jobs.
+
+## RBAC and multi-stack role portability
+
+Teams and Service Accounts refer to Grafana **role names**, never role UIDs. `preset`/`presets` are expanded by Helm into individual `RoleAssignmentItem` resources.
+
+Built-in fixed-role UIDs live in `chart/catalog/fixed-roles.yaml`. Grafana documents these fixed UUIDs as provisioning identifiers, with availability caveats for older instances. citeturn970918search0turn646263view0
+
+Plugin roles are stack-specific. Their UIDs live only in `chart/catalog/stacks/<stack>/plugin-roles.yaml`; choose the file through `rbac.roleCatalog.pluginPath`. The same Team/ServiceAccount definitions can therefore be reused across stacks while each stack resolves its own plugin-role UIDs. Grafana's RBAC API exposes role names and UIDs, but provider-grafana does not provide a native list/data-source lookup that could be wired into `RoleAssignmentItem`, so no script/job is used. citeturn970918search4turn575153search0
+
+Example:
+
+```yaml
+name: SRE
+preset: sre
+roles:
+  - plugins:grafana-kowalski-app:frontend-observability-viewer
 ```
 
-The repository intentionally contains **no custom runtime scripts, no custom controllers, and no Terraform**.
+For a new stack, copy the default plugin catalog to a stack-specific file and update only the UID values. Do not place plugin UIDs in Team or Service Account files.
 
-## What is managed
+## Ownership rules
 
-Convenience templates cover teams, folders, service accounts/tokens, dashboards, datasources, datasource permissions/LBAC, role assignments, alerting resources, SLOs and Synthetic Monitoring. `chart/resources/` is the escape hatch for any provider-grafana resource that does not need a dedicated convenience template.
+Each Crossplane managed resource is the ownership boundary. Omitted Git objects are not discovered or swept from Grafana. Use item resources for permissions and role assignments. Do not use whole-set APIs for resources that contain unrelated children. Native Grafana state that is not represented by one of these resources remains unmanaged.
 
-See `docs/RESOURCE-COVERAGE.md`.
-
-## Repository layout
+## Layout
 
 ```text
 chart/
-  dashboards/<folder>/
-  alert-rules/<folder>/
-  contact-points/<folder>/
-  notification-policies/<folder>/
-  mute-timings/<folder>/
-  message-templates/<folder>/
-  datasources/
+  dashboards/
   folders/
-  serviceaccounts/
   teams/
-  slos/
-  synthetic-monitoring/
-  resources/                 # raw Crossplane resources
-  catalog/                   # optional stack-derived catalogs
-  templates/                 # thin Helm translations
-
-deploy/
-  argocd/                    # Argo CD application/project
-  crossplane/                # provider + ProviderConfig example
-
-docs/
+  serviceaccounts/
+  catalog/
+    fixed-roles.yaml
+    role-presets.yaml
+    stacks/<stack>/plugin-roles.yaml
+  templates/
+deploy/argocd/
+deploy/crossplane/
 examples/
-policy/
 ```
 
-## Daily usage
+Credentials remain outside Git and are supplied through the Crossplane `ProviderConfig`.
 
-Put desired state in the matching `chart/` directory, then:
+## Crossplane v2 lifecycle policy
 
-```bash
-make validate
-```
+This chart targets Crossplane v2 namespaced managed resources. It uses `spec.managementPolicies` only; the legacy `spec.deletionPolicy` field is intentionally not rendered.
 
-Review the Git diff and merge. Argo CD applies the chart and Crossplane reconciles Grafana Cloud.
+Resources that are safe to delete from Grafana when their individual Git object is removed include dashboards, explicit folder-permission items, service-account tokens, service-account permission items, and individual RBAC role assignments. Parent resources with potentially broad secondary effects (folders, teams, service accounts, and TeamExternalGroup mappings) omit `Delete` from `managementPolicies` by default, so deleting their Git object does not delete the external Grafana object.
 
-## Existing Grafana resources
-
-Use Grafana Cloud's native export functionality and place the exported file directly under the matching `chart/` directory. The Helm chart is the transformation layer: it recognizes the native Grafana export shapes and renders the corresponding Crossplane resources. No exporter, normalizer, Python utility, shell script, Terraform module, or custom controller is required.
-
-For resources whose Grafana export does not contain enough information to reconstruct a Crossplane object (for example some Cloud control-plane and provider-specific resources), commit the complete Crossplane manifest under `chart/resources/`. See `docs/EXPORT-IMPORT.md` for the exact mappings.
-
-## Multi-stack
-
-Resource definitions are stack-neutral. The target stack is selected through the Crossplane `ProviderConfig` and a values overlay. Do not put Grafana credentials in resource files.
-
-For logical datasource references:
-
-```yaml
-datasourceAliases:
-  logs:
-    uid: <stack-local-datasource-uid>
-```
-
-LBAC remains opt-in and is configured against the target stack's datasource UID.
-
-## Bootstrap
-
-An end-to-end bootstrap script is provided to initialize a local cluster or automated environment:
-
-```bash
-make bootstrap
-# OR
-./bootstrap.sh
-```
-
-The bootstrap script automates the complete workflow:
-1. **Cluster Creation**: Verifies or creates the `grafana-admin-gitops` kind cluster.
-2. **Argo CD Installation**: Deploys Argo CD, sets up custom Crossplane Lua health checks in `deploy/argocd/argocd-cm.yaml`, and waits for controller readiness.
-3. **Crossplane Setup**: Installs Crossplane via Helm into `crossplane-system`.
-4. **Grafana Credentials**: Checks for `grafana-provider-creds` secret and securely prompts for your Grafana Admin Service Account token if missing.
-5. **Provider & Limits**: Deploys `deploy/crossplane/runtime-config.yaml` (configured with `--max-reconcile-rate=10` and `--poll=10m` to prevent API rate limits) and `deploy/crossplane/provider.yaml`.
-6. **Argo CD Application**: Deploys `deploy/argocd/project.yaml` and `deploy/argocd/application.yaml` to begin continuous reconciliation.
-
-See `deploy/crossplane/README.md` and `OPERATIONS.md`.
-
-## Security
-
-Do not commit Grafana tokens, integration keys, datasource passwords, or populated ProviderConfig credentials. Keep provider credentials in Kubernetes Secret management outside Git.
-
-See `docs/SECURITY.md`.
-
-## Provider compatibility
-
-The repository pins `xpkg.upbound.io/grafana/provider-grafana:v2.14.0` in the declarative provider package manifest. Review provider release notes before upgrading and run the validation suite in a branch before deployment.
-
-## Validation
-
-The repository validation path is deliberately simple:
-
-```bash
-make validate
-```
-
-It uses Helm only. No Python runtime is required.
+Crossplane v2 removes `deletionPolicy` from namespaced managed resources and uses `managementPolicies` to control observe/create/update/delete behavior. The provider must support management policies for this to take effect.

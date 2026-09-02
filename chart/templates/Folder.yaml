@@ -1,123 +1,82 @@
-{{- if and .Values.folders (default true .Values.folders.enabled) }}
-{{- $folders := (include "grafana-crossplane.foldersList" . | fromYaml).folders | default list }}
-{{- $teams := (include "grafana-crossplane.teamsList" . | fromYaml).teams | default list }}
-{{- $verbMap := include "grafana-crossplane.verbMap" . | fromYaml }}
-{{- $explicit := dict }}
-{{- $permissions := dict }}
+{{- $folders := (include "grafana-crossplane.foldersList" . | fromYaml).folders | default list -}}
 {{- range $f := $folders }}
-  {{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) }}
-  {{- $_ := set $explicit $uid true }}
-  {{- $items := list }}
-  {{- range ($f.permissions | default list) }}
-    {{- $level := get $verbMap (.permission | default "View" | toString | lower) | default "View" }}
-    {{- if .role }}{{ $items = append $items (dict "role" (.role | toString | title) "permission" $level) }}
-    {{- else if .team }}{{ $items = append $items (dict "teamRef" (dict "name" (include "grafana-crossplane.slugify" .team)) "permission" $level) }}
-    {{- else if .teamRef }}{{ $items = append $items (dict "teamRef" .teamRef "permission" $level) }}
-    {{- else if .userRef }}{{ $items = append $items (dict "userRef" .userRef "permission" $level) }}
-    {{- else if .user }}{{ $items = append $items (dict "userId" (toString .user) "permission" $level) }}
-    {{- end }}
-  {{- end }}
-  {{- $_ := set $permissions $uid $items }}
-{{- end }}
-{{- range $team := $teams }}
-  {{- $teamSlug := $team.slug | default (include "grafana-crossplane.slugify" $team.name) }}
-  {{- range ($team.folderPermissions | default list) }}
-    {{- $uid := include "grafana-crossplane.slugify" .folder }}
-    {{- $level := get $verbMap (.permission | default "View" | toString | lower) | default "View" }}
-    {{- $items := get $permissions $uid | default list }}
-    {{- $items = append $items (dict "teamRef" (dict "name" $teamSlug) "permission" $level) }}
-    {{- $_ := set $permissions $uid $items }}
-  {{- end }}
-{{- end }}
+{{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) }}
+{{- $delete := $f.allowDelete | default false }}
 
-{{/* Grafana native alert-rule exports use folder names. Create those folders automatically. */}}
-{{- $auto := dict }}
-{{- range $root := list "dashboards" "alert-rules" "alerting" "contact-points" "notification-policies" "mute-timings" "message-templates" "slos" "synthetic-monitoring" }}
-  {{- range $depth := list "/*" "/*/*" "/*/*/*" "/*/*/*/*" "/*/*/*/*/*" "" }}
-    {{- range $ext := list "json" "yaml" "yml" }}
-      {{- range $path, $_ := $.Files.Glob (printf "%s%s.%s" $root $depth $ext) }}
-        {{- $doc := $.Files.Get $path | fromYaml }}
-        {{- $rel := include "grafana-crossplane.folderPath" (dict "path" $path) }}
-        {{- if and $rel (eq $root "alert-rules") }}
-          {{- range $g := ($doc.groups | default list) }}
-            {{- $folder := $g.folderUid | default (include "grafana-crossplane.slugify" ($g.folder | default $rel)) }}
-            {{- if not (hasKey $explicit $folder) }}{{ $_ := set $auto $folder (dict "title" ($g.folder | default $rel) "parentUid" "") }}{{ end }}
-          {{- end }}
-          {{- if or $doc.grafana_alert $doc.title }}
-            {{- $fUid := include "grafana-crossplane.slugify" $rel }}
-            {{- if not (hasKey $explicit $fUid) }}{{ if not (hasKey $auto $fUid) }}{{ $_ := set $auto $fUid (dict "title" $rel "parentUid" "") }}{{ end }}{{ end }}
-          {{- end }}
-        {{- else if $rel }}
-          {{- $parent := "" }}
-          {{- range $part := (splitList "/" $rel) }}
-            {{- $uid := include "grafana-crossplane.slugify" (ternary (printf "%s/%s" $parent $part) $part (ne $parent "")) }}
-            {{- if not (hasKey $explicit $uid) }}{{ if not (hasKey $auto $uid) }}{{ $_ := set $auto $uid (dict "title" $part "parentUid" $parent) }}{{ end }}{{ end }}
-            {{- $parent = $uid }}
-          {{- end }}
-        {{- end }}
-      {{- end }}
-    {{- end }}
-  {{- end }}
-{{- end }}
-
-{{- range $f := $folders }}
-  {{- $uid := $f.uid | default (include "grafana-crossplane.slugify" $f.title) }}
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
 kind: Folder
 metadata:
-  name: {{ $uid | quote }}
+  name: {{ include "grafana-crossplane.resourceName" $uid | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "0"
   labels:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  {{- if $delete }}
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
+    - Delete
+  {{- else }}
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
+  {{- end }}
   forProvider:
     title: {{ $f.title | quote }}
     uid: {{ $uid | quote }}
-    {{- $parent := $f.parentUid | default ($f.parentTitle | default "" | toString | trim) }}
-    {{- if and $parent (ne $parent "nil") }}
-    parentFolderUid: {{ include "grafana-crossplane.slugify" $parent | quote }}
+    preventDestroyIfNotEmpty: true
+    {{- with $f.parentUid }}
+    parentFolderUid: {{ . | quote }}
+    {{- else with $f.parentTitle }}
+    parentFolderUid: {{ include "grafana-crossplane.slugify" (. | toString | trim) | quote }}
     {{- end }}
-  {{- $fp := get $permissions $uid | default list }}
-  {{- if $fp }}
+{{ range $p := ($f.permissions | default list) }}
+{{- $permission := $p.permission | default "View" | toString | lower -}}
+{{- if eq $permission "view" }}{{ $permission = "View" }}{{ else if eq $permission "query" }}{{ $permission = "View" }}{{ else if eq $permission "edit" }}{{ $permission = "Edit" }}{{ else if eq $permission "write" }}{{ $permission = "Edit" }}{{ else if eq $permission "admin" }}{{ $permission = "Admin" }}{{ else }}{{ fail (printf "Unsupported folder permission %q for %s" $permission $f.title) }}{{ end -}}
+{{- $actor := "permission" -}}
+{{- if $p.role }}{{ $actor = printf "role-%s" (include "grafana-crossplane.slugify" $p.role) }}{{ end -}}
+{{- if $p.team }}{{ $actor = printf "team-%s" (include "grafana-crossplane.slugify" $p.team) }}{{ end -}}
+{{- if $p.teamRef }}{{ $actor = printf "team-ref-%s" (include "grafana-crossplane.resourceName" $p.teamRef.name) }}{{ end -}}
+{{- if $p.user }}{{ $actor = printf "user-%s" (include "grafana-crossplane.slugify" $p.user) }}{{ end -}}
+{{- if $p.userRef }}{{ $actor = printf "user-ref-%s" (include "grafana-crossplane.resourceName" $p.userRef.name) }}{{ end }}
+
 ---
 apiVersion: oss.grafana.m.crossplane.io/v1alpha1
-kind: FolderPermission
+kind: FolderPermissionItem
 metadata:
-  name: {{ printf "%s-permissions" $uid | trunc 63 | trimSuffix "-" | quote }}
+  name: {{ include "grafana-crossplane.resourceName" (printf "%s-%s-%s" $uid $actor (lower $permission)) | quote }}
   annotations:
     argocd.argoproj.io/sync-wave: "1"
   labels:
     {{- include "grafana-crossplane.labels" $ | nindent 4 }}
 spec:
   {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
+  managementPolicies:
+    - Observe
+    - Create
+    - Update
+    - Delete
   forProvider:
     folderUid: {{ $uid | quote }}
-    permissions:
-      {{- toYaml $fp | nindent 6 }}
-  {{- end }}
-{{- end }}
-
-{{- range $uid, $meta := $auto }}
----
-apiVersion: oss.grafana.m.crossplane.io/v1alpha1
-kind: Folder
-metadata:
-  name: {{ $uid | quote }}
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
-    grafana.gitops/auto-discovered: "true"
-  labels:
-    {{- include "grafana-crossplane.labels" $ | nindent 4 }}
-spec:
-  {{- include "grafana-crossplane.providerConfigRef" $ | nindent 2 }}
-  forProvider:
-    title: {{ $meta.title | quote }}
-    uid: {{ $uid | quote }}
-    {{- with $meta.parentUid }}
-    parentFolderUid: {{ . | quote }}
+    permission: {{ $permission | quote }}
+    {{- with $p.role }}
+    role: {{ . | toString | title | quote }}
+    {{- else with $p.team }}
+    teamRef:
+      name: {{ include "grafana-crossplane.slugify" . | quote }}
+    {{- else with $p.teamRef }}
+    teamRef:
+      {{- toYaml . | nindent 6 }}
+    {{- else with $p.user }}
+    userId: {{ . | toString | quote }}
+    {{- else with $p.userRef }}
+    userRef:
+      {{- toYaml . | nindent 6 }}
     {{- end }}
 {{- end }}
 {{- end }}

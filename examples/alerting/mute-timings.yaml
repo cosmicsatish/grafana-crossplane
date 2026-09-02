@@ -1,9 +1,0 @@
-# Example Mute Timings / Maintenance Windows (can be placed in chart/alerting/)
-muteTimings:
-  - name: weekend-maintenance
-    owner: platform
-    intervals:
-      - weekdays: ["saturday", "sunday"]
-        times:
-          - start: "01:00"
-            end: "05:00"

@@ -1,16 +1,10 @@
 version: 2
 updates:
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: helm
-    directory: "/chart"
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: helm
-    directory: "/deploy"
-    schedule:
-      interval: weekly
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: weekly
+- package-ecosystem: helm
+  directory: /chart
+  schedule:
+    interval: weekly

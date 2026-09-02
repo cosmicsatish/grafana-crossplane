@@ -1,0 +1,5 @@
+# Official provider-grafana TeamExternalGroup example.
+# The Team is created from the same file, and TeamExternalGroup references it by name.
+name: Payments Team
+syncGroups:
+  - 11111111-2222-3333-4444-555555555555
