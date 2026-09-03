@@ -24,18 +24,6 @@ spec:
 {{- with $team.email }}
     email: {{ . | quote }}
 {{- end }}
-{{- with $team.admins }}
-    admins:
-      {{- toYaml . | nindent 6 }}
-{{- end }}
-{{- with $team.members }}
-    members:
-      {{- toYaml . | nindent 6 }}
-{{- end }}
-{{- with $team.preferences }}
-    preferences:
-      - {{- toYaml . | nindent 8 }}
-{{- end }}
 {{- if hasKey $team "syncGroups" }}
 
 ---

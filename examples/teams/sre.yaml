@@ -34,16 +34,5 @@ lbac:
       - '{cluster="prod", namespace="sre"}'
       - '{env="prod", job="node-exporter"}'
 
-# Team UI Preferences (Optional)
-preferences:
-  theme: dark                          # light | dark | system
-  timezone: utc                        # utc | browser
-  # homeDashboardUid: platform-overview
-
-# Direct Team Admins and Members (Optional, when not exclusively using IdP sync)
-# admins:
-#   - lead-sre@example.com
-# members:
-#   - engineer@example.com
 
 
