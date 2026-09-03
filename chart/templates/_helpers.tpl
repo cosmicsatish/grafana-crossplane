@@ -62,6 +62,17 @@ items:
     {{- $items = append $items (dict "title" $dirName "uid" (include "grafana-crossplane.slugify" $dirName)) -}}
   {{- end -}}
 {{- end -}}
+{{/* Auto-discover folders from teams folderPermissions if not explicitly defined */}}
+{{- $teams := (include "grafana-crossplane.teamsList" . | fromYaml).teams | default list -}}
+{{- range $t := $teams -}}
+  {{- range $fp := ($t.folderPermissions | default list) -}}
+    {{- $fName := $fp.folder | toString | trim -}}
+    {{- if and $fName (not (hasKey $knownTitles (lower $fName))) -}}
+      {{- $_ := set $knownTitles (lower $fName) true -}}
+      {{- $items = append $items (dict "title" (title $fName) "uid" (include "grafana-crossplane.slugify" $fName)) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 folders:
 {{- toYaml $items | nindent 2 }}
 {{- end -}}

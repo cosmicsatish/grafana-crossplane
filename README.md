@@ -254,6 +254,7 @@ serviceAccounts:
     role: Editor                       # (Required) Basic role: None | Viewer | Editor | Admin.
                                        # Set to "None" or "Viewer" if using fine-grained roles below.
     isDisabled: false                  # (Optional, default: false) Disable without deleting.
+    id: 670                            # (Optional) Numeric ID only if adopting a pre-existing SA.
     owner: devops                      # (Optional) Team or owner accountability label.
     
     # API Tokens
