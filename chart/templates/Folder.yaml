@@ -24,7 +24,7 @@ spec:
     title: {{ $f.title | quote }}
     uid: {{ $uid | quote }}
     preventDestroyIfNotEmpty: true
-    {{- with $f.parentUid }}
+    {{- with ($f.parentFolderUid | default $f.parentUid) }}
     parentFolderUid: {{ . | quote }}
     {{- else with $f.parentTitle }}
     parentFolderUid: {{ include "grafana-crossplane.slugify" (. | toString | trim) | quote }}
